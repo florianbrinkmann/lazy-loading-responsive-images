@@ -1,5 +1,5 @@
 === Lazy Load Responsive Images ===
-Contributors: Florian Brinkmann, MarcDK
+Contributors: FlorianBrinkmann, MarcDK
 Tags: ricg, responsive, lazy, performance, images, MarcTV
 Requires at least: 3.0
 Tested up to: 4.3.1
