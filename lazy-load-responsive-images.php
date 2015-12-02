@@ -4,7 +4,7 @@ defined('ABSPATH') or die("Nothing to see!");
   Plugin Name: Lazy Loading Responsive Images
   Plugin URI: https://florianbrinkmann.de/1122/responsive-images-und-lazy-loading-in-wordpress/
   Description: Lazy loading Images plugin that works with responsive images.
-  Version: 1.0
+  Version: 1.0.3
   Author: Florian Brinkmann, MarcDK
   Author URI: http://www.marc.tv
   License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -106,6 +106,10 @@ add_filter('wp_get_attachment_image_attributes', 'lazy_load_responsive_images_mo
 
 function lazy_load_responsive_images_filter_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
 {
+    if (empty($html)) {
+        return $html;
+    }
+
     $dom = new DOMDocument("1.0", "utf-8");
     libxml_use_internal_errors(true);
     $dom->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
@@ -127,8 +131,8 @@ add_filter('post_thumbnail_html', 'lazy_load_responsive_images_filter_post_thumb
 
 function lazy_load_responsive_images_script()
 {
-    wp_enqueue_script('lazy_load_responsive_images_script-lazysizes', plugins_url() . '/lazy-load-responsive-images/js/lazysizes.js', '', false, false);
-    wp_enqueue_style('lazy_load_responsive_images_style', plugins_url() . '/lazy-load-responsive-images/css/lazy_load_responsive_images.css');
+    wp_enqueue_script('lazy_load_responsive_images_script-lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.js', '', false, false);
+    wp_enqueue_style('lazy_load_responsive_images_style', plugins_url() . '/lazy-loading-responsive-images/css/lazy_load_responsive_images.css');
 }
 
 add_action('wp_enqueue_scripts', 'lazy_load_responsive_images_script', 20, 0);
