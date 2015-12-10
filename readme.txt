@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images, MarcTV
 Requires at least: 3.0
 Tested up to: 4.4
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 
 == Description ==
 
@@ -17,6 +17,10 @@ Based on lazysizes.js
 * Activate it
 
 == Changelog ==
+
+= 1.0.5 =
+
+* removed lazy loading from atom feeds and backend
 
 = 1.0.4 =
 

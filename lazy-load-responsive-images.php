@@ -4,7 +4,7 @@ defined('ABSPATH') or die("Nothing to see!");
   Plugin Name: Lazy Loading Responsive Images
   Plugin URI: https://florianbrinkmann.de/1122/responsive-images-und-lazy-loading-in-wordpress/
   Description: Lazy loading Images plugin that works with responsive images introduced in Wordpress 4.4.
-  Version: 1.0.4
+  Version: 1.0.5
   Author: Florian Brinkmann, MarcDK
   Author URI: http://www.marc.tv
   License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
@@ -24,6 +24,14 @@ defined('ABSPATH') or die("Nothing to see!");
 function lazy_load_responsive_images($content)
 {
     if (empty($content)) {
+        return $content;
+    }
+
+    if (is_feed()) {
+        return $content;
+    }
+
+    if (is_admin()) {
         return $content;
     }
 
@@ -75,6 +83,14 @@ add_filter('the_content', 'lazy_load_responsive_images', 20);
 
 function lazy_load_responsive_images_modify_post_thumbnail_attr($attr, $attachment, $size)
 {
+    if (is_feed()) {
+        return $attr;
+    }
+
+    if (is_admin()) {
+        return $attr;
+    }
+
     if (isset($attr['sizes'])) {
         $data_sizes = $attr['sizes'];
         unset($attr['sizes']);
@@ -99,6 +115,14 @@ add_filter('wp_get_attachment_image_attributes', 'lazy_load_responsive_images_mo
 function lazy_load_responsive_images_filter_post_thumbnail_html($html, $post_id, $post_thumbnail_id, $size, $attr)
 {
     if (empty($html)) {
+        return $html;
+    }
+
+    if (is_feed()) {
+        return $html;
+    }
+
+    if (is_admin()) {
         return $html;
     }
 
