@@ -1,14 +1,15 @@
-=== Lazy Load Responsive Images ===
+=== Lazy Loading Responsive Images ===
 Contributors: FlorianBrinkmann, MarcDK
-Tags: ricg, responsive, lazy, performance, images, MarcTV
+Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images, MarcTV
 Requires at least: 3.0
-Tested up to: 4.3.1
-Stable tag: 1.0.3
+Tested up to: 4.4
+Stable tag: 1.0.4
 
 == Description ==
 
 Lazy loading Images plugin that works with responsive images.
-Compatible with "RICG Responsive Images" plugin.  Based on lazysizes.js
+Compatible with "RICG Responsive Images" and works with responsive images introduced in Wordpress 4.4.
+Based on lazysizes.js
 
 == Installation ==
 
@@ -16,6 +17,12 @@ Compatible with "RICG Responsive Images" plugin.  Based on lazysizes.js
 * Activate it
 
 == Changelog ==
+
+= 1.0.4 =
+
+* Changed description to reflect the compatibility with Wordpress 4.4 core responsive images.
+* Removed skipping of the first image in the post.
+* Adds css class "js" to body tag for better compatibility.   
 
 = 1.0.3 =
 
