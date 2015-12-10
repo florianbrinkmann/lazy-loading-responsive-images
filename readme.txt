@@ -22,7 +22,7 @@ Based on lazysizes.js
 
 * Changed description to reflect the compatibility with Wordpress 4.4 core responsive images.
 * Removed skipping of the first image in the post.
-* Adds css class "js" to body tag for better compatibility.   
+* Adds css class "js" to body tag for better compatibility.
 
 = 1.0.3 =
 
