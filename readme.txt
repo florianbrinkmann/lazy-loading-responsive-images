@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images, MarcTV
 Requires at least: 3.0
 Tested up to: 4.4
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 
 == Description ==
 
@@ -18,9 +18,13 @@ Based on lazysizes.js
 
 == Changelog ==
 
+= 1.0.6 =
+
+* added missing src attribute. Older browsers like the PS4 browser now work again.
+
 = 1.0.5 =
 
-* removed lazy loading from atom feeds and backend
+* now prevents lazy loading in atom feeds and the Wordpress backend.
 
 = 1.0.4 =
 
