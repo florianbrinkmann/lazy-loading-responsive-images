@@ -106,6 +106,10 @@ function lazy_load_responsive_images_modify_post_thumbnail_attr($attr, $attachme
     if (is_admin()) {
         return $attr;
     }
+  
+    if (isset($attr['data-no-lazyload'])) { 
+        return $attr; 
+    }
 
     if (isset($attr['sizes'])) {
         $data_sizes = $attr['sizes'];
