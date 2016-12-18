@@ -4,7 +4,7 @@ defined('ABSPATH') or die("Nothing to see!");
   Plugin Name: Lazy Loading Responsive Images
   Plugin URI: https://florianbrinkmann.de/1122/responsive-images-und-lazy-loading-in-wordpress/
   Description: Lazy loading Images plugin that works with responsive images introduced in Wordpress 4.4.
-  Version: 1.0.8
+  Version: 1.0.9
   Author: Florian Brinkmann, MarcDK
   Author URI: http://www.marc.tv
   License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
