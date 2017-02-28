@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images, MarcTV
 Requires at least: 3.0
-Tested up to: 4.7
-Stable tag: 1.0.9
+Tested up to: 4.7.2
+Stable tag: 3.0
 
 == Description ==
 
@@ -17,6 +17,11 @@ Based on lazysizes.js
 * Activate it
 
 == Changelog ==
+
+= 3.0 =
+
+* Updated lazysizes to 3.0.0 (Thanks FlorianBrinkmann)
+* Plugin version reflects version of lazysizes.
 
 = 1.0.9 =
 
