@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
 Tested up to: 4.8
-Stable tag: 3.1.1
+Stable tag: 3.1.2
 
 == Description ==
 
@@ -19,6 +19,12 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.2 =
+
+**Fixed**
+
+* Capital P for one »WordPress« in readme and one in plugin description.
 
 = 3.1.1 =
 
