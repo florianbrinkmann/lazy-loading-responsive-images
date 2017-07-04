@@ -7,7 +7,7 @@
  * Author: Florian Brinkmann, MarcDK
  * Author URI: http://www.marc.tv
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * Text Domain: lazy-load-responsive-images
+ * Text Domain: lazy-loading-responsive-images
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

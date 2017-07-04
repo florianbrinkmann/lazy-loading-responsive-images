@@ -519,7 +519,7 @@ img.lazyload {
 	 * Loads the plugin translation.
 	 */
 	public function load_translation() {
-		load_plugin_textdomain( 'lazy-load-responsive-images' );
+		load_plugin_textdomain( 'lazy-loading-responsive-images' );
 	}
 
 	/**

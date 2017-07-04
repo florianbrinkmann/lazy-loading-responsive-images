@@ -54,7 +54,7 @@ class Settings {
 		 * Add section.
 		 */
 		$wp_customize->add_section( 'lazy_load_responsive_images_options', [
-			'title' => __( 'Lazy loading options', 'lazy-load-responsive-images' ),
+			'title' => __( 'Lazy loading options', 'lazy-loading-responsive-images' ),
 		] );
 
 		/**
@@ -73,7 +73,7 @@ class Settings {
 			'priority' => 1,
 			'type'     => 'text',
 			'section'  => 'lazy_load_responsive_images_options',
-			'label'    => __( 'Exclude images with the following class names (separate multiple class names with comma).', 'lazy-load-responsive-images' ),
+			'label'    => __( 'Exclude images with the following class names (separate multiple class names with comma).', 'lazy-loading-responsive-images' ),
 		] );
 	}
 }
