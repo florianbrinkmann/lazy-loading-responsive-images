@@ -8,7 +8,7 @@ Stable tag: 3.1.1
 == Description ==
 
 Lazy loading Images plugin that works with responsive images.
-Compatible with »RICG Responsive Images« and works with responsive images introduced in Wordpress 4.4.
+Compatible with »RICG Responsive Images« and works with responsive images introduced in WordPress 4.4.
 Based on lazysizes.js
 
 You can disable lazy loading for specific image classes by adding them in the customizer (*Appearance* › *Customize* › *Lazy loading options*).
