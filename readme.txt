@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
 Tested up to: 4.8
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 
 == Description ==
 
@@ -11,12 +11,24 @@ Lazy loading Images plugin that works with responsive images.
 Compatible with »RICG Responsive Images« and works with responsive images introduced in Wordpress 4.4.
 Based on lazysizes.js
 
+You can disable lazy loading for specific image classes by adding them in the customizer (*Appearance* › *Customize* › *Lazy loading options*).
+
 == Installation ==
 
 * Install plugin
 * Activate it
 
 == Changelog ==
+
+= 3.1.1 =
+
+**Changed**
+
+* Added option to disable lazy loading for specific classes to readme.
+
+**Fixed**
+
+* Correct text domain.
 
 = 3.1.0 =
 
