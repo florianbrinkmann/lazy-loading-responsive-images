@@ -1,14 +1,14 @@
 === Lazy Loading Responsive Images ===
 Contributors: FlorianBrinkmann, MarcDK
-Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images, MarcTV
+Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
-Tested up to: 4.7.2
-Stable tag: 3.0
+Tested up to: 4.8
+Stable tag: 3.1.0
 
 == Description ==
 
 Lazy loading Images plugin that works with responsive images.
-Compatible with "RICG Responsive Images" and works with responsive images introduced in Wordpress 4.4.
+Compatible with »RICG Responsive Images« and works with responsive images introduced in Wordpress 4.4.
 Based on lazysizes.js
 
 == Installation ==
@@ -17,6 +17,21 @@ Based on lazysizes.js
 * Activate it
 
 == Changelog ==
+
+= 3.1.0 =
+
+**Added**
+
+* Customizer option to specify image class names to disable lazy loading for those.
+
+**Changed**
+
+* Using semver.
+* Make it work with AJAX requests (thanks to zitrusblau).
+* Using classes and namespaces.
+* Using SmartDomDocument class.
+* Updated plugin URL.
+* Doc improvements.
 
 = 3.0 =
 
@@ -41,11 +56,11 @@ Based on lazysizes.js
 
 = 1.0.5 =
 
-* now prevents lazy loading in atom feeds and the Wordpress backend.
+* now prevents lazy loading in atom feeds and the WordPress backend.
 
 = 1.0.4 =
 
-* Changed description to reflect the compatibility with Wordpress 4.4 core responsive images.
+* Changed description to reflect the compatibility with WordPress 4.4 core responsive images.
 * Removed skipping of the first image in the post.
 * Adds css class "js" to body tag for better compatibility.
 
@@ -55,4 +70,4 @@ Based on lazysizes.js
 
 = 1.0.2 =
 
-* typo in wordpress usernames.
+* typo in WordPress usernames.
