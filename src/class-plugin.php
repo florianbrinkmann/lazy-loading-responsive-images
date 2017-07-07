@@ -509,7 +509,7 @@ img.lazyload {
 	 * Adds inline script.
 	 */
 	public function add_inline_script() {
-		wp_add_inline_script( 'lazysizes', "if (document.documentElement.classList.contains('js')) {
+		wp_add_inline_script( 'lazysizes', "if (!document.documentElement.classList.contains('js')) {
 			document.documentElement.classList.add('js');
 		}
 		" );

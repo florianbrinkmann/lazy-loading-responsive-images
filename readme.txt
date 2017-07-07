@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
 Tested up to: 4.8
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 
 == Description ==
 
@@ -19,6 +19,12 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.3 — 07.07.2017 =
+
+**Fixed**
+
+* Wrong check for js class, which causes hidden images if nothing else added a js class…
 
 = 3.1.2 =
 
