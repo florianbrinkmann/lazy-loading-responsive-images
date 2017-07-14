@@ -41,7 +41,7 @@ class Settings {
 		/**
 		 * Register customizer control and setting for the theme update URL.
 		 */
-		add_action( 'customize_register', [ $this, 'customize_register' ], 12 );
+		add_action( 'customize_register', array( $this, 'customize_register' ), 12 );
 	}
 
 	/**
@@ -53,27 +53,27 @@ class Settings {
 		/**
 		 * Add section.
 		 */
-		$wp_customize->add_section( 'lazy_load_responsive_images_options', [
+		$wp_customize->add_section( 'lazy_load_responsive_images_options', array(
 			'title' => __( 'Lazy loading options', 'lazy-loading-responsive-images' ),
-		] );
+		) );
 
 		/**
 		 * Add setting for URL.
 		 */
-		$wp_customize->add_setting( 'lazy_load_responsive_images_disabled_classes', [
+		$wp_customize->add_setting( 'lazy_load_responsive_images_disabled_classes', array(
 			'type'              => 'option',
 			'default'           => '',
-			'sanitize_callback' => [ $this->helpers, 'sanitize_class_name_list' ],
-		] );
+			'sanitize_callback' => array( $this->helpers, 'sanitize_class_name_list' ),
+		) );
 
 		/**
 		 * Add control for update URL.
 		 */
-		$wp_customize->add_control( 'lazy_load_responsive_images_disabled_classes', [
+		$wp_customize->add_control( 'lazy_load_responsive_images_disabled_classes', array(
 			'priority' => 1,
 			'type'     => 'text',
 			'section'  => 'lazy_load_responsive_images_options',
 			'label'    => __( 'Exclude images with the following class names (separate multiple class names with comma).', 'lazy-loading-responsive-images' ),
-		] );
+		) );
 	}
 }

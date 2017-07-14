@@ -72,42 +72,42 @@ class Plugin {
 		/**
 		 * Adds lazyload class to content images and adds noscript element.
 		 */
-		add_filter( 'the_content', [ $this, 'modify_content_images' ], 20 );
+		add_filter( 'the_content', array( $this, 'modify_content_images' ), 20 );
 
 		/**
 		 * Adds lazyload class to post thumbnails and gallery images.
 		 */
-		add_filter( 'wp_get_attachment_image_attributes', [ $this, 'filter_attachment_image_attributes' ], 20, 3 );
+		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 20, 3 );
 
 		/**
 		 * Adds noscript element to post thumbnail.
 		 */
-		add_filter( 'post_thumbnail_html', [ $this, 'add_noscript_element_to_post_thumbnail_markup' ], 10, 1 );
+		add_filter( 'post_thumbnail_html', array( $this, 'add_noscript_element_to_post_thumbnail_markup' ), 10, 1 );
 
 		/**
 		 * Enqueues scripts and styles.
 		 */
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ], 20 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_script' ), 20 );
 
 		/**
 		 * Adds inline style.
 		 */
-		add_action( 'wp_head', [ $this, 'add_inline_style' ] );
+		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
 
 		/**
 		 * Adds inline script.
 		 */
-		add_action( 'wp_footer', [ $this, 'add_inline_script' ] );
+		add_action( 'wp_footer', array( $this, 'add_inline_script' ) );
 
 		/**
 		 * Load the language files
 		 */
-		add_action( 'plugins_loaded', [ $this, 'load_translation' ] );
+		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
 		/**
 		 * Action on uninstall.
 		 */
-		register_uninstall_hook( __FILE__, [ 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin', 'uninstall' ] );
+		register_uninstall_hook( __FILE__, array( 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin', 'uninstall' ) );
 	}
 
 	/**
