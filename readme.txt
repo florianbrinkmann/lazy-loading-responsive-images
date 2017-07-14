@@ -24,7 +24,7 @@ You can disable lazy loading for specific image classes by adding them in the cu
 
 **Fixed**
 
-* Replaced [] array syntax with traditional one, so it works again for PHP 5.3.
+* Replaced [] array syntax with traditional one, so it works with PHP 5.3 again.
 
 = 3.1.3 — 07.07.2017 =
 
