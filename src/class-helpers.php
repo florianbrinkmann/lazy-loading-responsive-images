@@ -21,10 +21,19 @@ class Helpers {
 	 * @return bool true if is admin request, otherwise false.
 	 */
 	public function is_admin_request() {
-		if ( function_exists( 'wp_doing_ajax' ) ) {
-			return is_admin() && ! wp_doing_ajax();
+		/**
+		 * Get admin URL and referrer.
+		 */
+		$admin_url = strtolower( admin_url() );
+		$referrer  = strtolower( wp_get_referer() );
+
+		/**
+		 * Check if the referrer does not begin with the admin URL.
+		 */
+		if ( 0 !== strpos( $referrer, $admin_url ) ) {
+			return false;
 		} else {
-			return is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX );
+			return true;
 		}
 	}
 
