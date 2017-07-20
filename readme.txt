@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
 Tested up to: 4.8
-Stable tag: 3.1.4
+Stable tag: 3.1.5
 
 == Description ==
 
@@ -19,6 +19,13 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.5 — 20.07.2017 =
+
+**Fixed**
+
+* Further issues with PHP 5.3.
+* Issue with lazy loaded post thumbnail in the backend.
 
 = 3.1.4 — 14.07.2017 =
 
