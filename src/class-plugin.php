@@ -165,9 +165,14 @@ class Plugin {
 			$result = array_intersect( $this->disabled_classes, $img_classes );
 
 			/**
+			 * Filter empty values.
+			 */
+			$result = array_filter( $result );
+
+			/**
 			 * Check if we have no result.
 			 */
-			if ( empty( array_filter( $result ) ) ) {
+			if ( empty( $result ) ) {
 				/**
 				 * Check if the img not already has the lazyload class.
 				 */
@@ -335,9 +340,14 @@ class Plugin {
 		$result = array_intersect( $this->disabled_classes, $img_classes );
 
 		/**
+		 * Remove empty values from array.
+		 */
+		$result = array_filter( $result );
+
+		/**
 		 * Check if we have no result.
 		 */
-		if ( empty( array_filter( $result ) ) ) {
+		if ( empty( $result ) ) {
 			/**
 			 * Check for sizes attribute.
 			 */
@@ -461,9 +471,14 @@ class Plugin {
 		$result = array_intersect( $this->disabled_classes, explode( ' ', $classes ) );
 
 		/**
+		 * Remove empty values from array.
+		 */
+		$result = array_filter( $result );
+
+		/**
 		 * Check if we have no result.
 		 */
-		if ( empty( array_filter( $result ) ) ) {
+		if ( empty( $result ) ) {
 			/**
 			 * Add the noscript element.
 			 */
