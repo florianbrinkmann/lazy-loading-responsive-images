@@ -324,7 +324,7 @@ class Plugin {
 		/**
 		 * Check if is backend site request.
 		 */
-		if ( $this->helpers->is_admin_request() ) {
+		if ( true === $this->helpers->is_admin_request() ) {
 			return $attr;
 		}
 
