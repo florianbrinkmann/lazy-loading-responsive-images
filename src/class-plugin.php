@@ -140,6 +140,13 @@ class Plugin {
 		}
 
 		/**
+		 * Check for AMP page.
+		 */
+		if ( true === $this->helpers->is_amp_page() ) {
+			return $content;
+		}
+
+		/**
 		 * Create new SmartDomDocument object.
 		 */
 		$dom = new SmartDomDocument();
@@ -329,6 +336,13 @@ class Plugin {
 		}
 
 		/**
+		 * Check for AMP page.
+		 */
+		if ( true === $this->helpers->is_amp_page() ) {
+			return $attr;
+		}
+
+		/**
 		 * Get the image classes as an array.
 		 */
 		$img_classes = explode( ' ', $attr['class'] );
@@ -431,6 +445,13 @@ class Plugin {
 		 * Check if this is a request at the backend.
 		 */
 		if ( $this->helpers->is_admin_request() ) {
+			return $html;
+		}
+
+		/**
+		 * Check for AMP page.
+		 */
+		if ( true === $this->helpers->is_amp_page() ) {
 			return $html;
 		}
 

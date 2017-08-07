@@ -64,6 +64,19 @@ class Helpers {
 	}
 
 	/**
+	 * Checks if we are on an AMP page generated from the Automattic plugin.
+	 *
+	 * @return bool true if is amp page, false otherwise.
+	 */
+	public function is_amp_page() {
+		if ( function_exists( 'is_amp_endpoint' ) && true === is_amp_endpoint() ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Sanitize comma separated list of class names
 	 *
 	 * @param string $class_names Comma separated list of HTML class names.

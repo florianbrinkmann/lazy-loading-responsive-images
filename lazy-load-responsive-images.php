@@ -3,9 +3,9 @@
  * Plugin Name: Lazy Loading Responsive Images
  * Plugin URI: https://florianbrinkmann.com/en/3350/responsive-images-and-lazy-loading-in-wordpress/
  * Description: Lazy loading Images plugin that works with responsive images introduced in WordPress 4.4.
- * Version: 3.1.5
+ * Version: 3.1.6
  * Author: Florian Brinkmann, MarcDK
- * Author URI: http://www.marc.tv
+ * Author URI: https://florianbrinkmann.com/en/
  * License: GPL v2 - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Text Domain: lazy-loading-responsive-images
  *
