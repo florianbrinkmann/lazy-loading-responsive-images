@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
-Tested up to: 4.8
-Stable tag: 3.1.5
+Tested up to: 4.8.1
+Stable tag: 3.1.6
 
 == Description ==
 
