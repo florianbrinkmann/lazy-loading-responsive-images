@@ -69,6 +69,9 @@ class Helpers {
 	 * @return bool true if is amp page, false otherwise.
 	 */
 	public function is_amp_page() {
+		/**
+		 * Check if Automattic’s AMP plugin is active and we are on an AMP endpoint.
+		 */
 		if ( function_exists( 'is_amp_endpoint' ) && true === is_amp_endpoint() ) {
 			return true;
 		} else {
