@@ -1,9 +1,9 @@
 === Lazy Loading Responsive Images ===
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
-Requires at least: 3.0
+Requires at least: 4.5
 Tested up to: 4.8.1
-Stable tag: 3.1.7
+Stable tag: 3.1.8
 
 == Description ==
 
@@ -19,6 +19,12 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.8 – 10.08.2017 =
+
+**Fixed**
+
+* Bump »Requires at least« to 4.5 because using wp_add_inline_script() since a few versions.
 
 = 3.1.7 – 10.08.2017 =
 
