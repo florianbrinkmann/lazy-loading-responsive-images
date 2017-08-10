@@ -305,7 +305,7 @@ class Plugin {
 					/**
 					 * Save the content.
 					 */
-					$content = $dom->saveHTML();
+					$content = $dom->saveHTMLExact();
 				} // End if().
 			} // End if().
 		} // End foreach().

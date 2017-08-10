@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 3.0
 Tested up to: 4.8.1
-Stable tag: 3.1.6
+Stable tag: 3.1.7
 
 == Description ==
 
@@ -19,6 +19,12 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.7 – 10.08.2017 =
+
+**Fixed**
+
+* Use saveHTMLExact() method from SmartDomDocument to prevent doctype, html and body element to be added to the content.
 
 = 3.1.6 – 07.08.2017 =
 
