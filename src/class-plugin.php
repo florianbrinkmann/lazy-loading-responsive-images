@@ -166,6 +166,15 @@ class Plugin {
 			$img_classes = explode( ' ', $img->getAttribute( 'class' ) );
 
 			/**
+			 * Check if this is a WooCommerce cart image. If so,
+			 * the other methods already added the markup so we skip
+			 * it here. Otherwise we would get the image markup twice.
+			 */
+			if ( in_array( 'attachment-shop_thumbnail', $img_classes, true ) ) {
+				continue;
+			} // End if().
+
+			/**
 			 * Check for intersection with array of classes, which should
 			 * not be lazy loaded.
 			 */
