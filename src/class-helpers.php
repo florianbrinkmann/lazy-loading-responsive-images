@@ -22,11 +22,11 @@ class Helpers {
 	 */
 	public function is_admin_request() {
 		/**
-		 * Get current URL.
+		 * Get current URL. From wp_admin_canonical_url().
 		 *
-		 * @link https://wordpress.stackexchange.com/a/126534
+		 * @link https://stackoverflow.com/a/29976742/7774451
 		 */
-		$current_url = home_url( add_query_arg( null, null ) );
+		$current_url = set_url_scheme( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
 
 		/**
 		 * Get admin URL and referrer.
