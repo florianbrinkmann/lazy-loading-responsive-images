@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
 Requires at least: 4.5
 Tested up to: 4.8.1
-Stable tag: 3.1.9
+Stable tag: 3.1.10
 
 == Description ==
 
@@ -19,6 +19,12 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.10 – 17.09.2017 =
+
+**Fixed**
+
+* is_admin_request() check does not work for subdirectory installs.
 
 = 3.1.9 – 25.08.2017 =
 
