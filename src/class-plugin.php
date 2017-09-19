@@ -75,12 +75,12 @@ class Plugin {
 	 */
 	public function init() {
 		/**
-		 * Adds lazyload class to content images and adds noscript element.
+		 * Adds lazyload markup and noscript element to content images.
 		 */
 		add_filter( 'the_content', array( $this, 'modify_content_images' ), 200 );
 
 		/**
-		 * Adds lazyload class noscript element to post thumbnail.
+		 * Adds lazyload markup and noscript element to post thumbnail.
 		 */
 		add_filter( 'post_thumbnail_html', array( $this, 'modify_content_images' ), 10, 1 );
 
