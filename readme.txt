@@ -1,15 +1,23 @@
 === Lazy Loading Responsive Images ===
 Contributors: FlorianBrinkmann, MarcDK
-Tags: lazysizes, unveil, ricg, responsive, lazy, performance, images
+Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
 Tested up to: 4.8.1
-Stable tag: 3.1.10
+Stable tag: 3.1.11
+Requires PHP: 5.3
 
 == Description ==
 
-Lazy loading Images plugin that works with responsive images.
-Compatible with »RICG Responsive Images« and works with responsive images introduced in WordPress 4.4.
-Based on lazysizes.js
+Lazy loading images plugin that works with the responsive images feature introduced in WordPress 4.4. Based on lazysizes.js.
+
+Lazy loads:
+
+* Images inserted in posts, pages, Custom Post Types, …
+* Post thumbnails.
+
+The plugin adds a `noscript` element as fallback for disabled JavaScript.
+
+The plugin does not lazy load CSS background images. It also does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback be added.
 
 You can disable lazy loading for specific image classes by adding them in the customizer (*Appearance* › *Customize* › *Lazy loading options*).
 
@@ -19,6 +27,20 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.11 – 19.09.2017 =
+
+**Changed**
+
+* Added details to the readme, what images are lazy loaded.
+
+**Fixed**
+
+* Now also adds a `noscript` element for gallery images.
+
+**Removed**
+
+* No lazy loading for images that are added via `wp_get_attachment_image()`, because for those image cannot be added a `noscript` fallback.
 
 = 3.1.10 – 17.09.2017 =
 

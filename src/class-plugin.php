@@ -68,21 +68,21 @@ class Plugin {
 		 * Get the disabled classes and save in property.
 		 */
 		$this->disabled_classes = explode( ',', get_option( 'lazy_load_responsive_images_disabled_classes' ) );
+	}
 
+	/**
+	 * Runs the filters and actions.
+	 */
+	public function init() {
 		/**
 		 * Adds lazyload class to content images and adds noscript element.
 		 */
-		add_filter( 'the_content', array( $this, 'modify_content_images' ), 20 );
+		add_filter( 'the_content', array( $this, 'modify_content_images' ), 200 );
 
 		/**
-		 * Adds lazyload class to post thumbnails and gallery images.
+		 * Adds lazyload class noscript element to post thumbnail.
 		 */
-		add_filter( 'wp_get_attachment_image_attributes', array( $this, 'filter_attachment_image_attributes' ), 20, 3 );
-
-		/**
-		 * Adds noscript element to post thumbnail.
-		 */
-		add_filter( 'post_thumbnail_html', array( $this, 'add_noscript_element_to_post_thumbnail_markup' ), 10, 1 );
+		add_filter( 'post_thumbnail_html', array( $this, 'modify_content_images' ), 10, 1 );
 
 		/**
 		 * Enqueues scripts and styles.
@@ -320,207 +320,6 @@ class Plugin {
 		} // End foreach().
 
 		return $content;
-	}
-
-	/**
-	 * Add lazyload class to post thumbnails and gallery images.
-	 *
-	 * @param array $attr Array with image attributes.
-	 *
-	 * @return array Attribute array.
-	 */
-	public function filter_attachment_image_attributes( $attr ) {
-		/**
-		 * Check if is feed site.
-		 */
-		if ( is_feed() ) {
-			return $attr;
-		}
-
-		/**
-		 * Check if is backend site request.
-		 */
-		if ( true === $this->helpers->is_admin_request() ) {
-			return $attr;
-		}
-
-		/**
-		 * Check for AMP page.
-		 */
-		if ( true === $this->helpers->is_amp_page() ) {
-			return $attr;
-		}
-
-		/**
-		 * Get the image classes as an array.
-		 */
-		$img_classes = explode( ' ', $attr['class'] );
-
-		/**
-		 * Check for intersection with array of classes, which should
-		 * not be lazy loaded.
-		 */
-		$result = array_intersect( $this->disabled_classes, $img_classes );
-
-		/**
-		 * Remove empty values from array.
-		 */
-		$result = array_filter( $result );
-
-		/**
-		 * Check if we have no result.
-		 */
-		if ( empty( $result ) ) {
-			/**
-			 * Check for sizes attribute.
-			 */
-			if ( isset( $attr['sizes'] ) ) {
-				/**
-				 * Get the sizes value.
-				 */
-				$data_sizes = $attr['sizes'];
-
-				/**
-				 * Unset the sizes attribute.
-				 */
-				unset( $attr['sizes'] );
-
-				/**
-				 * Add data-sizes attribute.
-				 */
-				$attr['data-sizes'] = $data_sizes;
-			} // End if().
-
-			/**
-			 * Check for srcset attribute.
-			 */
-			if ( isset( $attr['srcset'] ) ) {
-				/**
-				 * Get srcset value.
-				 */
-				$data_srcset = $attr['srcset'];
-
-				/**
-				 * Unset srcset attribute.
-				 */
-				unset( $attr['srcset'] );
-
-				/**
-				 * Set data-srcset attribute.
-				 */
-				$attr['data-srcset'] = $data_srcset;
-
-				/**
-				 * Set data-noscript and data-src attribute.
-				 */
-				$attr['data-noscript'] = $attr['src'];
-				$attr['data-src']      = $attr['src'];
-
-				/**
-				 * Unset src attribute.
-				 */
-				unset( $attr['src'] );
-			} // End if().
-
-			$attr['class'] .= ' lazyload';
-		} // End if().
-
-		return $attr;
-	}
-
-	/**
-	 * Add the noscript element to post thumbnail markup.
-	 *
-	 * @param string $html Post thumbnail HTML.
-	 *
-	 * @return string Post thumbnail HTML.
-	 */
-	public function add_noscript_element_to_post_thumbnail_markup( $html ) {
-		/**
-		 * Check if we have no HTML.
-		 */
-		if ( empty( $html ) ) {
-			return $html;
-		}
-
-		/**
-		 * Check if we are on a feed page.
-		 */
-		if ( is_feed() ) {
-			return $html;
-		}
-
-		/**
-		 * Check if this is a request at the backend.
-		 */
-		if ( $this->helpers->is_admin_request() ) {
-			return $html;
-		}
-
-		/**
-		 * Check for AMP page.
-		 */
-		if ( true === $this->helpers->is_amp_page() ) {
-			return $html;
-		}
-
-		/**
-		 * New SmartDomDocument object.
-		 */
-		$dom = new SmartDomDocument();
-
-		/**
-		 * Load HTML.
-		 */
-		$dom->loadHTML( $html );
-
-		/**
-		 * Loop the image.
-		 */
-		foreach ( $dom->getElementsByTagName( 'img' ) as $img ) {
-			/**
-			 * Save src from data-noscript.
-			 */
-			$src = $img->getAttribute( 'data-noscript' );
-
-			/**
-			 * Save classes string.
-			 */
-			$classes = $img->getAttribute( 'class' );
-		}
-
-		/**
-		 * Remove lazyload class.
-		 */
-		$classes = str_replace( 'lazyload', '', $classes );
-
-		/**
-		 * Check for intersection with array of classes, which should
-		 * not be lazy loaded.
-		 */
-		$result = array_intersect( $this->disabled_classes, explode( ' ', $classes ) );
-
-		/**
-		 * Remove empty values from array.
-		 */
-		$result = array_filter( $result );
-
-		/**
-		 * Check if we have no result.
-		 */
-		if ( empty( $result ) ) {
-			/**
-			 * Add the noscript element.
-			 */
-			$noscript_element = "<noscript><img src='" . $src . "' class='" . $classes . "'></noscript>";
-
-			/**
-			 * Save it inside HTML-
-			 */
-			$html .= $noscript_element;
-		}
-
-		return $html;
 	}
 
 	/**
