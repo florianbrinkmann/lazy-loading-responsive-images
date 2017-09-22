@@ -32,7 +32,7 @@ You can disable lazy loading for specific image classes by adding them in the cu
 
 **Fixed**
 
-* Added back the support for data-no-lazyload attr (was removed in 3.1.0 without keeping backwards compatibility in mind, sorry).
+* Added back the support for `data-no-lazyload` attr to disable lazy loading for specific images (was removed in 3.1.0 without keeping backwards compatibility in mind, sorry).
 
 = 3.1.11 – 19.09.2017 =
 
