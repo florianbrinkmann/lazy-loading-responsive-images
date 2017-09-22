@@ -190,6 +190,13 @@ class Plugin {
 			 */
 			if ( empty( $result ) ) {
 				/**
+				 * Check if the image has the data-no-lazyload attr.
+				 */
+				if ( $img->hasAttribute( 'data-no-lazyload' ) ) {
+					continue;
+				} // End if().
+
+				/**
 				 * Check if the img not already has the lazyload class.
 				 */
 				if ( strpos( $img->getAttribute( 'class' ), 'lazyload' ) === false ) {

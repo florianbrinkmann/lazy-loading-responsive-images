@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
-Tested up to: 4.8.1
-Stable tag: 3.1.11
+Tested up to: 4.8.2
+Stable tag: 3.1.12
 Requires PHP: 5.3
 
 == Description ==
@@ -28,6 +28,12 @@ You can disable lazy loading for specific image classes by adding them in the cu
 
 == Changelog ==
 
+= 3.1.12 – 22.09.2017 =
+
+**Fixed**
+
+* Added back the support for data-no-lazyload attr to keep backwards compatibility.
+
 = 3.1.11 – 19.09.2017 =
 
 **Changed**
@@ -40,7 +46,7 @@ You can disable lazy loading for specific image classes by adding them in the cu
 
 **Removed**
 
-* No lazy loading for images that are added via `wp_get_attachment_image()`, because for those image cannot be added a `noscript` fallback.
+* No lazy loading for images that are added via `wp_get_attachment_image()`, because for those images cannot be added a `noscript` fallback.
 
 = 3.1.10 – 17.09.2017 =
 
