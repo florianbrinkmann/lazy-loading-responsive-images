@@ -19,7 +19,7 @@ The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
 The plugin does not lazy load CSS background images. It also does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback be added.
 
-You can disable lazy loading for specific image classes by adding them in the customizer (*Appearance* › *Customize* › *Lazy loading options*).
+You can disable lazy loading for specific image classes by adding them in the customizer (*Appearance* › *Customize* › *Lazy loading options*). Or use the data-no-lazyload attribute.
 
 == Installation ==
 
