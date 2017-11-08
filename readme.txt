@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
-Tested up to: 4.8.2
-Stable tag: 3.1.12
+Tested up to: 4.9
+Stable tag: 3.1.13
 Requires PHP: 5.3
 
 == Description ==
@@ -27,6 +27,13 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.13 – 08.11.2017 =
+
+**Changed**
+
+* Updated lazysizes to 4.0.1.
+* Updated »Tested up to« version to 4.9.0 in readme.
 
 = 3.1.12 – 22.09.2017 =
 
