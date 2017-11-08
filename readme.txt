@@ -33,7 +33,7 @@ You can disable lazy loading for specific image classes by adding them in the cu
 **Changed**
 
 * Updated lazysizes to 4.0.1.
-* Updated »Tested up to« version to 4.9.0 in readme.
+* Updated »Tested up to« version to 4.9 in readme.
 
 = 3.1.12 – 22.09.2017 =
 
