@@ -139,6 +139,9 @@ class Plugin {
 
 				// Check if the img not already has the lazyload class.
 				if ( strpos( $img->getAttribute( 'class' ), 'lazyload' ) === false ) {
+					// Save the image original attributes.
+					$img_attributes = $img->attributes;
+
 					// Check if the image has sizes and srcset attribute.
 					if ( $img->hasAttribute( 'sizes' ) && $img->hasAttribute( 'srcset' ) ) {
 						// Get sizes and srcset value.
@@ -190,40 +193,8 @@ class Plugin {
 					// Remove the src attribute.
 					$img->removeAttribute( 'src' );
 
-					/**
-					 * Create noscript element.
-					 */
-					$noscript = $dom->createElement( 'noscript' );
-
-					/**
-					 * Insert it before the img node.
-					 */
-					$noscript_node = $img->parentNode->insertBefore( $noscript, $img );
-
-					/**
-					 * Create img element.
-					 */
-					$noscript_img = $dom->createElement( 'IMG' );
-
-					/**
-					 * Remove lazyload class from classes string for noscript element.
-					 */
-					$classes = str_replace( 'lazyload', '', $classes );
-
-					/**
-					 * Set class value.
-					 */
-					$noscript_img->setAttribute( 'class', $classes );
-
-					/**
-					 * Add img node to noscript node.
-					 */
-					$new_img = $noscript_node->appendChild( $noscript_img );
-
-					/**
-					 * Set src value.
-					 */
-					$new_img->setAttribute( 'src', $src );
+					// Add noscript element.
+					$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG', $classes, $src );
 
 					// Save the content.
 					$content = $dom->saveHTMLExact();
