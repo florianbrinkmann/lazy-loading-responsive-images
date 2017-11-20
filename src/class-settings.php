@@ -64,6 +64,22 @@ class Settings {
 			'label'    => __( 'Exclude elements with the following class names (separate multiple class names with comma).',
 				'lazy-loading-responsive-images' ),
 		) );
+
+		// Add setting to enable lazy loading for iframes.
+		$wp_customize->add_setting( 'lazy_load_responsive_images_enable_for_iframes', array(
+			'type'              => 'option',
+			'default'           => 0,
+			'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
+		) );
+
+		// Add control to enable lazy loading for iframes.
+		$wp_customize->add_control( 'lazy_load_responsive_images_enable_for_iframes', array(
+			'priority' => 1,
+			'type'     => 'checkbox',
+			'section'  => 'lazy_load_responsive_images_options',
+			'label'    => __( 'Enable lazy loading for iframes.',
+				'lazy-loading-responsive-images' ),
+		) );
 		) );
 	}
 }

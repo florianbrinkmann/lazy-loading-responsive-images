@@ -109,4 +109,17 @@ class Helpers {
 			return '';
 		}
 	}
+
+	/**
+	 * Sanitize comma separated list of class names
+	 *
+	 * @link https://github.com/WPTRT/code-examples/blob/master/customizer/sanitization-callbacks.php
+	 *
+	 * @param bool $checked Whether the checkbox is checked.
+	 *
+	 * @return bool Whether the checkbox is checked.
+	 */
+	public function sanitize_checkbox( $checked ) {
+		return ( ( isset( $checked ) && true == $checked ) ? true : false );
+	}
 }

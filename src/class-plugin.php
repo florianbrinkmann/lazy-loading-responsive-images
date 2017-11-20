@@ -240,7 +240,119 @@ class Plugin {
 			} // End if().
 		} // End foreach().
 
+		// Get option for iframe lazyloading and check if it is enabled.
+		$lazy_load_iframes = get_option( 'lazy_load_responsive_images_enable_for_iframes', 0 );
+		if ( '1' === $lazy_load_iframes ) {
+			// Loop through the iframe elements.
+			foreach ( $dom->getElementsByTagName( 'iframe' ) as $iframe ) {
+				// Get the iframe classes as an array.
+				$iframe_classes = explode( ' ', $iframe->getAttribute( 'class' ) );
+
+				// Check for intersection with array of classes, which should
+				// not be lazy loaded.
+				$result = array_intersect( $this->disabled_classes, $iframe_classes );
+
+				// Filter empty values.
+				$result = array_filter( $result );
+
+				// Check if we have no result.
+				if ( empty( $result ) ) {
+					// Check if the iframe has the data-no-lazyload attr.
+					if ( $iframe->hasAttribute( 'data-no-lazyload' ) ) {
+						continue;
+					} // End if().
+
+					// Save the image original attributes.
+					$iframe_attributes = $iframe->attributes;
+
+					// Check if the img not already has the lazyload class.
+					if ( strpos( $iframe->getAttribute( 'class' ), 'lazyload' ) === false ) {
+						// Check if the iframe has a src attribute.
+						if ( $iframe->hasAttribute( 'src' ) ) {
+							// Get src attribute.
+							$src = $iframe->getAttribute( 'src' );
+
+							// Set data-src value.
+							$iframe->setAttribute( 'data-src', $src );
+						} else {
+							continue;
+						} // End if().
+
+						// Get the classes.
+						$classes = $iframe->getAttribute( 'class' );
+
+						// Add lazyload class.
+						$classes .= " lazyload";
+
+						// Set the class string.
+						$iframe->setAttribute( 'class', $classes );
+
+						// Remove the src attribute.
+						$iframe->removeAttribute( 'src' );
+
+						// Add noscript element.
+						$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes,
+							$src );
+
+						// Save the content.
+						$content = $dom->saveHTMLExact();
+					} // End if().
+				} // End if().
+			} // End foreach().
+		}
+
 		return $content;
+	}
+
+	/**
+	 * Adds noscript element before DOM node.
+	 *
+	 * @param array            $orig_elem_attr Array of attribute objects of the original element.
+	 * @param SmartDomDocument $dom            SmartDomDocument() object of the HTML.
+	 * @param DOMNodeList      $elem           Single DOM node.
+	 * @param string           $tag_name       Tag name which needs to be created inside the noscript element.
+	 * @param array            $classes        Array of the element’s classes.
+	 * @param string           $src            Value of the src attribute.
+	 *
+	 * @return SmartDomDocument The updates DOM.
+	 */
+	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name, $classes, $src ) {
+		$noscript = $dom->createElement( 'noscript' );
+
+		// Insert it before the img node.
+		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
+
+		// Create element.
+		$noscript_iframe = $dom->createElement( $tag_name );
+
+		// Remove lazyload class from classes string for noscript element.
+		$classes = str_replace( 'lazyload', '', $classes );
+
+		// Set class value.
+		$noscript_iframe->setAttribute( 'class', $classes );
+
+		// Add the other attributes of the original element.
+		foreach ( $orig_elem_attr as $attr ) {
+			// Save name and value.
+			$name  = $attr->nodeName;
+			$value = $attr->nodeValue;
+
+			// Check if it is class attribute and continue.
+			if ( 'class' === $name ) {
+				continue;
+			}
+
+			// Set attribute to noscript image.
+			$noscript_iframe->setAttribute( $name, $value );
+		}
+
+		// Add img node to noscript node.
+		$new_iframe = $noscript_node->appendChild( $noscript_iframe );
+
+		// Set src value.
+		$new_iframe->setAttribute( 'src', $src );
+
+		return $dom;
 	}
 
 	/**
@@ -260,11 +372,13 @@ class Plugin {
 	 * echo it.
 	 */
 	public function add_inline_style() {
-		echo '<style>.js img.lazyload {
+		echo '<style>.js img.lazyload,
+ .js iframe.lazyload{
 			display: block;
 		}
 
-img.lazyload {
+img.lazyload,
+iframe.lazyload {
 			display: none;
 		}</style>';
 	}
@@ -292,5 +406,6 @@ img.lazyload {
 	public function uninstall() {
 		// Delete customizer option.
 		delete_option( 'lazy_load_responsive_images_disabled_classes' );
+		delete_option( 'lazy_load_responsive_images_enable_for_iframes' );
 	}
 }
