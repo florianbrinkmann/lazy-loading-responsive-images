@@ -20,9 +20,7 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-/**
- * Include plugin class.
- */
+// Include plugin class.
 require_once 'src/class-plugin.php';
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Plugin as LazyLoadResponsiveImages;
@@ -31,12 +29,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * Create object.
- */
+// Create object.
 $plugin = new LazyLoadResponsiveImages();
 
-/**
- * Init the plugin,
- */
+// Init the plugin,
 $plugin->init();

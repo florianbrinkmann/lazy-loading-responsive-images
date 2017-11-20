@@ -7,9 +7,7 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-/**
- * Include helpers class.
- */
+// Include helpers class.
 require_once 'class-helpers.php';
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
@@ -33,14 +31,10 @@ class Settings {
 	 * Settings constructor.
 	 */
 	public function __construct() {
-		/**
-		 * Set helpers.
-		 */
+		// Set helpers.
 		$this->helpers = new Helpers();
 
-		/**
-		 * Register customizer control and setting for the theme update URL.
-		 */
+		// Register customizer control and setting for the theme update URL.
 		add_action( 'customize_register', array( $this, 'customize_register' ), 12 );
 	}
 
@@ -50,30 +44,26 @@ class Settings {
 	 * @param object $wp_customize WP_Customze object.
 	 */
 	public function customize_register( $wp_customize ) {
-		/**
-		 * Add section.
-		 */
+		// Add section.
 		$wp_customize->add_section( 'lazy_load_responsive_images_options', array(
 			'title' => __( 'Lazy loading options', 'lazy-loading-responsive-images' ),
 		) );
 
-		/**
-		 * Add setting for URL.
-		 */
+		// Add setting for classes to disable lazy loading for.
 		$wp_customize->add_setting( 'lazy_load_responsive_images_disabled_classes', array(
 			'type'              => 'option',
 			'default'           => '',
 			'sanitize_callback' => array( $this->helpers, 'sanitize_class_name_list' ),
 		) );
 
-		/**
-		 * Add control for update URL.
-		 */
+		// Add control for classes to disable lazy loading for.
 		$wp_customize->add_control( 'lazy_load_responsive_images_disabled_classes', array(
 			'priority' => 1,
 			'type'     => 'text',
 			'section'  => 'lazy_load_responsive_images_options',
-			'label'    => __( 'Exclude images with the following class names (separate multiple class names with comma).', 'lazy-loading-responsive-images' ),
+			'label'    => __( 'Exclude elements with the following class names (separate multiple class names with comma).',
+				'lazy-loading-responsive-images' ),
+		) );
 		) );
 	}
 }

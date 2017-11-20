@@ -7,23 +7,17 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-/**
- * Include helpers class.
- */
+// Include helpers class.
 require_once 'class-helpers.php';
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
 
-/**
- * Include Settings class
- */
+// Include Settings class.
 require_once 'class-settings.php';
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
 
-/**
- * Include SmartDomDocument class.
- */
+// Include SmartDomDocument class.
 require_once 'class-smart-dom-document.php';
 
 use archon810\SmartDomDocument as SmartDomDocument;
@@ -54,19 +48,13 @@ class Plugin {
 	 * Plugin constructor.
 	 */
 	public function __construct() {
-		/**
-		 * Init customizer settings.
-		 */
+		// Init customizer settings.
 		new Settings();
 
-		/**
-		 * Set helpers.
-		 */
+		// Set helpers.
 		$this->helpers = new Helpers();
 
-		/**
-		 * Get the disabled classes and save in property.
-		 */
+		// Get the disabled classes and save in property.
 		$this->disabled_classes = explode( ',', get_option( 'lazy_load_responsive_images_disabled_classes' ) );
 	}
 
@@ -74,39 +62,25 @@ class Plugin {
 	 * Runs the filters and actions.
 	 */
 	public function init() {
-		/**
-		 * Adds lazyload markup and noscript element to content images.
-		 */
+		// Adds lazyload markup and noscript element to content images.
 		add_filter( 'the_content', array( $this, 'modify_content_images' ), 200 );
 
-		/**
-		 * Adds lazyload markup and noscript element to post thumbnail.
-		 */
+		// Adds lazyload markup and noscript element to post thumbnail.
 		add_filter( 'post_thumbnail_html', array( $this, 'modify_content_images' ), 10, 1 );
 
-		/**
-		 * Enqueues scripts and styles.
-		 */
+		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_script' ), 20 );
 
-		/**
-		 * Adds inline style.
-		 */
+		// Adds inline style.
 		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
 
-		/**
-		 * Adds inline script.
-		 */
+		// Adds inline script.
 		add_action( 'wp_footer', array( $this, 'add_inline_script' ) );
 
-		/**
-		 * Load the language files
-		 */
+		// Load the language files
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
-		/**
-		 * Action on uninstall.
-		 */
+		// Action on uninstall.
 		register_uninstall_hook( __FILE__, array( 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin', 'uninstall' ) );
 	}
 
@@ -118,51 +92,35 @@ class Plugin {
 	 * @return string Entry content.
 	 */
 	public function modify_content_images( $content ) {
-		/**
-		 * Check if we have no content.
-		 */
+		// Check if we have no content.
 		if ( empty( $content ) ) {
 			return $content;
 		}
 
-		/**
-		 * Check if we are on a feed page.
-		 */
+		// Check if we are on a feed page.
 		if ( is_feed() ) {
 			return $content;
 		}
 
-		/**
-		 * Check if this is a request in the backend.
-		 */
+		// Check if this is a request in the backend.
 		if ( $this->helpers->is_admin_request() ) {
 			return $content;
 		}
 
-		/**
-		 * Check for AMP page.
-		 */
+		// Check for AMP page.
 		if ( true === $this->helpers->is_amp_page() ) {
 			return $content;
 		}
 
-		/**
-		 * Create new SmartDomDocument object.
-		 */
+		// Create new SmartDomDocument object.
 		$dom = new SmartDomDocument();
 
-		/**
-		 * Load the HTML.
-		 */
+		// Load the HTML.
 		$dom->loadHTML( $content );
 
-		/**
-		 * Loop through the image elements.
-		 */
+		// Loop through the image elements.
 		foreach ( $dom->getElementsByTagName( 'img' ) as $img ) {
-			/**
-			 * Get the image classes as an array.
-			 */
+			// Get the image classes as an array.
 			$img_classes = explode( ' ', $img->getAttribute( 'class' ) );
 
 			/**
@@ -174,113 +132,71 @@ class Plugin {
 				continue;
 			} // End if().
 
-			/**
-			 * Check for intersection with array of classes, which should
-			 * not be lazy loaded.
-			 */
+			// Check for intersection with array of classes, which should
+			// not be lazy loaded.
 			$result = array_intersect( $this->disabled_classes, $img_classes );
 
-			/**
-			 * Filter empty values.
-			 */
+			// Filter empty values.
 			$result = array_filter( $result );
 
-			/**
-			 * Check if we have no result.
-			 */
+			// Check if we have no result.
 			if ( empty( $result ) ) {
-				/**
-				 * Check if the image has the data-no-lazyload attr.
-				 */
+				// Check if the image has the data-no-lazyload attr.
 				if ( $img->hasAttribute( 'data-no-lazyload' ) ) {
 					continue;
 				} // End if().
 
-				/**
-				 * Check if the img not already has the lazyload class.
-				 */
+				// Check if the img not already has the lazyload class.
 				if ( strpos( $img->getAttribute( 'class' ), 'lazyload' ) === false ) {
-					/**
-					 * Check if the image has sizes and srcset attribute.
-					 */
+					// Check if the image has sizes and srcset attribute.
 					if ( $img->hasAttribute( 'sizes' ) && $img->hasAttribute( 'srcset' ) ) {
-						/**
-						 * Get sizes and srcset value.
-						 */
+						// Get sizes and srcset value.
 						$sizes_attr = $img->getAttribute( 'sizes' );
 						$srcset     = $img->getAttribute( 'srcset' );
 
-						/**
-						 * Set data-sizes and data-srcset attribute.
-						 */
+						// Set data-sizes and data-srcset attribute.
 						$img->setAttribute( 'data-sizes', $sizes_attr );
 						$img->setAttribute( 'data-srcset', $srcset );
 
-						/**
-						 * Remove sizes and srcset attribute.
-						 */
+						// Remove sizes and srcset attribute.
 						$img->removeAttribute( 'sizes' );
 						$img->removeAttribute( 'srcset' );
 
-						/**
-						 * Get src value.
-						 */
+						// Get src value.
 						$src = $img->getAttribute( 'src' );
 
-						/**
-						 * Check if we have a src.
-						 */
+						// Check if we have a src.
 						if ( '' === $src ) {
-							/**
-							 * Set the value from data-noscript as src.
-							 */
+							// Set the value from data-noscript as src.
 							$src = $img->getAttribute( 'data-noscript' );
 						}
 
-						/**
-						 * Set data-src value.
-						 */
+						// Set data-src value.
 						$img->setAttribute( 'data-src', $src );
 					} else {
-						/**
-						 * Get src attribute.
-						 */
+						// Get src attribute.
 						$src = $img->getAttribute( 'src' );
 
-						/**
-						 * Check if we do not have a value.
-						 */
+						// Check if we do not have a value.
 						if ( '' === $src ) {
-							/**
-							 * Set the value from data-noscript as src.
-							 */
+							// Set the value from data-noscript as src.
 							$src = $img->getAttribute( 'data-noscript' );
 						}
 
-						/**
-						 * Set data-src value.
-						 */
+						// Set data-src value.
 						$img->setAttribute( 'data-src', $src );
 					} // End if().
 
-					/**
-					 * Get the classes.
-					 */
+					// Get the classes.
 					$classes = $img->getAttribute( 'class' );
 
-					/**
-					 * Add lazyload class.
-					 */
+					// Add lazyload class.
 					$classes .= " lazyload";
 
-					/**
-					 * Set the class string.
-					 */
+					// Set the class string.
 					$img->setAttribute( 'class', $classes );
 
-					/**
-					 * Remove the src attribute.
-					 */
+					// Remove the src attribute.
 					$img->removeAttribute( 'src' );
 
 					/**
@@ -318,9 +234,7 @@ class Plugin {
 					 */
 					$new_img->setAttribute( 'src', $src );
 
-					/**
-					 * Save the content.
-					 */
+					// Save the content.
 					$content = $dom->saveHTMLExact();
 				} // End if().
 			} // End if().
@@ -333,10 +247,9 @@ class Plugin {
 	 * Enqueues scripts and styles.
 	 */
 	public function enqueue_script() {
-		/**
-		 * Enqueue lazysizes.
-		 */
-		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '', false, true );
+		// Enqueue lazysizes.
+		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '',
+			false, true );
 	}
 
 	/**
@@ -377,9 +290,7 @@ img.lazyload {
 	 * Action on plugin uninstall.
 	 */
 	public function uninstall() {
-		/**
-		 * Delete customizer option.
-		 */
+		// Delete customizer option.
 		delete_option( 'lazy_load_responsive_images_disabled_classes' );
 	}
 }
