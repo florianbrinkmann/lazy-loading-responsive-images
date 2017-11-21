@@ -316,10 +316,10 @@ class Plugin {
 					continue;
 				} // End if().
 
-				// Save the image original attributes.
+				// Save the iframe original attributes.
 				$iframe_attributes = $iframe->attributes;
 
-				// Check if the img not already has the lazyload class.
+				// Check if the iframe not already has the lazyload class.
 				if ( strpos( $iframe->getAttribute( 'class' ), 'lazyload' ) === false ) {
 					// Check if the iframe has a src attribute.
 					if ( $iframe->hasAttribute( 'src' ) ) {
