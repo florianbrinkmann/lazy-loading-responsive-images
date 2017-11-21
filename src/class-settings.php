@@ -122,7 +122,7 @@ class Settings {
 		$wp_customize->add_control( 'lazy_load_responsive_images_unveilhooks_plugin', array(
 			'type'    => 'checkbox',
 			'section' => 'lazy_load_responsive_images_options',
-			'label'   => __( 'Load the lazyload unveilhooks extension to enable lazy loading of background images, scripts, styles, and video posters. To use it with background images, scripts and styles, you will need to manually modify the markup: https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks',
+			'label'   => __( 'Load the lazyload unveilhooks extension to enable lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to manually modify the markup: https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks',
 				'lazy-loading-responsive-images' ),
 		) );
 
@@ -136,7 +136,7 @@ class Settings {
 		$wp_customize->add_control( 'lazy_load_responsive_images_enable_for_videos', array(
 			'type'            => 'checkbox',
 			'section'         => 'lazy_load_responsive_images_options',
-			'label'           => __( 'Enable lazy loading for videos (just makes sense if you use the »poster« attribute with your videos).',
+			'label'           => __( 'Enable lazy loading for videos.',
 				'lazy-loading-responsive-images' ),
 			'active_callback' => array( $this->helpers, 'display_video_option' ),
 		) );
