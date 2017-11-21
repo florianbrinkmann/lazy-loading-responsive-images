@@ -125,6 +125,83 @@ class Plugin {
 		// Load the HTML.
 		$dom->loadHTML( $content );
 
+		// Add lazy loading feature to images.
+		$content = $this->modify_img_markup( $dom );
+
+		// Check if we should lazy load iframes.
+		if ( '1' === $this->settings->enable_for_iframes ) {
+			// Add lazy loading feature to iframes.
+			$content = $this->modify_iframe_markup( $dom );
+		}
+
+		// Check if we should lazy load videos.
+		if ( '1' === $this->settings->enable_for_videos && '1' === $this->settings->load_unveilhooks_plugin ) {
+			// Add lazy loading feature to videos.
+			$content = $this->modify_video_markup( $dom );
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Adds noscript element before DOM node.
+	 *
+	 * @param array            $orig_elem_attr Array of attribute objects of the original element.
+	 * @param SmartDomDocument $dom            SmartDomDocument() object of the HTML.
+	 * @param DOMNodeList      $elem           Single DOM node.
+	 * @param string           $tag_name       Tag name which needs to be created inside the noscript element.
+	 * @param array            $classes        Array of the element’s classes.
+	 * @param string           $src            Value of the src attribute.
+	 *
+	 * @return SmartDomDocument The updates DOM.
+	 */
+	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name, $classes, $src ) {
+		$noscript = $dom->createElement( 'noscript' );
+
+		// Insert it before the img node.
+		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
+
+		// Create element.
+		$noscript_iframe = $dom->createElement( $tag_name );
+
+		// Remove lazyload class from classes string for noscript element.
+		$classes = str_replace( 'lazyload', '', $classes );
+
+		// Set class value.
+		$noscript_iframe->setAttribute( 'class', $classes );
+
+		// Add the other attributes of the original element.
+		foreach ( $orig_elem_attr as $attr ) {
+			// Save name and value.
+			$name  = $attr->nodeName;
+			$value = $attr->nodeValue;
+
+			// Check if it is class attribute and continue.
+			if ( 'class' === $name ) {
+				continue;
+			}
+
+			// Set attribute to noscript image.
+			$noscript_iframe->setAttribute( $name, $value );
+		}
+
+		// Add img node to noscript node.
+		$new_iframe = $noscript_node->appendChild( $noscript_iframe );
+
+		// Set src value.
+		$new_iframe->setAttribute( 'src', $src );
+
+		return $dom;
+	}
+
+	/**
+	 * Modifies img markup to enable lazy loading.
+	 *
+	 * @param SmartDomDocument $dom SmartDomDocument() object of the HTML.
+	 *
+	 * @return SmartDomDocument The updated DOM.
+	 */
+	public function modify_img_markup( $dom ) {
 		// Loop through the image elements.
 		foreach ( $dom->getElementsByTagName( 'img' ) as $img ) {
 			// Get the image classes as an array.
@@ -204,196 +281,161 @@ class Plugin {
 					$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG', $classes, $src );
 
 					// Save the content.
-					$content = $dom->saveHTMLExact();
+					$dom->saveHTMLExact();
 				} // End if().
 			} // End if().
 		} // End foreach().
 
-		// Check if we should lazy load iframes.
-		if ( '1' === $this->settings->enable_for_iframes ) {
-			// Loop through the iframe elements.
-			foreach ( $dom->getElementsByTagName( 'iframe' ) as $iframe ) {
-				// Get the iframe classes as an array.
-				$iframe_classes = explode( ' ', $iframe->getAttribute( 'class' ) );
-
-				// Check for intersection with array of classes, which should
-				// not be lazy loaded.
-				$result = array_intersect( $this->disabled_classes, $iframe_classes );
-
-				// Filter empty values.
-				$result = array_filter( $result );
-
-				// Check if we have no result.
-				if ( empty( $result ) ) {
-					// Check if the iframe has the data-no-lazyload attr.
-					if ( $iframe->hasAttribute( 'data-no-lazyload' ) ) {
-						continue;
-					} // End if().
-
-					// Save the image original attributes.
-					$iframe_attributes = $iframe->attributes;
-
-					// Check if the img not already has the lazyload class.
-					if ( strpos( $iframe->getAttribute( 'class' ), 'lazyload' ) === false ) {
-						// Check if the iframe has a src attribute.
-						if ( $iframe->hasAttribute( 'src' ) ) {
-							// Get src attribute.
-							$src = $iframe->getAttribute( 'src' );
-
-							// Set data-src value.
-							$iframe->setAttribute( 'data-src', $src );
-						} else {
-							continue;
-						} // End if().
-
-						// Get the classes.
-						$classes = $iframe->getAttribute( 'class' );
-
-						// Add lazyload class.
-						$classes .= " lazyload";
-
-						// Set the class string.
-						$iframe->setAttribute( 'class', $classes );
-
-						// Remove the src attribute.
-						$iframe->removeAttribute( 'src' );
-
-						// Add noscript element.
-						$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes,
-							$src );
-
-						// Save the content.
-						$content = $dom->saveHTMLExact();
-					} // End if().
-				} // End if().
-			} // End foreach().
-		}
-
-		// Check if we should lazy load videos.
-		if ( '1' === $this->settings->enable_for_videos && '1' === $this->settings->load_unveilhooks_plugin ) {
-			// Loop through the video elements.
-			foreach ( $dom->getElementsByTagName( 'video' ) as $video ) {
-				// Get the video classes as an array.
-				$video_classes = explode( ' ', $video->getAttribute( 'class' ) );
-
-				// Check for intersection with array of classes, which should
-				// not be lazy loaded.
-				$result = array_intersect( $this->disabled_classes, $video_classes );
-
-				// Filter empty values.
-				$result = array_filter( $result );
-
-				// Check if we have no result.
-				if ( empty( $result ) ) {
-					// Check if the video has the data-no-lazyload attr.
-					if ( $video->hasAttribute( 'data-no-lazyload' ) ) {
-						continue;
-					} // End if().
-
-					// Save the original attributes.
-					$video_attributes = $video->attributes;
-
-					// Check if the element not already has the lazyload class.
-					if ( strpos( $video->getAttribute( 'class' ), 'lazyload' ) === false ) {
-						// Check if the video has a poster attribute.
-						if ( $video->hasAttribute( 'poster' ) ) {
-							// Get poster attribute.
-							$poster = $video->getAttribute( 'poster' );
-
-							// Remove the poster attribute.
-							$video->removeAttribute( 'poster' );
-
-							// Set data-poster value.
-							$video->setAttribute( 'data-poster', $poster );
-						} else {
-							continue;
-						} // End if().
-
-						// Check if the video has a src attribute.
-						if ( $video->hasAttribute( 'src' ) ) {
-							// Get src attribute.
-							$src = $video->getAttribute( 'src' );
-
-							// Remove the src attribute.
-							$video->removeAttribute( 'src' );
-
-							// Set data-src value.
-							$video->setAttribute( 'data-src', $src );
-						} // End if().
-
-						// Set preload to none.
-						$video->setAttribute( 'preload', 'none' );
-
-						// Get the classes.
-						$classes = $video->getAttribute( 'class' );
-
-						// Add lazyload class.
-						$classes .= " lazyload";
-
-						// Set the class string.
-						$video->setAttribute( 'class', $classes );
-
-						// Add noscript element.
-						$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes,
-							$src );
-
-						// Save the content.
-						$content = $dom->saveHTMLExact();
-					} // End if().
-				} // End if().
-			} // End foreach().
-		}
-
-		return $content;
+		return $dom;
 	}
 
 	/**
-	 * Adds noscript element before DOM node.
+	 * Modifies iframe markup to enable lazy loading.
 	 *
-	 * @param array            $orig_elem_attr Array of attribute objects of the original element.
-	 * @param SmartDomDocument $dom            SmartDomDocument() object of the HTML.
-	 * @param DOMNodeList      $elem           Single DOM node.
-	 * @param string           $tag_name       Tag name which needs to be created inside the noscript element.
-	 * @param array            $classes        Array of the element’s classes.
-	 * @param string           $src            Value of the src attribute.
+	 * @param SmartDomDocument $dom SmartDomDocument() object of the HTML.
 	 *
-	 * @return SmartDomDocument The updates DOM.
+	 * @return SmartDomDocument The updated DOM.
 	 */
-	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name, $classes, $src ) {
-		$noscript = $dom->createElement( 'noscript' );
+	public function modify_iframe_markup( $dom ) {
+		// Loop through the iframe elements.
+		foreach ( $dom->getElementsByTagName( 'iframe' ) as $iframe ) {
+			// Get the iframe classes as an array.
+			$iframe_classes = explode( ' ', $iframe->getAttribute( 'class' ) );
 
-		// Insert it before the img node.
-		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
+			// Check for intersection with array of classes, which should
+			// not be lazy loaded.
+			$result = array_intersect( $this->disabled_classes, $iframe_classes );
 
-		// Create element.
-		$noscript_iframe = $dom->createElement( $tag_name );
+			// Filter empty values.
+			$result = array_filter( $result );
 
-		// Remove lazyload class from classes string for noscript element.
-		$classes = str_replace( 'lazyload', '', $classes );
+			// Check if we have no result.
+			if ( empty( $result ) ) {
+				// Check if the iframe has the data-no-lazyload attr.
+				if ( $iframe->hasAttribute( 'data-no-lazyload' ) ) {
+					continue;
+				} // End if().
 
-		// Set class value.
-		$noscript_iframe->setAttribute( 'class', $classes );
+				// Save the image original attributes.
+				$iframe_attributes = $iframe->attributes;
 
-		// Add the other attributes of the original element.
-		foreach ( $orig_elem_attr as $attr ) {
-			// Save name and value.
-			$name  = $attr->nodeName;
-			$value = $attr->nodeValue;
+				// Check if the img not already has the lazyload class.
+				if ( strpos( $iframe->getAttribute( 'class' ), 'lazyload' ) === false ) {
+					// Check if the iframe has a src attribute.
+					if ( $iframe->hasAttribute( 'src' ) ) {
+						// Get src attribute.
+						$src = $iframe->getAttribute( 'src' );
 
-			// Check if it is class attribute and continue.
-			if ( 'class' === $name ) {
-				continue;
-			}
+						// Set data-src value.
+						$iframe->setAttribute( 'data-src', $src );
+					} else {
+						continue;
+					} // End if().
 
-			// Set attribute to noscript image.
-			$noscript_iframe->setAttribute( $name, $value );
-		}
+					// Get the classes.
+					$classes = $iframe->getAttribute( 'class' );
 
-		// Add img node to noscript node.
-		$new_iframe = $noscript_node->appendChild( $noscript_iframe );
+					// Add lazyload class.
+					$classes .= " lazyload";
 
-		// Set src value.
-		$new_iframe->setAttribute( 'src', $src );
+					// Set the class string.
+					$iframe->setAttribute( 'class', $classes );
+
+					// Remove the src attribute.
+					$iframe->removeAttribute( 'src' );
+
+					// Add noscript element.
+					$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes,
+						$src );
+
+					// Save the content.
+					$dom->saveHTMLExact();
+				} // End if().
+			} // End if().
+		} // End foreach().
+
+		return $dom;
+	}
+
+	/**
+	 * Modifies video markup to enable lazy loading.
+	 *
+	 * @param SmartDomDocument $dom SmartDomDocument() object of the HTML.
+	 *
+	 * @return SmartDomDocument The updated DOM.
+	 */
+	public function modify_video_markup( $dom ) {
+		// Loop through the video elements.
+		foreach ( $dom->getElementsByTagName( 'video' ) as $video ) {
+			// Get the video classes as an array.
+			$video_classes = explode( ' ', $video->getAttribute( 'class' ) );
+
+			// Check for intersection with array of classes, which should
+			// not be lazy loaded.
+			$result = array_intersect( $this->disabled_classes, $video_classes );
+
+			// Filter empty values.
+			$result = array_filter( $result );
+
+			// Check if we have no result.
+			if ( empty( $result ) ) {
+				// Check if the video has the data-no-lazyload attr.
+				if ( $video->hasAttribute( 'data-no-lazyload' ) ) {
+					continue;
+				} // End if().
+
+				// Save the original attributes.
+				$video_attributes = $video->attributes;
+
+				// Check if the element not already has the lazyload class.
+				if ( strpos( $video->getAttribute( 'class' ), 'lazyload' ) === false ) {
+					// Check if the video has a poster attribute.
+					if ( $video->hasAttribute( 'poster' ) ) {
+						// Get poster attribute.
+						$poster = $video->getAttribute( 'poster' );
+
+						// Remove the poster attribute.
+						$video->removeAttribute( 'poster' );
+
+						// Set data-poster value.
+						$video->setAttribute( 'data-poster', $poster );
+					} else {
+						continue;
+					} // End if().
+
+					// Check if the video has a src attribute.
+					if ( $video->hasAttribute( 'src' ) ) {
+						// Get src attribute.
+						$src = $video->getAttribute( 'src' );
+
+						// Remove the src attribute.
+						$video->removeAttribute( 'src' );
+
+						// Set data-src value.
+						$video->setAttribute( 'data-src', $src );
+					} // End if().
+
+					// Set preload to none.
+					$video->setAttribute( 'preload', 'none' );
+
+					// Get the classes.
+					$classes = $video->getAttribute( 'class' );
+
+					// Add lazyload class.
+					$classes .= " lazyload";
+
+					// Set the class string.
+					$video->setAttribute( 'class', $classes );
+
+					// Add noscript element.
+					$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes,
+						$src );
+
+					// Save the content.
+					$dom->saveHTMLExact();
+				} // End if().
+			} // End if().
+		} // End foreach().
 
 		return $dom;
 	}
