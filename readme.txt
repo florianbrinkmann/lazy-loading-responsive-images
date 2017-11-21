@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 3.1.13
+Stable tag: 3.2.0
 Requires PHP: 5.3
 
 == Description ==
@@ -27,6 +27,21 @@ You can disable lazy loading for specific image classes by adding them in the cu
 * Activate it
 
 == Changelog ==
+
+= 3.1.13 – 08.11.2017 =
+
+**Added**
+
+* Option to automatically lazy load iframes.
+* Option to additionally load the unveilhooks plugin of lazysizes. This enables lazy loading of audio, video, scripts, and more.
+
+** Changed**
+
+* PHP comment style for inline comments.
+
+**Fixed**
+
+* Small doc errors.
 
 = 3.1.13 – 08.11.2017 =
 

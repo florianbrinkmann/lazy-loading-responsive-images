@@ -122,4 +122,20 @@ class Helpers {
 	public function sanitize_checkbox( $checked ) {
 		return ( ( isset( $checked ) && true == $checked ) ? true : false );
 	}
+
+	/**
+	 * Checks if checkbox for unveilhooks plugin is checked.
+	 *
+	 * @param WP_Customize_Control $control Control object.
+	 *
+	 * @return bool true if unevilhooks plugin checkbox is checked, otherwise false.
+	 */
+	function display_video_option( $control ) {
+		$value = $control->manager->get_setting( 'lazy_load_responsive_images_unveilhooks_plugin' )->value();
+		if ( $value == '1' ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }

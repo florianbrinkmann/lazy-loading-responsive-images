@@ -38,6 +38,13 @@ class Plugin {
 	private $helpers;
 
 	/**
+	 * Settings object.
+	 *
+	 * @var \FlorianBrinkmann\LazyLoadResponsiveImages\Settings
+	 */
+	private $settings;
+
+	/**
 	 * Array of classes which should not be lazy loaded.
 	 *
 	 * @var array
@@ -49,13 +56,13 @@ class Plugin {
 	 */
 	public function __construct() {
 		// Init customizer settings.
-		new Settings();
+		$this->settings = new Settings();
 
 		// Set helpers.
 		$this->helpers = new Helpers();
 
 		// Get the disabled classes and save in property.
-		$this->disabled_classes = explode( ',', get_option( 'lazy_load_responsive_images_disabled_classes' ) );
+		$this->disabled_classes = $this->settings->disabled_classes;
 	}
 
 	/**
@@ -63,7 +70,7 @@ class Plugin {
 	 */
 	public function init() {
 		// Adds lazyload markup and noscript element to content images.
-		add_filter( 'the_content', array( $this, 'modify_content_images' ), 200 );
+		add_filter( 'the_content', array( $this, 'modify_content_images' ), 500 );
 
 		// Adds lazyload markup and noscript element to post thumbnail.
 		add_filter( 'post_thumbnail_html', array( $this, 'modify_content_images' ), 10, 1 );
@@ -202,9 +209,8 @@ class Plugin {
 			} // End if().
 		} // End foreach().
 
-		// Get option for iframe lazyloading and check if it is enabled.
-		$lazy_load_iframes = get_option( 'lazy_load_responsive_images_enable_for_iframes', 0 );
-		if ( '1' === $lazy_load_iframes ) {
+		// Check if we should lazy load iframes.
+		if ( '1' === $this->settings->enable_for_iframes ) {
 			// Loop through the iframe elements.
 			foreach ( $dom->getElementsByTagName( 'iframe' ) as $iframe ) {
 				// Get the iframe classes as an array.
@@ -254,6 +260,81 @@ class Plugin {
 
 						// Add noscript element.
 						$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes,
+							$src );
+
+						// Save the content.
+						$content = $dom->saveHTMLExact();
+					} // End if().
+				} // End if().
+			} // End foreach().
+		}
+
+		// Check if we should lazy load videos.
+		if ( '1' === $this->settings->enable_for_videos && '1' === $this->settings->load_unveilhooks_plugin ) {
+			// Loop through the video elements.
+			foreach ( $dom->getElementsByTagName( 'video' ) as $video ) {
+				// Get the video classes as an array.
+				$video_classes = explode( ' ', $video->getAttribute( 'class' ) );
+
+				// Check for intersection with array of classes, which should
+				// not be lazy loaded.
+				$result = array_intersect( $this->disabled_classes, $video_classes );
+
+				// Filter empty values.
+				$result = array_filter( $result );
+
+				// Check if we have no result.
+				if ( empty( $result ) ) {
+					// Check if the video has the data-no-lazyload attr.
+					if ( $video->hasAttribute( 'data-no-lazyload' ) ) {
+						continue;
+					} // End if().
+
+					// Save the original attributes.
+					$video_attributes = $video->attributes;
+
+					// Check if the element not already has the lazyload class.
+					if ( strpos( $video->getAttribute( 'class' ), 'lazyload' ) === false ) {
+						// Check if the video has a poster attribute.
+						if ( $video->hasAttribute( 'poster' ) ) {
+							// Get poster attribute.
+							$poster = $video->getAttribute( 'poster' );
+
+							// Remove the poster attribute.
+							$video->removeAttribute( 'poster' );
+
+							// Set data-poster value.
+							$video->setAttribute( 'data-poster', $poster );
+						} else {
+							continue;
+						} // End if().
+
+						// Check if the video has a src attribute.
+						if ( $video->hasAttribute( 'src' ) ) {
+							// Get src attribute.
+							$src = $video->getAttribute( 'src' );
+
+							// Remove the src attribute.
+							$video->removeAttribute( 'src' );
+
+							// Set data-src value.
+							$video->setAttribute( 'data-src', $src );
+						} // End if().
+
+						// Set preload to none.
+						$video->setAttribute( 'preload', 'none' );
+
+						// Get the classes.
+						$classes = $video->getAttribute( 'class' );
+
+						// Add lazyload class.
+						$classes .= " lazyload";
+
+						// Set the class string.
+						$video->setAttribute( 'class', $classes );
+
+						// Add noscript element.
+						$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes,
 							$src );
 
 						// Save the content.
@@ -324,6 +405,13 @@ class Plugin {
 		// Enqueue lazysizes.
 		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '',
 			false, true );
+
+		// Check if unveilhooks plugin should be loaded.
+		if ( '1' === $this->settings->load_unveilhooks_plugin ) {
+			// Enqueue unveilhooks plugin.
+			wp_enqueue_script( 'lazysizes-unveilhooks',
+				plugins_url() . '/lazy-loading-responsive-images/js/ls.unveilhooks.js', 'lazysizes', false, true );
+		}
 	}
 
 	/**
@@ -335,12 +423,14 @@ class Plugin {
 	 */
 	public function add_inline_style() {
 		echo '<style>.js img.lazyload,
- .js iframe.lazyload{
+ .js iframe.lazyload,
+ .js video.lazyload {
 			display: block;
 		}
 
 img.lazyload,
-iframe.lazyload {
+iframe.lazyload,
+video.lazyload {
 			display: none;
 		}</style>';
 	}
@@ -369,5 +459,7 @@ iframe.lazyload {
 		// Delete customizer option.
 		delete_option( 'lazy_load_responsive_images_disabled_classes' );
 		delete_option( 'lazy_load_responsive_images_enable_for_iframes' );
+		delete_option( 'lazy_load_responsive_images_unveilhooks_plugin' );
+		delete_option( 'lazy_load_responsive_images_enable_for_videos' );
 	}
 }
