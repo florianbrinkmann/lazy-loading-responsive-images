@@ -70,10 +70,10 @@ class Plugin {
 	 */
 	public function init() {
 		// Adds lazyload markup and noscript element to content images.
-		add_filter( 'the_content', array( $this, 'modify_content_images' ), 500 );
+		add_filter( 'the_content', array( $this, 'filter_markup' ), 500 );
 
 		// Adds lazyload markup and noscript element to post thumbnail.
-		add_filter( 'post_thumbnail_html', array( $this, 'modify_content_images' ), 10, 1 );
+		add_filter( 'post_thumbnail_html', array( $this, 'filter_markup' ), 10, 1 );
 
 		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_script' ), 20 );
@@ -92,13 +92,13 @@ class Plugin {
 	}
 
 	/**
-	 * Modifies img elements inside the entry content.
+	 * Modifies elements to automatically enable lazy loading.
 	 *
-	 * @param string $content Entry content.
+	 * @param string $content HTML.
 	 *
-	 * @return string Entry content.
+	 * @return string Modified HTML.
 	 */
-	public function modify_content_images( $content ) {
+	public function filter_markup( $content ) {
 		// Check if we have no content.
 		if ( empty( $content ) ) {
 			return $content;
