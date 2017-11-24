@@ -52,6 +52,13 @@ class Plugin {
 	private $disabled_classes;
 
 	/**
+	 * Basename of the plugin.
+	 *
+	 * @var string
+	 */
+	public $basename;
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -69,8 +76,25 @@ class Plugin {
 	 * Runs the filters and actions.
 	 */
 	public function init() {
-		// Adds lazyload markup and noscript element to content images.
+		// Add link to settings in the plugin list.
+		add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 2 );
+
+		// Filter markup of the_content() calls to modify media markup for lazy loading.
 		add_filter( 'the_content', array( $this, 'filter_markup' ), 500 );
+
+		global $wp_version;
+
+		// Filter markup of Custom HTML widget to modify media markup for lazy loading.
+		// Filter exists since WordPress 4.8.1, so we make a check here.
+		if ( version_compare( $wp_version, '4.8.1', '>=' ) ) {
+			add_filter( 'widget_custom_html_content', array( $this, 'filter_markup' ) );
+		}
+
+		// Filter markup of Text widget to modify media markup for lazy loading.
+		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
+
+		// Filter markup of gravatars to modify markup for lazy loading.
+		add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
 
 		// Adds lazyload markup and noscript element to post thumbnail.
 		add_filter( 'post_thumbnail_html', array( $this, 'filter_markup' ), 10, 1 );
@@ -84,11 +108,31 @@ class Plugin {
 		// Adds inline script.
 		add_action( 'wp_footer', array( $this, 'add_inline_script' ) );
 
-		// Load the language files
+		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
 		// Action on uninstall.
 		register_uninstall_hook( __FILE__, array( 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin', 'uninstall' ) );
+	}
+
+	/**
+	 * Add settings link to the plugin entry in the plugin list.
+	 *
+	 * @param array  $links Array of action links.
+	 * @param string $file  Basename of the plugin.
+	 *
+	 * @return array The action links array.
+	 */
+	public function plugin_action_links( $links, $file ) {
+		if ( $file === $this->basename ) {
+			$links[] = sprintf(
+				'<a href="%s">%s</a>',
+				'options-media.php#lazy-loader-options',
+				__( 'Settings', 'lazy-loading-responsive-images' )
+			);
+		}
+
+		return $links;
 	}
 
 	/**
@@ -138,6 +182,12 @@ class Plugin {
 		if ( '1' === $this->settings->enable_for_videos && '1' === $this->settings->load_unveilhooks_plugin ) {
 			// Add lazy loading feature to videos.
 			$content = $this->modify_video_markup( $dom );
+		}
+
+		// Check if we should lazy load audios.
+		if ( '1' === $this->settings->enable_for_audios && '1' === $this->settings->load_unveilhooks_plugin ) {
+			// Add lazy loading feature to videos.
+			$content = $this->modify_audio_markup( $dom );
 		}
 
 		return $content;
@@ -399,9 +449,7 @@ class Plugin {
 
 						// Set data-poster value.
 						$video->setAttribute( 'data-poster', $poster );
-					} else {
-						continue;
-					} // End if().
+					}
 
 					// Check if the video has a src attribute.
 					if ( $video->hasAttribute( 'src' ) ) {
@@ -429,6 +477,75 @@ class Plugin {
 
 					// Add noscript element.
 					$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes,
+						$src );
+
+					// Save the content.
+					$dom->saveHTMLExact();
+				} // End if().
+			} // End if().
+		} // End foreach().
+
+		return $dom;
+	}
+
+	/**
+	 * Modifies audio markup to enable lazy loading.
+	 *
+	 * @param SmartDomDocument $dom SmartDomDocument() object of the HTML.
+	 *
+	 * @return SmartDomDocument The updated DOM.
+	 */
+	public function modify_audio_markup( $dom ) {
+		// Loop through the audio elements.
+		foreach ( $dom->getElementsByTagName( 'audio' ) as $audio ) {
+			// Get the audio classes as an array.
+			$audio_classes = explode( ' ', $audio->getAttribute( 'class' ) );
+
+			// Check for intersection with array of classes, which should
+			// not be lazy loaded.
+			$result = array_intersect( $this->disabled_classes, $audio_classes );
+
+			// Filter empty values.
+			$result = array_filter( $result );
+
+			// Check if we have no result.
+			if ( empty( $result ) ) {
+				// Check if the audio has the data-no-lazyload attr.
+				if ( $audio->hasAttribute( 'data-no-lazyload' ) ) {
+					continue;
+				} // End if().
+
+				// Save the original attributes.
+				$audio_attributes = $audio->attributes;
+
+				// Check if the element not already has the lazyload class.
+				if ( strpos( $audio->getAttribute( 'class' ), 'lazyload' ) === false ) {
+					// Check if the audio has a src attribute.
+					if ( $audio->hasAttribute( 'src' ) ) {
+						// Get src attribute.
+						$src = $audio->getAttribute( 'src' );
+
+						// Remove the src attribute.
+						$audio->removeAttribute( 'src' );
+
+						// Set data-src value.
+						$audio->setAttribute( 'data-src', $src );
+					} // End if().
+
+					// Set preload to none.
+					$audio->setAttribute( 'preload', 'none' );
+
+					// Get the classes.
+					$classes = $audio->getAttribute( 'class' );
+
+					// Add lazyload class.
+					$classes .= " lazyload";
+
+					// Set the class string.
+					$audio->setAttribute( 'class', $classes );
+
+					// Add noscript element.
+					$dom = $this->add_noscript_element( $audio_attributes, $dom, $audio, 'AUDIO', $classes,
 						$src );
 
 					// Save the content.
@@ -498,10 +615,9 @@ video.lazyload {
 	 * Action on plugin uninstall.
 	 */
 	public function uninstall() {
-		// Delete customizer option.
-		delete_option( 'lazy_load_responsive_images_disabled_classes' );
-		delete_option( 'lazy_load_responsive_images_enable_for_iframes' );
-		delete_option( 'lazy_load_responsive_images_unveilhooks_plugin' );
-		delete_option( 'lazy_load_responsive_images_enable_for_videos' );
+		// Delete options.
+		foreach ( $this->settings->options as $option_id => $option ) {
+			delete_option( $option_id );
+		}
 	}
 }

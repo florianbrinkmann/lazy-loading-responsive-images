@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Lazy Loading Responsive Images
+ * Plugin Name: Lazy Loader
  * Plugin URI: https://florianbrinkmann.com/en/3350/responsive-images-and-lazy-loading-in-wordpress/
- * Description: Lazy loading plugin for images, which also works with iframes, video, audio, scripts, styles, and more.
+ * Description: Lazy loading plugin that supports images, iFrames, video and audio elements and uses lazysizes.js. With manual modification of the markup it is also possible to lazy load background images, scripts, and styles.
  * Version: 3.2.0
  * Author: Florian Brinkmann, MarcDK
  * Author URI: https://florianbrinkmann.com/en/
@@ -32,5 +32,8 @@ if ( ! defined( 'WPINC' ) ) {
 // Create object.
 $plugin = new LazyLoadResponsiveImages();
 
-// Init the plugin,
+// Init the plugin.
 $plugin->init();
+
+// Set plugin basename.
+$plugin->basename = plugin_basename( __FILE__ );
