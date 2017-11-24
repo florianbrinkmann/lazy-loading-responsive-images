@@ -2,10 +2,10 @@ language: php
 php:
 - '7.1'
 script:
-- chmod +x ./scripts/deploy-production.sh
-- chmod +x ./scripts/deploy-staging.sh
+- chmod +x ./scripts/before_deploy.sh
 before_deploy:
 - composer install
+- cd scripts
 - sh before_deploy.sh
 - mkdir -p lazy-loading-responsive-images
 - rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images

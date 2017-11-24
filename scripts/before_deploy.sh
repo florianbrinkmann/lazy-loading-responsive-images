@@ -2,7 +2,7 @@
 # Check if commit comes from Travis.
 if [$(git log -1 $TRAVIS_COMMIT --pretty="%cE") != "Travis CI"]
   then
-    cd vendor/bin
+    cd ../vendor/bin
     wp2md -i ../../readme.txt -o ../../README.md
     cd ../../
     git config --global user.email "travis@travis-ci.org"
