@@ -1,6 +1,6 @@
 # Lazy Loader 
 **Contributors:** FlorianBrinkmann, MarcDK  
-**Tags:** lazysizes, lazy loading, performance  
+**Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9  
 **Stable tag:** 3.2.0  
