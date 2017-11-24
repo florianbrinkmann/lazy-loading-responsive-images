@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Check if commit comes from Travis.
-if [$(git log -1 $TRAVIS_COMMIT --pretty="%cE") != "Travis CI"]
+if ["$(git log -1 $TRAVIS_COMMIT --pretty="%cE")" != "Travis CI"]
   then
     cd ../vendor/bin
     wp2md -i ../../readme.txt -o ../../README.md
