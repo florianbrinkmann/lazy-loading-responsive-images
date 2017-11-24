@@ -1,0 +1,29 @@
+{
+  "name": "florianbrinkmann/lazy-loading-responsive-images",
+  "description": "Lazy loading plugin for WordPress \u0000 uses lazysizes.js.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0",
+  "authors": [
+	{
+	  "name": "Florian Brinkmann",
+	  "email": "kontakt@florianbrinkmann.com"
+	}
+  ],
+  "autoload": {
+	"psr-4": {
+	  "FlorianBrinkmann\\LazyLoadResponsiveImages\\": "src/"
+	}
+  },
+  "repositories": [
+	{
+	  "type": "vcs",
+	  "url": "https://bitbucket.org/archon810/smartdomdocument.git"
+	}
+  ],
+  "require": {
+	"archon810/smartdomdocument": "dev-master"
+  },
+  "require-dev": {
+	"wpreadme2markdown/wp2md": "*"
+  }
+}

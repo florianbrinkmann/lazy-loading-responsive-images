@@ -7,9 +7,6 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-// Include helpers class.
-require_once 'class-helpers.php';
-
 use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
 
 /**

@@ -7,18 +7,9 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-// Include helpers class.
-require_once 'class-helpers.php';
-
 use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
 
-// Include Settings class.
-require_once 'class-settings.php';
-
 use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
-
-// Include SmartDomDocument class.
-require_once 'class-smart-dom-document.php';
 
 use archon810\SmartDomDocument as SmartDomDocument;
 
