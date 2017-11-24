@@ -1,0 +1,25 @@
+language: php
+php:
+- '7.1'
+script:
+- chmod +x ./scripts/deploy-production.sh
+- chmod +x ./scripts/deploy-staging.sh
+before_deploy:
+- composer install
+- sh before_deploy.sh
+- mkdir -p lazy-loading-responsive-images
+- rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
+- zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
+- rm -rf lazy-loading-responsive-images
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: HhR4K7q+7BTsr8L+D2lWv/NR0AGvcjvNBlwtnxBSDhGieIIC7wHlDL2Z8MC043L8kAXegtIU+BkTYOqbUdEBdKLTEUHXVATBHlsfc/bhBmjeVrqA+LuRL0QVUGX90slYCX9chIAtpkZwMxVFcHzAAEjdUjpTwksKUXjNIISJRV5LfyicNU2IIy22vP6k0mkH0pOcYq/bmK5pSHIrNdpSWMs0cnpePDZ/a1A4Ar+i/R1XQD1Sk+tNKxXs+fvgEbPjWCQgGusj5LrpnUJ6Gw517t7IyWsFzOGLvUtG7MYn/3LyMEGKSUDGujeywRSpFC1WQIAZyexO8A0ATNFqryusb0euSmP9tiwxPQQmfZiZc8IzEPqQWI1rFGi5UKex6FIzcEMyJ+FPWBTYxWRGI2ZTry5g0A38QiGmIzIRjPPpwuOXyGvPYPbtA7z6jFWyU/XcZxxqPNfYNL+3aGsrK2Eru0W3m4XPWEcHahxY2fdksBbgsemrLZfkGgCnyTByEGTsr6rr7xzCo3naVTI4QW2KolEplZk89CGYsOrBZ7EYKW3vavbrH2VgEEdoxfhyDro2Jr84NiePOev25RZ/lCoTS2j9s1Z4LGTq3BnEiv9tbHJ34rZ9qRZM83dcyDJnfRSyrAvbRvkMChvj2mTnwEWRoUJ3Vm0xS1j9V5umTFT5C+I=
+  file: lazy-loading-responsive-images.zip
+  on:
+    repo: florianbrinkmann/lazy-loading-responsive-images
+    tags: true
+env:
+  global:
+    secure: KDzqWA28tUigKjTCmM4t09hMq3q1ZF8+sbEjTt5rQG7qcKmSwaFDVbqf9k3icakanHOq2GltCjH35qa5oqznwwl79LDQ8NH/Iih5uXhh35rx9ueg1XRcyZ7f4Mz9QrTOIrEUc16RfzG8+NthipS0aPmVEym8epi3nXpQzuZ+jNKvG34ZQbE0emcDnMeWzGf84k81Q+tc3mhxt/u8oncMeTaOEyvyEDfCivjo/Ks6R0J4oCijtD8qkSbw1P8Cj3hJDlhia/TWo9dIEIwJ+XCxghIP420nOaRrp04GnPlyLYYp//EGRJua/9ZOLc0ArxCRshL349B0hlYZNUC1dYVKEe8mMzU4bkIslUen61DB0zXP3W71JUsUqzsBLpwNeAn4cJKy/RNj8jIqtBcyYHN07ULJ6DqrQ1gfV3n9whY/Yj0P87/5Q8aA+QBCJ5BEmmLqU9Wkd6MBS71LjA9wuN6EFGJckq2S1JacanfCqhOlgUbx1UrpI7poG1PcI3WUMOUBcg6y/HtjZUq3lBoxN7/rDpuPf5eCVVRByuJ+99zlMn6vbR7KuMchhrtMZ3Ezt8D2rNX5ah+3B9Xy5CoAVarWmqNNiBiBWhmzpAOpHgdkzQsLFgVRhB+LccmNrs0MCivC8BIHZK+NJ/BY8gh/aoPgT8PkogvW9R6VcbJ7BkNTRNI=

@@ -1,6 +1,6 @@
 # Lazy Loader 
 **Contributors:** FlorianBrinkmann, MarcDK  
-**Tags:** lazysizes, lazy loading, performance, images  
+**Tags:** lazysizes, lazy loading, performance  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9  
 **Stable tag:** 3.2.0  
@@ -63,12 +63,14 @@ supports, go to the plugin settings under *Appearance* › *Media* › *Lazy loa
 * Option to additionally load the unveilhooks plugin of lazysizes. This enables lazy loading of audio, video, scripts, and more.
 * Support for images inside the text and HTML widget. Does not work for galleries in the widgets.
 * Support for Gravatars.
+* Autoloading of classes with Composer.
 
 **Changed**
 
 * Changed plugin name to »Lazy Loader«.
 * PHP comment style for inline comments.
 * Moved settings to the media settings page and removed the customizer section.
+* Renamed the class files in `src`.
 
 **Fixed**
 

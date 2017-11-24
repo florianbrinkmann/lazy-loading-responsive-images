@@ -1,0 +1,8 @@
+- .git/
+- vendor/
+- lazy-loading-responsive-images/
+- composer.json
+- composer.lock
+- lazy-loading-responsive-images.zip
+- README.md
+- .*
