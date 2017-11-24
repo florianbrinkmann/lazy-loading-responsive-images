@@ -3,14 +3,16 @@ php:
 - '7.1'
 script:
 - chmod +x ./scripts/before_deploy.sh
-before_deploy:
 - composer install
 - cd scripts
 - sh before_deploy.sh
+- cd ../
 - mkdir -p lazy-loading-responsive-images
 - rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
 - zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
 - rm -rf lazy-loading-responsive-images
+before_deploy:
+-
 deploy:
   provider: releases
   skip_cleanup: true
