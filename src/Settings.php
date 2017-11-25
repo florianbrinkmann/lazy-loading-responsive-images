@@ -78,8 +78,7 @@ class Settings {
 				'type'              => 'text',
 				'value'             => get_option( 'lazy_load_responsive_images_disabled_classes', '' ),
 				'label'             => __( 'CSS classes to exclude', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'Enter one or more CSS classes to exclude them from lazy loading (separated by comma).',
-					'lazy-loading-responsive-images' ),
+				'description'       => __( 'Enter one or more CSS classes to exclude them from lazy loading (separated by comma).', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'text_field_cb' ),
 				'sanitize_callback' => array( $this->helpers, 'sanitize_class_name_list' ),
 			),
@@ -94,16 +93,14 @@ class Settings {
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_unveilhooks_plugin', '0' ),
 				'label'             => __( 'Include lazyload unveilhooks extension' ),
-				'description'       => __( 'The extension adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>.',
-					'lazy-loading-responsive-images' ),
+				'description'       => __( 'The extension adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
 			),
 			'lazy_load_responsive_images_enable_for_videos'  => array(
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_videos', '0' ),
-				'label'             => __( 'Enable lazy loading for videos',
-					'lazy-loading-responsive-images' ),
+				'label'             => __( 'Enable lazy loading for videos', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'This feature needs the unveilhooks plugin.',
 					'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
@@ -112,18 +109,15 @@ class Settings {
 			'lazy_load_responsive_images_enable_for_audios'  => array(
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_audios', '0' ),
-				'label'             => __( 'Enable lazy loading for audios',
-					'lazy-loading-responsive-images' ),
-				'description'       => __( 'This feature needs the unveilhooks plugin.',
-					'lazy-loading-responsive-images' ),
+				'label'             => __( 'Enable lazy loading for audios', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'This feature needs the unveilhooks plugin.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
 			),
 		);
 
 		// Fill properties with setting values.
-		$this->disabled_classes        = explode( ',',
-			$this->options['lazy_load_responsive_images_disabled_classes']['value'] );
+		$this->disabled_classes        = explode( ',', $this->options['lazy_load_responsive_images_disabled_classes']['value'] );
 		$this->enable_for_iframes      = $this->options['lazy_load_responsive_images_enable_for_iframes']['value'];
 		$this->load_unveilhooks_plugin = $this->options['lazy_load_responsive_images_unveilhooks_plugin']['value'];
 		$this->enable_for_videos       = $this->options['lazy_load_responsive_images_enable_for_videos']['value'];
