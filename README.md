@@ -21,7 +21,7 @@ Lazy loads (without the need of any manually modifications):
 * Video elements.*
 * Audio elements.*
 
-\* *Can be enabled in the plugin options. Lazy loading of video and audio elements
+\* *Can be enabled in the plugin options (Settings › Media › Lazy Loader options). Lazy loading of video and audio elements
 need the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks),
 which can be included via an additional option in the plugin settings.*
 
@@ -47,7 +47,7 @@ settings (*Appearance* › *Media* › *Lazy loading options*). Or use the data-
 * Activate it.
 * If you want to add support for iFrames, video/audio elements, or things the
 [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks)
-supports, go to the plugin settings under *Appearance* › *Media* › *Lazy loading options*.
+supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
 
 
 ## Changelog 
@@ -68,8 +68,8 @@ supports, go to the plugin settings under *Appearance* › *Media* › *Lazy loa
 **Changed**
 
 * Changed plugin name to »Lazy Loader«.
-* PHP comment style for inline comments.
 * Moved settings to the media settings page and removed the customizer section.
+* PHP comment style for inline comments.
 * Renamed the class files in `src`.
 
 **Fixed**
