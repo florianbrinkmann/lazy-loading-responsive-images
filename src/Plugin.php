@@ -553,14 +553,12 @@ class Plugin {
 	 */
 	public function enqueue_script() {
 		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '',
-			false, true );
+		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '', false, true );
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->load_unveilhooks_plugin ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks',
-				plugins_url() . '/lazy-loading-responsive-images/js/ls.unveilhooks.js', 'lazysizes', false, true );
+			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url() . '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js', 'lazysizes', false, true );
 		}
 	}
 
