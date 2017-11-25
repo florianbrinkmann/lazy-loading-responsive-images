@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 3.2.1
+Stable tag: 3.2.2
 Requires PHP: 5.3
 
 == Description ==
@@ -48,6 +48,12 @@ settings (*Appearance* › *Media* › *Lazy loading options*). Or use the data-
 supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
 
 == Changelog ==
+
+= 3.2.2 – 25.11.2017 =
+
+**Fixed**
+
+* Problem with duplicated images in HTML widget.
 
 = 3.2.1 – 25.11.2017 =
 

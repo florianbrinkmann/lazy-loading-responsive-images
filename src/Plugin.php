@@ -73,14 +73,6 @@ class Plugin {
 		// Filter markup of the_content() calls to modify media markup for lazy loading.
 		add_filter( 'the_content', array( $this, 'filter_markup' ), 500 );
 
-		global $wp_version;
-
-		// Filter markup of Custom HTML widget to modify media markup for lazy loading.
-		// Filter exists since WordPress 4.8.1, so we make a check here.
-		if ( version_compare( $wp_version, '4.8.1', '>=' ) ) {
-			add_filter( 'widget_custom_html_content', array( $this, 'filter_markup' ) );
-		}
-
 		// Filter markup of Text widget to modify media markup for lazy loading.
 		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
 
@@ -161,25 +153,27 @@ class Plugin {
 		$dom->loadHTML( $content );
 
 		// Add lazy loading feature to images.
-		$content = $this->modify_img_markup( $dom );
+		$dom = $this->modify_img_markup( $dom );
 
 		// Check if we should lazy load iframes.
 		if ( '1' === $this->settings->enable_for_iframes ) {
 			// Add lazy loading feature to iframes.
-			$content = $this->modify_iframe_markup( $dom );
+			$dom = $this->modify_iframe_markup( $dom );
 		}
 
 		// Check if we should lazy load videos.
 		if ( '1' === $this->settings->enable_for_videos && '1' === $this->settings->load_unveilhooks_plugin ) {
 			// Add lazy loading feature to videos.
-			$content = $this->modify_video_markup( $dom );
+			$dom = $this->modify_video_markup( $dom );
 		}
 
 		// Check if we should lazy load audios.
 		if ( '1' === $this->settings->enable_for_audios && '1' === $this->settings->load_unveilhooks_plugin ) {
 			// Add lazy loading feature to videos.
-			$content = $this->modify_audio_markup( $dom );
+			$dom = $this->modify_audio_markup( $dom );
 		}
+
+		$content = $dom->saveHTMLExact();
 
 		return $content;
 	}
