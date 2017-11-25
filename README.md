@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9  
-**Stable tag:** 3.2.3  
+**Stable tag:** 3.2.4  
 **Requires PHP:** 5.3  
 
 
@@ -42,6 +42,13 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 
 ## Changelog 
+
+
+### 3.2.4 – 25.11.2017 
+
+**Fixed**
+
+* Fatal error due case mismatch in referencing the SmartDOMDocument class – sorry for that!
 
 
 ### 3.2.3 – 25.11.2017 

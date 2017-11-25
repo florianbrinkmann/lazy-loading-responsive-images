@@ -11,7 +11,7 @@ use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
 
-use archon810\SmartDomDocument as SmartDomDocument;
+use archon810\SmartDOMDocument as SmartDOMDocument;
 
 /**
  * Class Plugin
@@ -147,7 +147,7 @@ class Plugin {
 		}
 
 		// Create new SmartDomDocument object.
-		$dom = new SmartDomDocument();
+		$dom = new SmartDOMDocument();
 
 		// Load the HTML.
 		$dom->loadHTML( $content );
