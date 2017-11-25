@@ -1,5 +1,4 @@
 - .git/
-- vendor/
 - lazy-loading-responsive-images/
 - composer.json
 - composer.lock
