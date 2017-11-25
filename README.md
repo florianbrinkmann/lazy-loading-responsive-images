@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9  
-**Stable tag:** 3.2.0  
+**Stable tag:** 3.2.1  
 **Requires PHP:** 5.3  
 
 
@@ -51,6 +51,13 @@ supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loade
 
 
 ## Changelog 
+
+
+### 3.2.1 – 25.11.2017 
+
+**Fixed**
+
+* Load minified version of lazysizes unveilhooks plugin.
 
 
 ### 3.2.0 – 25.11.2017 
