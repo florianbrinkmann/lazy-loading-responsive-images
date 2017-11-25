@@ -282,22 +282,22 @@
         },
         {
             "name": "wpreadme2markdown/wp2md",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpreadme2markdown/wp2md.git",
-                "reference": "37efd5284240a076c6a7f25af7314449c3271b28"
+                "reference": "6fec3a213080e32a5d53a235f89c6cf4d910572a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wpreadme2markdown/wp2md/zipball/37efd5284240a076c6a7f25af7314449c3271b28",
-                "reference": "37efd5284240a076c6a7f25af7314449c3271b28",
+                "url": "https://api.github.com/repos/wpreadme2markdown/wp2md/zipball/6fec3a213080e32a5d53a235f89c6cf4d910572a",
+                "reference": "6fec3a213080e32a5d53a235f89c6cf4d910572a",
                 "shasum": ""
             },
             "require": {
                 "php": ">= 5.5.9",
-                "symfony/console": "^3.2",
-                "wpreadme2markdown/wpreadme2markdown": "^3.0"
+                "symfony/console": "^3.2|^4.0",
+                "wpreadme2markdown/wpreadme2markdown": "^3.0.1"
             },
             "require-dev": {
                 "indeyets/pake": "~1.99",
@@ -332,20 +332,20 @@
                 "readme",
                 "wordpress"
             ],
-            "time": "2017-08-06T05:13:47+00:00"
+            "time": "2017-11-24T21:19:21+00:00"
         },
         {
             "name": "wpreadme2markdown/wpreadme2markdown",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wpreadme2markdown/wp-readme-to-markdown.git",
-                "reference": "50c4a56503cd26b48c28fad19be281b948b8c2e0"
+                "reference": "8066915828bb05a12b44360cda986e1d9e60047e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wpreadme2markdown/wp-readme-to-markdown/zipball/50c4a56503cd26b48c28fad19be281b948b8c2e0",
-                "reference": "50c4a56503cd26b48c28fad19be281b948b8c2e0",
+                "url": "https://api.github.com/repos/wpreadme2markdown/wp-readme-to-markdown/zipball/8066915828bb05a12b44360cda986e1d9e60047e",
+                "reference": "8066915828bb05a12b44360cda986e1d9e60047e",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "readme",
                 "wordpress"
             ],
-            "time": "2017-08-06T04:42:13+00:00"
+            "time": "2017-11-24T20:36:13+00:00"
         }
     ],
     "aliases": [],
