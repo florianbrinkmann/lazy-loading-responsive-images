@@ -3,14 +3,12 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 3.2.2
+Stable tag: 3.2.3
 Requires PHP: 5.3
 
 == Description ==
 
-Lazy loading plugin that supports images, iFrames, video and audio elements and uses lazysizes.js.
-With manual modification of the markup it is also possible to lazy load background images, scripts,
-and styles.
+Lazy loading plugin that supports images, iFrames, video and audio elements and uses lazysizes.js. With manual modification of the markup it is also possible to lazy load background images, scripts, and styles.
 
 Lazy loads (without the need of any manually modifications):
 
@@ -20,12 +18,9 @@ Lazy loads (without the need of any manually modifications):
 * Video elements.*
 * Audio elements.*
 
-\* *Can be enabled in the plugin options (Settings › Media › Lazy Loader options). Lazy loading of video and audio elements
-need the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks),
-which can be included via an additional option in the plugin settings.*
+\* *Can be enabled in the plugin options (Settings › Media › Lazy Loader options). Lazy loading of video and audio elements need the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks), which can be included via an additional option in the plugin settings.*
 
-The unveilhooks extension of lazysizes supports more than video and audio elements,
-but you need to manually modify the markup to use it for:
+The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
 
 * Background images.
 * Scripts.
@@ -33,21 +28,23 @@ but you need to manually modify the markup to use it for:
 
 The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
-The auto-modifying of the image markup does not work for images that are added
-using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
+The auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
 
-You can disable lazy loading for specific image classes by adding them in the plugin
-settings (*Appearance* › *Media* › *Lazy loading options*). Or use the data-no-lazyload attribute.
+You can disable lazy loading for specific image classes by adding them in the plugin settings (*Appearance* › *Media* › *Lazy loading options*). Or use the data-no-lazyload attribute.
 
 == Installation ==
 
 * Install plugin.
 * Activate it.
-* If you want to add support for iFrames, video/audio elements, or things the
-[lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks)
-supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
+* If you want to add support for iFrames, video/audio elements, or things the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
 
 == Changelog ==
+
+= 3.2.3 – 25.11.2017 =
+
+**Fixed**
+
+* Line break issues with the readme for W.org.
 
 = 3.2.2 – 25.11.2017 =
 
