@@ -49,7 +49,7 @@ supports, go to the plugin settings under *Appearance* › *Media* › *Lazy loa
 
 == Changelog ==
 
-= 3.2.0 – 24.11.2017 =
+= 3.2.0 – 25.11.2017 =
 
 **Added**
 
