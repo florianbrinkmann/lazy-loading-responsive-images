@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9  
-**Stable tag:** 3.2.4  
+**Stable tag:** 3.2.5  
 **Requires PHP:** 5.3  
 
 
@@ -31,7 +31,7 @@ The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
 The auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
 
-You can disable lazy loading for specific image classes by adding them in the plugin settings (*Appearance* › *Media* › *Lazy loading options*). Or use the data-no-lazyload attribute.
+You can disable lazy loading for specific image classes by adding them in the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the data-no-lazyload attribute.
 
 
 ## Installation 
@@ -42,6 +42,13 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 
 ## Changelog 
+
+
+### 3.2.5 – 27.11.2017 
+
+**Fixed**
+
+* Wrong path to plugin options in the readme.txt.
 
 
 ### 3.2.4 – 25.11.2017 
