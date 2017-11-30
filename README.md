@@ -48,7 +48,7 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 **Changed**
 
-* Automatically load unveilhooks extension if audio or video option is enabled, regardless if the option to load the unveilhooks plugin is enabled or not.
+* Automatically load unveilhooks extension if audio or video option is enabled, regardless of the option to load the unveilhooks plugin is enabled or not.
 * Updated *Tested up to* version to 4.9.1.
 
 
