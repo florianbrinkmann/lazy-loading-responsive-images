@@ -40,6 +40,12 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 == Changelog ==
 
+= 3.2.7 –  =
+
+**Fixed**
+
+* Small doc fix.
+
 = 3.2.6 – 30.11.2017 =
 
 **Changed**

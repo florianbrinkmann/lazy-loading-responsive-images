@@ -169,7 +169,7 @@ class Plugin {
 
 		// Check if we should lazy load audios.
 		if ( '1' === $this->settings->enable_for_audios ) {
-			// Add lazy loading feature to videos.
+			// Add lazy loading feature to audios.
 			$dom = $this->modify_audio_markup( $dom );
 		}
 
