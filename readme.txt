@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
-Tested up to: 4.9
-Stable tag: 3.2.5
+Tested up to: 4.9.1
+Stable tag: 3.2.6
 Requires PHP: 5.3
 
 == Description ==
@@ -39,6 +39,13 @@ You can disable lazy loading for specific image classes by adding them in the pl
 * If you want to add support for iFrames, video/audio elements, or things the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
 
 == Changelog ==
+
+= 3.2.6 – 30.11.2017 =
+
+**Changed**
+
+* Automatically load unveilhooks extension if audio or video option is enabled, regardless if the option to load the unveilhooks plugin is enabled or not.
+* Updated *Tested up to* version to 4.9.1.
 
 = 3.2.5 – 27.11.2017 =
 

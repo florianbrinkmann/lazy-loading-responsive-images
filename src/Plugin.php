@@ -162,13 +162,13 @@ class Plugin {
 		}
 
 		// Check if we should lazy load videos.
-		if ( '1' === $this->settings->enable_for_videos && '1' === $this->settings->load_unveilhooks_plugin ) {
+		if ( '1' === $this->settings->enable_for_videos ) {
 			// Add lazy loading feature to videos.
 			$dom = $this->modify_video_markup( $dom );
 		}
 
 		// Check if we should lazy load audios.
-		if ( '1' === $this->settings->enable_for_audios && '1' === $this->settings->load_unveilhooks_plugin ) {
+		if ( '1' === $this->settings->enable_for_audios ) {
 			// Add lazy loading feature to videos.
 			$dom = $this->modify_audio_markup( $dom );
 		}
@@ -550,7 +550,7 @@ class Plugin {
 		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '', false, true );
 
 		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->load_unveilhooks_plugin ) {
+		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url() . '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js', 'lazysizes', false, true );
 		}
