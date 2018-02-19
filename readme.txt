@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
-Tested up to: 4.9.1
-Stable tag: 3.2.6
+Tested up to: 4.9.4
+Stable tag: 3.2.7
 Requires PHP: 5.3
 
 == Description ==
@@ -40,10 +40,11 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 == Changelog ==
 
-= 3.2.7 –  =
+= 3.2.7 – 19.02.2018 =
 
 **Fixed**
 
+* Duplicated images if, for example, the `the_content` filter is run multiple times.
 * Small doc fix.
 
 = 3.2.6 – 30.11.2017 =

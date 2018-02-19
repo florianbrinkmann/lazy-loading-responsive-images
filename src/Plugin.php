@@ -21,6 +21,7 @@ use archon810\SmartDOMDocument as SmartDOMDocument;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages
  */
 class Plugin {
+
 	/**
 	 * Helpers object.
 	 *
@@ -68,34 +69,40 @@ class Plugin {
 	 */
 	public function init() {
 		// Add link to settings in the plugin list.
-		add_filter( 'plugin_action_links', array( $this, 'plugin_action_links' ), 10, 2 );
+		add_filter( 'plugin_action_links', [
+			$this,
+			'plugin_action_links',
+		], 10, 2 );
 
 		// Filter markup of the_content() calls to modify media markup for lazy loading.
-		add_filter( 'the_content', array( $this, 'filter_markup' ), 500 );
+		add_filter( 'the_content', [ $this, 'filter_markup' ], 500 );
 
 		// Filter markup of Text widget to modify media markup for lazy loading.
-		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
+		add_filter( 'widget_text', [ $this, 'filter_markup' ] );
 
 		// Filter markup of gravatars to modify markup for lazy loading.
-		add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
+		add_filter( 'get_avatar', [ $this, 'filter_markup' ] );
 
 		// Adds lazyload markup and noscript element to post thumbnail.
-		add_filter( 'post_thumbnail_html', array( $this, 'filter_markup' ), 10, 1 );
+		add_filter( 'post_thumbnail_html', [ $this, 'filter_markup' ], 10, 1 );
 
 		// Enqueues scripts and styles.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_script' ), 20 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ], 20 );
 
 		// Adds inline style.
-		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
+		add_action( 'wp_head', [ $this, 'add_inline_style' ] );
 
 		// Adds inline script.
-		add_action( 'wp_footer', array( $this, 'add_inline_script' ) );
+		add_action( 'wp_footer', [ $this, 'add_inline_script' ] );
 
 		// Load the language files.
-		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
+		add_action( 'plugins_loaded', [ $this, 'load_translation' ] );
 
 		// Action on uninstall.
-		register_uninstall_hook( __FILE__, array( 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin', 'uninstall' ) );
+		register_uninstall_hook( __FILE__, [
+			'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin',
+			'uninstall',
+		] );
 	}
 
 	/**
@@ -181,11 +188,15 @@ class Plugin {
 	/**
 	 * Adds noscript element before DOM node.
 	 *
-	 * @param array            $orig_elem_attr Array of attribute objects of the original element.
-	 * @param SmartDomDocument $dom            SmartDomDocument() object of the HTML.
-	 * @param DOMNodeList      $elem           Single DOM node.
-	 * @param string           $tag_name       Tag name which needs to be created inside the noscript element.
-	 * @param array            $classes        Array of the element’s classes.
+	 * @param array            $orig_elem_attr Array of attribute objects of
+	 *                                         the original element.
+	 * @param SmartDomDocument $dom            SmartDomDocument() object of the
+	 *                                         HTML.
+	 * @param \DOMNodeList     $elem           Single DOM node.
+	 * @param string           $tag_name       Tag name which needs to be
+	 *                                         created inside the noscript
+	 *                                         element.
+	 * @param string           $classes        String of the element’s classes.
 	 * @param string           $src            Value of the src attribute.
 	 *
 	 * @return SmartDomDocument The updates DOM.
@@ -197,13 +208,16 @@ class Plugin {
 		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
 
 		// Create element.
-		$noscript_iframe = $dom->createElement( $tag_name );
+		$media_element = $dom->createElement( $tag_name );
 
-		// Remove lazyload class from classes string for noscript element.
+		// Switch lazyload class against noscript-image.
 		$classes = str_replace( 'lazyload', '', $classes );
 
 		// Set class value.
-		$noscript_iframe->setAttribute( 'class', $classes );
+		$media_element->setAttribute( 'class', $classes );
+
+		// Set data-no-lazyload attribute.
+		$media_element->setAttribute( 'data-no-lazyload', '' );
 
 		// Add the other attributes of the original element.
 		foreach ( $orig_elem_attr as $attr ) {
@@ -217,11 +231,11 @@ class Plugin {
 			}
 
 			// Set attribute to noscript image.
-			$noscript_iframe->setAttribute( $name, $value );
+			$media_element->setAttribute( $name, $value );
 		}
 
 		// Add img node to noscript node.
-		$new_iframe = $noscript_node->appendChild( $noscript_iframe );
+		$new_iframe = $noscript_node->appendChild( $media_element );
 
 		// Set src value.
 		$new_iframe->setAttribute( 'src', $src );
@@ -255,6 +269,8 @@ class Plugin {
 				if ( $img->hasAttribute( 'data-no-lazyload' ) ) {
 					continue;
 				} // End if().
+
+				$classes = $img->getAttribute( 'class' );
 
 				// Check if the img not already has the lazyload class.
 				if ( strpos( $img->getAttribute( 'class' ), 'lazyload' ) === false ) {
