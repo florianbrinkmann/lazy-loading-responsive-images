@@ -580,15 +580,18 @@ class Plugin {
 	 * echo it.
 	 */
 	public function add_inline_style() {
-		echo '<style>.js img.lazyload,
- .js iframe.lazyload,
- .js video.lazyload {
-			display: block;
+		echo '<style>.lazyload,
+        .lazyloading {
+			opacity: 0;
 		}
-
-img.lazyload,
-iframe.lazyload,
-video.lazyload {
+		
+		
+		.lazyloaded {
+			opacity: 1;
+			transition: opacity 300ms;
+		}
+		
+		.no-js .lazyload {
 			display: none;
 		}</style>';
 	}

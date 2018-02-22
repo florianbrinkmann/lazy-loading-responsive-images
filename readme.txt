@@ -40,7 +40,11 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 == Changelog ==
 
-= 3.2.7 – 19.02.2018 =
+= 3.2.7 – 22.02.2018 =
+
+**Added**
+
+* Animated the opacity change when the images are loaded.
 
 **Fixed**
 
