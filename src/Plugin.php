@@ -69,40 +69,40 @@ class Plugin {
 	 */
 	public function init() {
 		// Add link to settings in the plugin list.
-		add_filter( 'plugin_action_links', [
+		add_filter( 'plugin_action_links', array(
 			$this,
 			'plugin_action_links',
-		], 10, 2 );
+		), 10, 2 );
 
 		// Filter markup of the_content() calls to modify media markup for lazy loading.
-		add_filter( 'the_content', [ $this, 'filter_markup' ], 500 );
+		add_filter( 'the_content', array( $this, 'filter_markup' ), 500 );
 
 		// Filter markup of Text widget to modify media markup for lazy loading.
-		add_filter( 'widget_text', [ $this, 'filter_markup' ] );
+		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
 
 		// Filter markup of gravatars to modify markup for lazy loading.
-		add_filter( 'get_avatar', [ $this, 'filter_markup' ] );
+		add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
 
 		// Adds lazyload markup and noscript element to post thumbnail.
-		add_filter( 'post_thumbnail_html', [ $this, 'filter_markup' ], 10, 1 );
+		add_filter( 'post_thumbnail_html', array( $this, 'filter_markup' ), 10, 1 );
 
 		// Enqueues scripts and styles.
-		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ], 20 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_script' ), 20 );
 
 		// Adds inline style.
-		add_action( 'wp_head', [ $this, 'add_inline_style' ] );
+		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
 
 		// Adds inline script.
-		add_action( 'wp_footer', [ $this, 'add_inline_script' ] );
+		add_action( 'wp_footer', array( $this, 'add_inline_script' ) );
 
 		// Load the language files.
-		add_action( 'plugins_loaded', [ $this, 'load_translation' ] );
+		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
 		// Action on uninstall.
-		register_uninstall_hook( __FILE__, [
+		register_uninstall_hook( __FILE__, array(
 			'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin',
 			'uninstall',
-		] );
+		) );
 	}
 
 	/**
