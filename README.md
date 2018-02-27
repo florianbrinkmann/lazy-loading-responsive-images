@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.2.7  
+**Stable tag:** 3.2.8  
 **Requires PHP:** 5.3  
 
 
@@ -42,6 +42,13 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 
 ## Changelog 
+
+
+### 3.2.8 – 27.02.2018 
+
+**Fixed**
+
+* Correctly set `.lazyload` images to `display: none` if JS is disabled.
 
 
 ### 3.2.7 – 22.02.2018 

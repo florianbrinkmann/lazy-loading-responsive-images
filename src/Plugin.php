@@ -269,7 +269,7 @@ class Plugin {
 				if ( $img->hasAttribute( 'data-no-lazyload' ) ) {
 					continue;
 				} // End if().
-				
+
 				// Check if the img not already has the lazyload class.
 				if ( strpos( $img->getAttribute( 'class' ), 'lazyload' ) === false ) {
 					// Save the image original attributes.
@@ -589,8 +589,12 @@ class Plugin {
 			transition: opacity 300ms;
 		}
 		
-		.no-js .lazyload {
+		.lazyload {
 			display: none;
+		}
+		
+		.js .lazyload {
+			display: block;
 		}</style>';
 	}
 
