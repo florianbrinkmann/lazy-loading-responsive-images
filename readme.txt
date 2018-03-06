@@ -22,6 +22,7 @@ Lazy loads (without the need of any manually modifications):
 
 **The plugin comes with the following options (under Settings › Media › Lazy Loader options):**
 
+* Do not lazy load elements with specific CSS classes.
 * Enable lazy loading for iFrames.
 * Include the lazysizes unveilhooks plugin that adds support for more elements, for example, video and audio elements.*
 * Enable lazy loading for video element placeholders.
@@ -38,7 +39,7 @@ The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
 The auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
 
-You can disable lazy loading for specific image classes by adding them in the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the data-no-lazyload attribute.
+You can disable lazy loading for specific CSS classes by adding them in the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the data-no-lazyload attribute.
 
 == Installation ==
 
