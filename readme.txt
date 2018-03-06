@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
 Tested up to: 4.9.4
-Stable tag: 3.2.9
+Stable tag: 3.2.10
 Requires PHP: 5.3
 
 == Description ==
@@ -25,7 +25,7 @@ Lazy loads (without the need of any manually modifications):
 * Do not lazy load elements with specific CSS classes.
 * Enable lazy loading for iFrames.
 * Include the lazysizes unveilhooks plugin that adds support for more elements, for example, video and audio elements.*
-* Enable lazy loading for video element placeholders.
+* Enable lazy loading for video element poster frame.
 * Enable lazy loading for audio elements.
 * Include lazysizes aspectratio plugin. This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 
@@ -48,6 +48,12 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 * If you want to add support for iFrames, video/audio elements, or things the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
 
 == Changelog ==
+
+= 3.2.10 – 06.03.2018 =
+
+**Fixed**
+
+* Small error in the readme.
 
 = 3.2.9 – 06.03.2018 =
 
