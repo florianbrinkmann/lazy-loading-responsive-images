@@ -17,6 +17,7 @@ use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages
  */
 class Settings {
+
 	/**
 	 * Helpers object.
 	 *
@@ -67,6 +68,13 @@ class Settings {
 	public $enable_for_audios;
 
 	/**
+	 * Value of setting for loading the aspectratio plugin.
+	 *
+	 * @var string
+	 */
+	public $load_aspectratio_plugin;
+
+	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
@@ -80,22 +88,31 @@ class Settings {
 				'label'             => __( 'CSS classes to exclude', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'Enter one or more CSS classes to exclude them from lazy loading (separated by comma).', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'text_field_cb' ),
-				'sanitize_callback' => array( $this->helpers, 'sanitize_class_name_list' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_class_name_list',
+				),
 			),
 			'lazy_load_responsive_images_enable_for_iframes' => array(
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_iframes', '0' ),
 				'label'             => __( 'Enable lazy loading for iframes', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
-				'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
 			),
 			'lazy_load_responsive_images_unveilhooks_plugin' => array(
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_unveilhooks_plugin', '0' ),
-				'label'             => __( 'Include lazyload unveilhooks extension' ),
-				'description'       => __( 'The extension adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>.', 'lazy-loading-responsive-images' ),
+				'label'             => __( 'Include lazyload unveilhooks plugin' ),
+				'description'       => __( 'The plugin adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>. Size of the additional JavaScript file: 1.43&nbsp;KB.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
-				'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
 			),
 			'lazy_load_responsive_images_enable_for_videos'  => array(
 				'type'              => 'checkbox',
@@ -103,7 +120,10 @@ class Settings {
 				'label'             => __( 'Enable lazy loading for videos', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'This feature needs the unveilhooks plugin and will automatically load it, regardless of the option to load the unveilhooks plugin is enabled or not.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
-				'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
 			),
 			'lazy_load_responsive_images_enable_for_audios'  => array(
 				'type'              => 'checkbox',
@@ -111,7 +131,21 @@ class Settings {
 				'label'             => __( 'Enable lazy loading for audios', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'This feature needs the unveilhooks plugin and will automatically load it, regardless of the option to load the unveilhooks plugin is enabled or not.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
-				'sanitize_callback' => array( $this->helpers, 'sanitize_checkbox' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
+			),
+			'lazy_load_responsive_images_aspectratio_plugin' => array(
+				'type'              => 'checkbox',
+				'value'             => get_option( 'lazy_load_responsive_images_aspectratio_plugin', '0' ),
+				'label'             => __( 'Include lazyload aspectratio plugin', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'The plugin helps to avoid content jumping when images are loaded and makes lazy loading work with masonry grids – <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio">more info on the plugin page</a>. Size of the additional JavaScript file: 2.61&nbsp;KB.', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'checkbox_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
 			),
 		);
 
@@ -121,6 +155,7 @@ class Settings {
 		$this->load_unveilhooks_plugin = $this->options['lazy_load_responsive_images_unveilhooks_plugin']['value'];
 		$this->enable_for_videos       = $this->options['lazy_load_responsive_images_enable_for_videos']['value'];
 		$this->enable_for_audios       = $this->options['lazy_load_responsive_images_enable_for_audios']['value'];
+		$this->load_aspectratio_plugin = $this->options['lazy_load_responsive_images_aspectratio_plugin']['value'];
 
 		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
@@ -180,7 +215,8 @@ class Settings {
 	 *
 	 * @type string $type               (Required) »themes« or »plugins«.
 	 * @type string $label_for          (Required) Value for the for attribute.
-	 * @type string $settings           (Required) Theme slug or plugin basename.
+	 * @type string $settings           (Required) Theme slug or plugin
+	 *       basename.
 	 * @type string $value_array_key    (Required) array key for the value.
 	 * }
 	 */
@@ -210,7 +246,8 @@ class Settings {
 	 *
 	 * @type string $type               (Required) »themes« or »plugins«.
 	 * @type string $label_for          (Required) Value for the for attribute.
-	 * @type string $settings           (Required) Theme slug or plugin basename.
+	 * @type string $settings           (Required) Theme slug or plugin
+	 *       basename.
 	 * @type string $value_array_key    (Required) array key for the value.
 	 * }
 	 */

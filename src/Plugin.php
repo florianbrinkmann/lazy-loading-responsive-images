@@ -253,6 +253,19 @@ class Plugin {
 	public function modify_img_markup( $dom ) {
 		// Loop through the image elements.
 		foreach ( $dom->getElementsByTagName( 'img' ) as $img ) {
+			// Get width and height.
+			$img_width  = $img->getAttribute( 'width' );
+			$img_height = $img->getAttribute( 'height' );
+
+			if ( '' === $img_width || '' === $img_height ) {
+				// Get sizes via getimagesize().
+				$sizes = getimagesize( $img->getAttribute( 'src' ) );
+				if ( false !== $sizes ) {
+					$img_width  = $sizes[1];
+					$img_height = $sizes[0];
+				} // End if().
+			} // End if().
+
 			// Get the image classes as an array.
 			$img_classes = explode( ' ', $img->getAttribute( 'class' ) );
 
@@ -314,11 +327,15 @@ class Plugin {
 						$img->setAttribute( 'data-src', $src );
 					} // End if().
 
+					if ( '' !== $img_width && '' !== $img_height ) {
+						$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
+					}
+
 					// Get the classes.
 					$classes = $img->getAttribute( 'class' );
 
 					// Add lazyload class.
-					$classes .= " lazyload";
+					$classes .= ' lazyload';
 
 					// Set the class string.
 					$img->setAttribute( 'class', $classes );
@@ -385,7 +402,7 @@ class Plugin {
 					$classes = $iframe->getAttribute( 'class' );
 
 					// Add lazyload class.
-					$classes .= " lazyload";
+					$classes .= ' lazyload';
 
 					// Set the class string.
 					$iframe->setAttribute( 'class', $classes );
@@ -394,8 +411,7 @@ class Plugin {
 					$iframe->removeAttribute( 'src' );
 
 					// Add noscript element.
-					$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes,
-						$src );
+					$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes, $src );
 
 					// Save the content.
 					$dom->saveHTMLExact();
@@ -469,14 +485,13 @@ class Plugin {
 					$classes = $video->getAttribute( 'class' );
 
 					// Add lazyload class.
-					$classes .= " lazyload";
+					$classes .= ' lazyload';
 
 					// Set the class string.
 					$video->setAttribute( 'class', $classes );
 
 					// Add noscript element.
-					$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes,
-						$src );
+					$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes, $src );
 
 					// Save the content.
 					$dom->saveHTMLExact();
@@ -538,14 +553,13 @@ class Plugin {
 					$classes = $audio->getAttribute( 'class' );
 
 					// Add lazyload class.
-					$classes .= " lazyload";
+					$classes .= ' lazyload';
 
 					// Set the class string.
 					$audio->setAttribute( 'class', $classes );
 
 					// Add noscript element.
-					$dom = $this->add_noscript_element( $audio_attributes, $dom, $audio, 'AUDIO', $classes,
-						$src );
+					$dom = $this->add_noscript_element( $audio_attributes, $dom, $audio, 'AUDIO', $classes, $src );
 
 					// Save the content.
 					$dom->saveHTMLExact();
@@ -567,6 +581,12 @@ class Plugin {
 		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url() . '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js', 'lazysizes', false, true );
+		}
+
+		// Check if unveilhooks plugin should be loaded.
+		if ( '1' === $this->settings->load_aspectratio_plugin ) {
+			// Enqueue unveilhooks plugin.
+			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url() . '/lazy-loading-responsive-images/js/ls.aspectratio.min.js', 'lazysizes', false, true );
 		}
 	}
 
