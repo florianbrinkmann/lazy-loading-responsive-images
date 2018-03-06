@@ -53,7 +53,7 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 ## Changelog 
 
 
-### 3.2.9 – 06.3.2018 
+### 3.2.9 – 06.03.2018 
 
 **Added**
 
