@@ -3,13 +3,13 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.2.8  
+**Stable tag:** 3.2.9  
 **Requires PHP:** 5.3  
 
 
 ## Description 
 
-Lazy loading plugin that supports images, iFrames, video and audio elements and uses lazysizes.js. With manual modification of the markup it is also possible to lazy load background images, scripts, and styles.
+Lazy loading plugin that supports images, iFrames, video and audio elements and uses the lightweight lazysizes script. With manual modification of the markup it is also possible to lazy load background images, scripts, and styles.
 
 Lazy loads (without the need of any manually modifications):
 
@@ -19,9 +19,17 @@ Lazy loads (without the need of any manually modifications):
 * Video elements.*
 * Audio elements.*
 
-\* *Can be enabled in the plugin options (Settings › Media › Lazy Loader options). Lazy loading of video and audio elements need the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks), which can be included via an additional option in the plugin settings.*
+\* *Can be enabled in the plugin options.*
 
-The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
+**The plugin comes with the following options (under Settings › Media › Lazy Loader options):**
+
+* Enable lazy loading for iFrames.
+* Include the lazysizes unveilhooks plugin that adds support for more elements, for example, video and audio elements.*
+* Enable lazy loading for video element placeholders.
+* Enable lazy loading for audio elements.
+* Include lazysizes aspectratio plugin. This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
+
+\* The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
 
 * Background images.
 * Scripts.
@@ -42,6 +50,13 @@ You can disable lazy loading for specific image classes by adding them in the pl
 
 
 ## Changelog 
+
+
+### 3.2.9 – 06.3.2018 
+
+**Added**
+
+* Option to load the lazysizes aspectratio plugin. This plugin calculates the space that the images need before they are loaded. With that enabled, the lazy loading should also work for masonry grids without further markup modifications. Thanks to W.org user zitrusblau for the hint with the plugin.
 
 
 ### 3.2.8 – 27.02.2018 
