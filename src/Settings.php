@@ -106,7 +106,7 @@ class Settings {
 			'lazy_load_responsive_images_unveilhooks_plugin' => array(
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_unveilhooks_plugin', '0' ),
-				'label'             => __( 'Include lazyload unveilhooks plugin' ),
+				'label'             => __( 'Include lazysizes unveilhooks plugin' ),
 				'description'       => __( 'The plugin adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>. Size of the additional JavaScript file: 1.43&nbsp;KB.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
@@ -139,7 +139,7 @@ class Settings {
 			'lazy_load_responsive_images_aspectratio_plugin' => array(
 				'type'              => 'checkbox',
 				'value'             => get_option( 'lazy_load_responsive_images_aspectratio_plugin', '0' ),
-				'label'             => __( 'Include lazyload aspectratio plugin', 'lazy-loading-responsive-images' ),
+				'label'             => __( 'Include lazysizes aspectratio plugin', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'The plugin helps to avoid content jumping when images are loaded and makes lazy loading work with masonry grids – <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio">more info on the plugin page</a>. Size of the additional JavaScript file: 2.61&nbsp;KB.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
