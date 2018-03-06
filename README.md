@@ -26,7 +26,7 @@ Lazy loads (without the need of any manually modifications):
 * Do not lazy load elements with specific CSS classes.
 * Enable lazy loading for iFrames.
 * Include the lazysizes unveilhooks plugin that adds support for more elements, for example, video and audio elements.*
-* Enable lazy loading for video element poster frame.
+* Enable lazy loading the for poster frame of video elements.
 * Enable lazy loading for audio elements.
 * Include lazysizes aspectratio plugin. This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 
