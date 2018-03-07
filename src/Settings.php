@@ -7,8 +7,6 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
-
 /**
  * Class Settings
  *
@@ -75,6 +73,27 @@ class Settings {
 	public $load_aspectratio_plugin;
 
 	/**
+	 * Value of setting for displaying a loading spinner.
+	 *
+	 * @var string
+	 */
+	public $loading_spinner;
+
+	/**
+	 * Default loading spinner color.
+	 *
+	 * @var string
+	 */
+	public static $loading_spinner_color_default = '#333333';
+
+	/**
+	 * Value of setting for loading spinner color.
+	 *
+	 * @var string
+	 */
+	public $loading_spinner_color;
+
+	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
@@ -82,8 +101,7 @@ class Settings {
 		$this->helpers = new Helpers();
 
 		$this->options = array(
-			'lazy_load_responsive_images_disabled_classes'   => array(
-				'type'              => 'text',
+			'lazy_load_responsive_images_disabled_classes'      => array(
 				'value'             => get_option( 'lazy_load_responsive_images_disabled_classes', '' ),
 				'label'             => __( 'CSS classes to exclude', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'Enter one or more CSS classes to exclude them from lazy loading (separated by comma).', 'lazy-loading-responsive-images' ),
@@ -93,8 +111,7 @@ class Settings {
 					'sanitize_class_name_list',
 				),
 			),
-			'lazy_load_responsive_images_enable_for_iframes' => array(
-				'type'              => 'checkbox',
+			'lazy_load_responsive_images_enable_for_iframes'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_iframes', '0' ),
 				'label'             => __( 'Enable lazy loading for iframes', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
@@ -103,8 +120,7 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
-			'lazy_load_responsive_images_unveilhooks_plugin' => array(
-				'type'              => 'checkbox',
+			'lazy_load_responsive_images_unveilhooks_plugin'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_unveilhooks_plugin', '0' ),
 				'label'             => __( 'Include lazysizes unveilhooks plugin' ),
 				'description'       => __( 'The plugin adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>. Size of the additional JavaScript file: 1.43&nbsp;KB.', 'lazy-loading-responsive-images' ),
@@ -114,8 +130,7 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
-			'lazy_load_responsive_images_enable_for_videos'  => array(
-				'type'              => 'checkbox',
+			'lazy_load_responsive_images_enable_for_videos'     => array(
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_videos', '0' ),
 				'label'             => __( 'Enable lazy loading for videos', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'This feature needs the unveilhooks plugin and will automatically load it, regardless of the option to load the unveilhooks plugin is enabled or not.', 'lazy-loading-responsive-images' ),
@@ -125,8 +140,7 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
-			'lazy_load_responsive_images_enable_for_audios'  => array(
-				'type'              => 'checkbox',
+			'lazy_load_responsive_images_enable_for_audios'     => array(
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_audios', '0' ),
 				'label'             => __( 'Enable lazy loading for audios', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'This feature needs the unveilhooks plugin and will automatically load it, regardless of the option to load the unveilhooks plugin is enabled or not.', 'lazy-loading-responsive-images' ),
@@ -136,8 +150,7 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
-			'lazy_load_responsive_images_aspectratio_plugin' => array(
-				'type'              => 'checkbox',
+			'lazy_load_responsive_images_aspectratio_plugin'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_aspectratio_plugin', '0' ),
 				'label'             => __( 'Include lazysizes aspectratio plugin', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'The plugin helps to avoid content jumping when images are loaded and makes lazy loading work with masonry grids – <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio">more info on the plugin page</a>. Size of the additional JavaScript file: 2.61&nbsp;KB.', 'lazy-loading-responsive-images' ),
@@ -145,6 +158,26 @@ class Settings {
 				'sanitize_callback' => array(
 					$this->helpers,
 					'sanitize_checkbox',
+				),
+			),
+			'lazy_load_responsive_images_loading_spinner'       => array(
+				'value'             => get_option( 'lazy_load_responsive_images_loading_spinner', '0' ),
+				'label'             => __( 'Display a loading spinner', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'To give the users a hint that there is something loading where they just see empty space. Works best with the aspectratio option.', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'checkbox_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
+			),
+			'lazy_load_responsive_images_loading_spinner_color' => array(
+				'value'             => get_option( 'lazy_load_responsive_images_loading_spinner_color', self::$loading_spinner_color_default ),
+				'label'             => __( 'Color of the spinner', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Spinner color in hex format. Default: #333333', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'color_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_hex_color',
 				),
 			),
 		);
@@ -156,9 +189,17 @@ class Settings {
 		$this->enable_for_videos       = $this->options['lazy_load_responsive_images_enable_for_videos']['value'];
 		$this->enable_for_audios       = $this->options['lazy_load_responsive_images_enable_for_audios']['value'];
 		$this->load_aspectratio_plugin = $this->options['lazy_load_responsive_images_aspectratio_plugin']['value'];
+		$this->loading_spinner         = $this->options['lazy_load_responsive_images_loading_spinner']['value'];
+		$this->loading_spinner_color   = $this->options['lazy_load_responsive_images_loading_spinner_color']['value'];
 
 		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
+
+		// Include color picker JS.
+		add_action( 'admin_enqueue_scripts', array(
+			$this,
+			'add_inline_script',
+		) );
 	}
 
 	/**
@@ -213,11 +254,9 @@ class Settings {
 	 * @param array $args               {
 	 *                                  Argument array.
 	 *
-	 * @type string $type               (Required) »themes« or »plugins«.
-	 * @type string $label_for          (Required) Value for the for attribute.
-	 * @type string $settings           (Required) Theme slug or plugin
-	 *       basename.
-	 * @type string $value_array_key    (Required) array key for the value.
+	 * @type string $label_for          (Required) The label for the checkbox.
+	 * @type string $value              (Required) The value.
+	 * @type string $description        (Required) Description.
 	 * }
 	 */
 	public function checkbox_field_cb( $args ) {
@@ -244,11 +283,9 @@ class Settings {
 	 * @param array $args               {
 	 *                                  Argument array.
 	 *
-	 * @type string $type               (Required) »themes« or »plugins«.
-	 * @type string $label_for          (Required) Value for the for attribute.
-	 * @type string $settings           (Required) Theme slug or plugin
-	 *       basename.
-	 * @type string $value_array_key    (Required) array key for the value.
+	 * @type string $label_for          (Required) The label for the text field.
+	 * @type string $value              (Required) The value.
+	 * @type string $description        (Required) Description.
 	 * }
 	 */
 	public function text_field_cb( $args ) {
@@ -267,5 +304,45 @@ class Settings {
 			</p>
 			<?php
 		}
+	}
+
+	/**
+	 * Color field callback.
+	 *
+	 * @param array $args               {
+	 *                                  Argument array.
+	 *
+	 * @type string $label_for          (Required) The label for the color
+	 *       field.
+	 * @type string $value              (Required) The value.
+	 * @type string $description        (Required) Description.
+	 * }
+	 */
+	public function color_field_cb( $args ) {
+		// Get option value.
+		$option_value = $args['value'];
+
+		// Get label for.
+		$label_for = esc_attr( $args['label_for'] ); ?>
+		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
+		       type="text" value="<?php echo $option_value; ?>"
+		       data-default-color="<?php echo self::$loading_spinner_color_default; ?>"
+		       class="lazy-load-responsive-images-color-field">
+		<?php
+		// Check for description.
+		if ( '' !== $args['description'] ) { ?>
+			<p class="description">
+				<?php echo $args['description']; ?>
+			</p>
+			<?php
+		}
+	}
+
+	public function add_inline_script() {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+		wp_add_inline_script( 'wp-color-picker', "jQuery(document).ready(function($){
+    $('.lazy-load-responsive-images-color-field').wpColorPicker();
+});" );
 	}
 }

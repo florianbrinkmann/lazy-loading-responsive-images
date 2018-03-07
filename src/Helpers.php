@@ -7,6 +7,8 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
+use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
+
 /**
  * Class Helpers
  *
@@ -15,6 +17,7 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages
  */
 class Helpers {
+
 	/**
 	 * Checks if this is a request at the backend.
 	 *
@@ -80,7 +83,7 @@ class Helpers {
 	}
 
 	/**
-	 * Sanitize comma separated list of class names
+	 * Sanitize comma separated list of class names.
 	 *
 	 * @param string $class_names Comma separated list of HTML class names.
 	 *
@@ -111,7 +114,7 @@ class Helpers {
 	}
 
 	/**
-	 * Sanitize comma separated list of class names
+	 * Sanitize comma separated list of class names.
 	 *
 	 * @link https://github.com/WPTRT/code-examples/blob/master/customizer/sanitization-callbacks.php
 	 *
@@ -124,18 +127,19 @@ class Helpers {
 	}
 
 	/**
-	 * Checks if checkbox for unveilhooks plugin is checked.
+	 * Sanitize hex color value.
 	 *
-	 * @param WP_Customize_Control $control Control object.
+	 * @param string $value The input from the color input.
 	 *
-	 * @return bool true if unevilhooks plugin checkbox is checked, otherwise false.
+	 * @return string The hex value.
 	 */
-	function display_video_option( $control ) {
-		$value = $control->manager->get_setting( 'lazy_load_responsive_images_unveilhooks_plugin' )->value();
-		if ( $value == '1' ) {
-			return true;
+	public function sanitize_hex_color( $value ) {
+		// Sanitize the input.
+		$sanitized = sanitize_hex_color( $value );
+		if ( null !== $sanitized && '' !== $sanitized ) {
+			return $value;
 		} else {
-			return false;
-		}
+			return Settings::$loading_spinner_color_default;
+		} // End if().
 	}
 }
