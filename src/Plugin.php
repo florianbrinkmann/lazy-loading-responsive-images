@@ -551,6 +551,13 @@ class Plugin {
 		.js .lazyload {
 			display: block;
 		}</style>';
+
+		/**
+		 * Filter for the default inline style element.
+		 *
+		 * @param string $default_styles The default styles (including <style> element).
+		 */
+		echo apply_filters( 'lazy_load_responsive_images_inline_styles', $default_styles );
 	}
 
 	/**
