@@ -53,6 +53,22 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 ## Changelog 
 
 
+### 3.2.11 – 07.03.2018 
+
+**Added**
+
+* `lazy_load_responsive_images_inline_styles` filter for filtering the inline CSS (including the `style` element).
+
+**Changed**
+
+* Using `DOMXpath()->query()`` to fetch the element nodes.
+* Looping the nodes once inside `FlorianBrinkmann\LazyLoadResponsiveImages\Plugin()->filter_markup()` and no longer one time in each of the three element-specific methods.
+
+**Fixed**
+
+* Do not modify elements inside noscript elements.
+
+
 ### 3.2.10 – 06.03.2018 
 
 **Fixed**
