@@ -98,9 +98,6 @@ class Plugin {
 		// Adds inline style.
 		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
 
-		// Adds inline script.
-		add_action( 'wp_footer', array( $this, 'add_inline_script' ) );
-
 		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
@@ -544,14 +541,6 @@ class Plugin {
 		.lazyloaded {
 			opacity: 1;
 			transition: opacity 300ms;
-		}
-		
-		.lazyload {
-			display: none;
-		}
-		
-		.js .lazyload {
-			display: block;
 		}</style>";
 
 		/**
@@ -584,15 +573,9 @@ class Plugin {
 				rawurlencode( $spinner_markup )
 			);
 		} // End if().
-	}
 
-	/**
-	 * Adds inline script.
-	 */
-	public function add_inline_script() {
-		wp_add_inline_script( 'lazysizes', "if (!document.documentElement.classList.contains('js')) {
-			document.documentElement.classList.add('js');
-		}" );
+		// Hide images if no JS.
+		echo '<noscript><style>.lazyload { display: none; }</style></noscript>';
 	}
 
 	/**

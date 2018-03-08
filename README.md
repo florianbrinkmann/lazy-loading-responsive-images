@@ -25,10 +25,11 @@ Lazy loads (without the need of any manually modifications):
 
 * Do not lazy load elements with specific CSS classes.
 * Enable lazy loading for iFrames.
-* Include the lazysizes unveilhooks plugin that adds support for more elements, for example, video and audio elements.*
+* Include the [lazysizes unveilhooks plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) that adds support for more elements, for example, video and audio elements.*
 * Enable lazy loading for the poster frame of video elements.
 * Enable lazy loading for audio elements.
-* Include lazysizes aspectratio plugin. This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
+* Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
+* Display a loading spinner.
 
 \* The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
 
@@ -47,26 +48,60 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 
 * Install plugin.
 * Activate it.
-* If you want to add support for iFrames, video/audio elements, or things the [lazysizes unveilhooks extension](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) supports, go to the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
+* You can find the plugin settings under *Settings* › *Media* › *Lazy Loader options*.
+
+
+## Frequently Asked Questions 
+
+
+### How can I disable/modify the inline styles? 
+
+You can use the `lazy_load_responsive_images_inline_styles` filter for that. For example, to remove the inline styles, use the following code:
+
+`add_filter( 'lazy_load_responsive_images_inline_styles', function () {
+	return '';
+} );`
+
+If you want to modify it, you can overwrite the plugin’s styles like that (remember to include the opening and closing `style` tags):
+
+`add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_styles ) {
+	return '<style>.lazyload,
+		.lazyloading {
+			opacity: 0;
+		}
+
+
+		.lazyloaded {
+			opacity: 1;
+			transition: opacity 300ms;
+		}</style>';
+} );`
+
+The CSS from the example are the default styles that are used by the plugin.
 
 
 ## Changelog 
 
 
-### 3.2.11 – 07.03.2018 
+### 3.3.0 – 08.03.2018 
+
+(there was also a new feature added in 3.2.9, but I forgot to increase the minor version number there…)
 
 **Added**
 
 * `lazy_load_responsive_images_inline_styles` filter for filtering the inline CSS (including the `style` element).
+* Option to display a loading spinner and define its color.
 
 **Changed**
 
-* Using `DOMXpath()->query()`` to fetch the element nodes.
+* Use style inside `noscript` element to hide lazyload images if no JS.
+* Using `DOMXpath()->query()` to fetch the element nodes.
 * Looping the nodes once inside `FlorianBrinkmann\LazyLoadResponsiveImages\Plugin()->filter_markup()` and no longer one time in each of the three element-specific methods.
 
 **Fixed**
 
 * Do not modify elements inside noscript elements.
+* Doc fixes.
 
 
 ### 3.2.10 – 06.03.2018 
