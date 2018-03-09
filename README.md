@@ -95,7 +95,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 **Added**
 
-* `lazy_load_responsive_images_inline_styles` filter for modifying the inline CSS (for modification, you also need to add the opening and closing `style` tags). If you use the spinner option and the filter, you need to add the spinner styles, because they are part of the filtered CSS ([Gist with the spinner styles used by default](https://gist.github.com/florianbrinkmann/937495c7b41df3c1600ef7d9c6e95a9e)]).
+* `lazy_load_responsive_images_inline_styles` filter for modifying the inline CSS (for modification, you also need to add the opening and closing `style` tags). If you use the spinner option and the filter, you need to add the spinner styles, because they are part of the filtered CSS ([Gist with the spinner styles used by default](https://gist.github.com/florianbrinkmann/937495c7b41df3c1600ef7d9c6e95a9e)).
 * Option to display a loading spinner and define its color.
 
 **Changed**
