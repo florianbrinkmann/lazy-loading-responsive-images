@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.3.1  
+**Stable tag:** 3.3.2  
 **Requires PHP:** 5.3  
 
 
@@ -87,6 +87,13 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.3.2 – 09.03.2018 
+
+**Fixed**
+
+* Removed try to get width and height from images without `width` and `height` attr with `getimagesize` because it may cause a PHP warning.
 
 
 ### 3.3.1 – 09.03.2018 

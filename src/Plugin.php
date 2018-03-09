@@ -222,19 +222,6 @@ class Plugin {
 	 * @return SmartDomDocument The updated DOM.
 	 */
 	public function modify_img_markup( $img, $dom ) {
-		// Get width and height.
-		$img_width  = $img->getAttribute( 'width' );
-		$img_height = $img->getAttribute( 'height' );
-
-		if ( '' === $img_width || '' === $img_height ) {
-			// Get sizes via getimagesize().
-			$sizes = getimagesize( $img->getAttribute( 'src' ) );
-			if ( false !== $sizes ) {
-				$img_width  = $sizes[1];
-				$img_height = $sizes[0];
-			} // End if().
-		} // End if().
-
 		// Save the image original attributes.
 		$img_attributes = $img->attributes;
 
@@ -277,8 +264,14 @@ class Plugin {
 			$img->setAttribute( 'data-src', $src );
 		} // End if().
 
-		if ( '' !== $img_width && '' !== $img_height ) {
-			$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
+		if ( '1' === $this->settings->load_aspectratio_plugin ) {
+			// Get width and height.
+			$img_width  = $img->getAttribute( 'width' );
+			$img_height = $img->getAttribute( 'height' );
+
+			if ( '' !== $img_width && '' !== $img_height ) {
+				$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
+			} // End if().
 		} // End if().
 
 		// Get the classes.
