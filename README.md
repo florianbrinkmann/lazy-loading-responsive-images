@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.2.10  
+**Stable tag:** 3.3.0  
 **Requires PHP:** 5.3  
 
 
@@ -56,6 +56,8 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 
 ### How can I disable/modify the inline styles? 
 
+**Important:** If you modify or remove the inline styles, also the style that shows the loading spinner is affected. So if you remove the styles or modify them without adding back the spinner styles, the spinner option will not work. [I created a Gist with the spinner styles – just add them to your modification to make it work](https://gist.github.com/florianbrinkmann/937495c7b41df3c1600ef7d9c6e95a9e).
+
 You can use the `lazy_load_responsive_images_inline_styles` filter for that. For example, to remove the inline styles, use the following code:
 
 `add_filter( 'lazy_load_responsive_images_inline_styles', function () {
@@ -77,19 +79,19 @@ If you want to modify it, you can overwrite the plugin’s styles like that (rem
 		}</style>';
 } );`
 
-The CSS from the example are the default styles that are used by the plugin.
+The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles).
 
 
 ## Changelog 
 
 
-### 3.3.0 – 08.03.2018 
+### 3.3.0 – 09.03.2018 
 
 (there was also a new feature added in 3.2.9, but I forgot to increase the minor version number there…)
 
 **Added**
 
-* `lazy_load_responsive_images_inline_styles` filter for filtering the inline CSS (including the `style` element).
+* `lazy_load_responsive_images_inline_styles` filter for modifying the inline CSS (for modification, you also need to add the opening and closing `style` tags). If you use the spinner option and the filter, you need to add the spinner styles, because they are part of the filtered CSS ([Gist with the spinner styles used by default](https://gist.github.com/florianbrinkmann/937495c7b41df3c1600ef7d9c6e95a9e)]).
 * Option to display a loading spinner and define its color.
 
 **Changed**

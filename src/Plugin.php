@@ -531,34 +531,16 @@ class Plugin {
 	 * echo it.
 	 */
 	public function add_inline_style() {
-		// Display the default styles.
-		$default_styles = "<style>.lazyload,
-        .lazyloading {
-			opacity: 0;
-		}
-		
-		
-		.lazyloaded {
-			opacity: 1;
-			transition: opacity 300ms;
-		}</style>";
-
-		/**
-		 * Filter for the default inline style element.
-		 *
-		 * @param string $default_styles The default styles (including <style> element).
-		 */
-		echo apply_filters( 'lazy_load_responsive_images_inline_styles', $default_styles );
-
-		// Display the loading spinner style if needed.
+		// Create loading spinner style if needed.
+		$spinner_styles = '';
 		$spinner_color  = $this->settings->loading_spinner_color;
 		$spinner_markup = sprintf(
 			'<svg width="44" height="44" xmlns="http://www.w3.org/2000/svg" stroke="%s"><g fill="none" fill-rule="evenodd" stroke-width="2"><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle></g></svg>',
 			$spinner_color
 		);
 		if ( '1' === $this->settings->loading_spinner ) {
-			printf(
-				'<style>.lazyloading {
+			$spinner_styles = sprintf(
+				'.lazyloading {
   color: transparent;
   opacity: 1;
   transition: opacity 300ms;
@@ -569,10 +551,29 @@ class Plugin {
 
 .lazyloaded {
   transition: none;
-}</style>',
+}',
 				rawurlencode( $spinner_markup )
 			);
 		} // End if().
+
+		// Display the default styles.
+		$default_styles = "<style>.lazyload,
+        .lazyloading {
+			opacity: 0;
+		}
+		
+		
+		.lazyloaded {
+			opacity: 1;
+			transition: opacity 300ms;
+		}$spinner_styles</style>";
+
+		/**
+		 * Filter for the default inline style element.
+		 *
+		 * @param string $default_styles The default styles (including <style> element).
+		 */
+		echo apply_filters( 'lazy_load_responsive_images_inline_styles', $default_styles );
 
 		// Hide images if no JS.
 		echo '<noscript><style>.lazyload { display: none; }</style></noscript>';
