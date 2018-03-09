@@ -94,7 +94,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 **Changed**
 
-* Use style inside `noscript` element to hide lazyload images if no JS.
+* Use style inside `noscript` element to hide `.lazyload` images if no JS instead of adding a `js` class via JS to the `html` element.
 * Using `DOMXpath()->query()` to fetch the element nodes.
 * Looping the nodes once inside `FlorianBrinkmann\LazyLoadResponsiveImages\Plugin()->filter_markup()` and no longer one time in each of the three element-specific methods.
 
