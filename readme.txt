@@ -54,15 +54,18 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 
 **Important:** If you modify or remove the inline styles, also the style that shows the loading spinner is affected. So if you remove the styles or modify them without adding back the spinner styles, the spinner option will not work. [I created a Gist with the spinner styles – just add them to your modification to make it work](https://gist.github.com/florianbrinkmann/937495c7b41df3c1600ef7d9c6e95a9e).
 
-You can use the `lazy_load_responsive_images_inline_styles` filter for that. For example, to remove the inline styles, use the following code:
+To disable or modify the plugin’s inline styles (except the style that hides the `img.lazyload` elements when JS is disabled, so only the `noscript` version is displayed) you can use the `lazy_load_responsive_images_inline_styles` filter. For example, to remove the inline styles, use the following code:
 
-`add_filter( 'lazy_load_responsive_images_inline_styles', function () {
+```
+add_filter( 'lazy_load_responsive_images_inline_styles', function () {
 	return '';
-} );`
+} );
+```
 
 If you want to modify it, you can overwrite the plugin’s styles like that (remember to include the opening and closing `style` tags):
 
-`add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_styles ) {
+```
+add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_styles ) {
 	return '<style>.lazyload,
 		.lazyloading {
 			opacity: 0;
@@ -73,7 +76,8 @@ If you want to modify it, you can overwrite the plugin’s styles like that (rem
 			opacity: 1;
 			transition: opacity 300ms;
 		}</style>';
-} );`
+} );
+```
 
 The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles).
 
