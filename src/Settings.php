@@ -198,7 +198,7 @@ class Settings {
 		// Include color picker JS.
 		add_action( 'admin_enqueue_scripts', array(
 			$this,
-			'add_inline_script',
+			'add_color_picker',
 		) );
 	}
 
@@ -338,7 +338,18 @@ class Settings {
 		}
 	}
 
-	public function add_inline_script() {
+	/**
+	 * Add color picker to media settings page and init it.
+	 *
+	 * @param string $hook_suffix PHP file of the admin screen.
+	 */
+	public function add_color_picker( $hook_suffix ) {
+		// Check if we are not on the media backend screen.
+		if ( 'options-media.php' !== $hook_suffix ) {
+			return;
+		} // End if().
+
+		// Add color picker script and style and init it.
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_add_inline_script( 'wp-color-picker', "jQuery(document).ready(function($){

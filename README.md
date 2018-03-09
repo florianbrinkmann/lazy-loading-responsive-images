@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.3.0  
+**Stable tag:** 3.3.1  
 **Requires PHP:** 5.3  
 
 
@@ -87,6 +87,14 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.3.1 – 09.03.2018 
+
+**Fixed**
+
+* Added inline doc for `FlorianBrinkmann\LazyLoadResponsiveImages\Settings()->add_color_picker()`.
+* Only load color picker styles and script if on media settings page.
 
 
 ### 3.3.0 – 09.03.2018 
