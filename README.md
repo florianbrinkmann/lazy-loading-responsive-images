@@ -93,7 +93,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 ## Changelog 
 
 
-### 3.3.3 –  
+### 3.3.3 – 13.03.2018 
 
 **Fixed**
 
