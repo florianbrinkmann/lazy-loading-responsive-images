@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.3.2  
+**Stable tag:** 3.3.3  
 **Requires PHP:** 5.3  
 
 
@@ -60,17 +60,21 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 
 To disable or modify the plugin’s inline styles (except the style that hides the `img.lazyload` elements when JS is disabled, so only the `noscript` version is displayed) you can use the `lazy_load_responsive_images_inline_styles` filter. For example, to remove the inline styles, use the following code:
 
-```
+`
 add_filter( 'lazy_load_responsive_images_inline_styles', function () {
 	return '';
 } );
-```
+`
 
 If you want to modify it, you can overwrite the plugin’s styles like that (remember to include the opening and closing `style` tags):
 
-```
+`
 add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_styles ) {
-	return '<style>.lazyload,
+	return '<style>.lazyload {
+			display: block;
+		}
+
+		.lazyload,
 		.lazyloading {
 			opacity: 0;
 		}
@@ -81,12 +85,20 @@ add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_sty
 			transition: opacity 300ms;
 		}</style>';
 } );
-```
+`
 
-The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles).
+The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles). The `display: block` for `.lazyload` is important for the aspectratio plugin option.
 
 
 ## Changelog 
+
+
+### 3.3.3 –  
+
+**Fixed**
+
+* Fix broken code blocks in readme file.
+* Set `.lazyload` to `display: block` to make the aspectratio option work correctly again.
 
 
 ### 3.3.2 – 09.03.2018 

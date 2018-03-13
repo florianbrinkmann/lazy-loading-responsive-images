@@ -550,7 +550,11 @@ class Plugin {
 		} // End if().
 
 		// Display the default styles.
-		$default_styles = "<style>.lazyload,
+		$default_styles = "<style>.lazyload {
+	display: block;
+}
+
+.lazyload,
         .lazyloading {
 			opacity: 0;
 		}
