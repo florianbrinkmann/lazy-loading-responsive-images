@@ -87,7 +87,7 @@ class Plugin {
 		add_filter( 'post_thumbnail_html', array(
 			$this,
 			'filter_markup',
-		), 10, 1 );
+		), 500, 1 );
 
 		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array(
