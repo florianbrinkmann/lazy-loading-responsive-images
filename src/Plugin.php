@@ -225,6 +225,9 @@ class Plugin {
 		// Save the image original attributes.
 		$img_attributes = $img->attributes;
 
+		// Add noscript element.
+		$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG' );
+
 		// Check if the image has sizes and srcset attribute.
 		if ( $img->hasAttribute( 'sizes' ) && $img->hasAttribute( 'srcset' ) ) {
 			// Get sizes and srcset value.
@@ -286,9 +289,6 @@ class Plugin {
 		// Remove the src attribute.
 		$img->removeAttribute( 'src' );
 
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG', $classes, $src );
-
 		// Save the content.
 		$dom->saveHTMLExact();
 
@@ -306,6 +306,9 @@ class Plugin {
 	public function modify_iframe_markup( $iframe, $dom ) {
 		// Save the iframe original attributes.
 		$iframe_attributes = $iframe->attributes;
+
+		// Add noscript element.
+		$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME' );
 
 		// Check if the iframe has a src attribute.
 		if ( $iframe->hasAttribute( 'src' ) ) {
@@ -330,9 +333,6 @@ class Plugin {
 		// Remove the src attribute.
 		$iframe->removeAttribute( 'src' );
 
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME', $classes, $src );
-
 		// Save the content.
 		$dom->saveHTMLExact();
 
@@ -351,6 +351,9 @@ class Plugin {
 		// Save the original attributes.
 		$video_attributes = $video->attributes;
 
+		// Add noscript element.
+		$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO' );
+
 		// Check if the video has a poster attribute.
 		if ( $video->hasAttribute( 'poster' ) ) {
 			// Get poster attribute.
@@ -361,18 +364,6 @@ class Plugin {
 
 			// Set data-poster value.
 			$video->setAttribute( 'data-poster', $poster );
-		} // End if().
-
-		// Check if the video has a src attribute.
-		if ( $video->hasAttribute( 'src' ) ) {
-			// Get src attribute.
-			$src = $video->getAttribute( 'src' );
-
-			// Remove the src attribute.
-			$video->removeAttribute( 'src' );
-
-			// Set data-src value.
-			$video->setAttribute( 'data-src', $src );
 		} // End if().
 
 		// Set preload to none.
@@ -386,9 +377,6 @@ class Plugin {
 
 		// Set the class string.
 		$video->setAttribute( 'class', $classes );
-
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO', $classes, $src );
 
 		// Save the content.
 		$dom->saveHTMLExact();
@@ -408,17 +396,8 @@ class Plugin {
 		// Save the original attributes.
 		$audio_attributes = $audio->attributes;
 
-		// Check if the audio has a src attribute.
-		if ( $audio->hasAttribute( 'src' ) ) {
-			// Get src attribute.
-			$src = $audio->getAttribute( 'src' );
-
-			// Remove the src attribute.
-			$audio->removeAttribute( 'src' );
-
-			// Set data-src value.
-			$audio->setAttribute( 'data-src', $src );
-		} // End if().
+		// Add noscript element.
+		$dom = $this->add_noscript_element( $audio_attributes, $dom, $audio, 'AUDIO' );
 
 		// Set preload to none.
 		$audio->setAttribute( 'preload', 'none' );
@@ -431,9 +410,6 @@ class Plugin {
 
 		// Set the class string.
 		$audio->setAttribute( 'class', $classes );
-
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $audio_attributes, $dom, $audio, 'AUDIO', $classes, $src );
 
 		// Save the content.
 		$dom->saveHTMLExact();
@@ -452,12 +428,10 @@ class Plugin {
 	 * @param string           $tag_name       Tag name which needs to be
 	 *                                         created inside the noscript
 	 *                                         element.
-	 * @param string           $classes        String of the element’s classes.
-	 * @param string           $src            Value of the src attribute.
 	 *
 	 * @return SmartDomDocument The updates DOM.
 	 */
-	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name, $classes, $src ) {
+	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name ) {
 		$noscript = $dom->createElement( 'noscript' );
 
 		// Insert it before the img node.
@@ -466,32 +440,18 @@ class Plugin {
 		// Create element.
 		$media_element = $dom->createElement( $tag_name );
 
-		// Switch lazyload class against noscript-image.
-		$classes = str_replace( 'lazyload', '', $classes );
-
-		// Set class value.
-		$media_element->setAttribute( 'class', $classes );
-
 		// Add the other attributes of the original element.
 		foreach ( $orig_elem_attr as $attr ) {
 			// Save name and value.
 			$name  = $attr->nodeName;
 			$value = $attr->nodeValue;
 
-			// Check if it is class attribute and continue.
-			if ( 'class' === $name ) {
-				continue;
-			} // End if().
-
-			// Set attribute to noscript image.
+			// Set attribute to noscript element.
 			$media_element->setAttribute( $name, $value );
 		} // End foreach().
 
 		// Add img node to noscript node.
-		$new_iframe = $noscript_node->appendChild( $media_element );
-
-		// Set src value.
-		$new_iframe->setAttribute( 'src', $src );
+		$noscript_node->appendChild( $media_element );
 
 		return $dom;
 	}

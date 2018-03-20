@@ -95,10 +95,16 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 ### 3.3.4 – 20.03.2018 
 
+**Fixed**
+
+* Use correct pattern for lazy loading of `video` and `audio` elements.
+
 **Changed**
 
 * Updated lazysizes.js and the bundled plugins to 4.0.2.
 * Run `post_thumbnail_html` filter later (priority 500, like for the `the_content` filter call, instead of 10), to fix a problem that appears when used with Responsify WP (thanks jgadbois).
+* Moved the `add_noscript_element()` method call to the beginning of the `modify_*_markup` methods. With that, there is no need to remove the `lazyload` class in the `add_noscript_element()` method, because it was not added yet.
+* Removed unnecessary `$new_iframe->setAttribute( 'src', $src )` call from the `add_noscript_element()`.
 
 
 ### 3.3.3 – 13.03.2018 
