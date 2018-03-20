@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.4  
-**Stable tag:** 3.3.3  
+**Stable tag:** 3.3.4  
 **Requires PHP:** 5.3  
 
 
@@ -91,6 +91,14 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.3.4 – 20.03.2018 
+
+**Changed**
+
+* Updated lazysizes.js and the bundled plugins to 4.0.2.
+* Run `post_thumbnail_html` filter later (priority 500, like for the `the_content` filter call, instead of 10), to fix a problem that appears when used with Responsify WP (thanks jgadbois).
 
 
 ### 3.3.3 – 13.03.2018 
