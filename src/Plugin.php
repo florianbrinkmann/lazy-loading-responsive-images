@@ -250,31 +250,19 @@ class Plugin {
 			// Remove sizes and srcset attribute.
 			$img->removeAttribute( 'sizes' );
 			$img->removeAttribute( 'srcset' );
-
-			// Get src value.
-			$src = $img->getAttribute( 'src' );
-
-			// Check if we have a src.
-			if ( '' === $src ) {
-				// Set the value from data-noscript as src.
-				$src = $img->getAttribute( 'data-noscript' );
-			} // End if().
-
-			// Set data-src value.
-			$img->setAttribute( 'data-src', $src );
-		} else {
-			// Get src attribute.
-			$src = $img->getAttribute( 'src' );
-
-			// Check if we do not have a value.
-			if ( '' === $src ) {
-				// Set the value from data-noscript as src.
-				$src = $img->getAttribute( 'data-noscript' );
-			} // End if().
-
-			// Set data-src value.
-			$img->setAttribute( 'data-src', $src );
 		} // End if().
+
+		// Get src value.
+		$src = $img->getAttribute( 'src' );
+
+		// Check if we have a src.
+		if ( '' === $src ) {
+			// Set the value from data-noscript as src.
+			$src = $img->getAttribute( 'data-noscript' );
+		} // End if().
+
+		// Set data-src value.
+		$img->setAttribute( 'data-src', $src );
 
 		if ( '1' === $this->settings->load_aspectratio_plugin ) {
 			// Get width and height.
