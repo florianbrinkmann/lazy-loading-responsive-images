@@ -208,7 +208,16 @@ class Plugin {
 			} // End if().
 		} // End foreach().
 
-		$content = $dom->saveHTMLExact();
+		// Fix for cyrillic from https://stackoverflow.com/a/47454019/7774451.
+		// Replacement of doctype, html, and body from archon810\SmartDOMDocument.
+		$content = preg_replace(
+			array(
+				'/^\<\!DOCTYPE.*?<html><body>/si',
+				'!</body></html>$!si',
+			),
+			'',
+			$dom->saveHTML( ( new \DOMXPath( $dom ) )->query( '/' )->item( 0 ) )
+		);
 
 		return $content;
 	}
