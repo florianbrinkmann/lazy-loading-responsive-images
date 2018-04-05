@@ -2,7 +2,7 @@
 **Contributors:** FlorianBrinkmann, MarcDK  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
-**Tested up to:** 4.9.4  
+**Tested up to:** 4.9.5  
 **Stable tag:** 3.3.4  
 **Requires PHP:** 5.3  
 
@@ -93,11 +93,13 @@ The CSS from the example are the default styles that are used by the plugin (wit
 ## Changelog 
 
 
-### 3.3.4 – 20.03.2018 
+### 3.3.4 – 05.04.2018 
 
 **Fixed**
 
 * Use correct pattern for lazy loading of `video` and `audio` elements.
+* Removed unnecessary `else` and a chunk of duplicate code (thanks mackzwellz).
+* Issue with encoding of cyrillic characters.
 
 **Changed**
 
@@ -105,6 +107,8 @@ The CSS from the example are the default styles that are used by the plugin (wit
 * Run `post_thumbnail_html` filter later (priority 500, like for the `the_content` filter call, instead of 10), to fix a problem that appears when used with Responsify WP (thanks jgadbois).
 * Moved the `add_noscript_element()` method call to the beginning of the `modify_*_markup` methods. With that, there is no need to remove the `lazyload` class in the `add_noscript_element()` method, because it was not added yet.
 * Removed unnecessary `$new_iframe->setAttribute( 'src', $src )` call from the `add_noscript_element()`.
+* Removed unnecessary `$dom->saveHTMLExact()` calls from the `modify_*_markup` methods.
+* Use own Helpers()->save_html() method for saving the HTML at the end.
 
 
 ### 3.3.3 – 13.03.2018 
