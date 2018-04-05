@@ -142,4 +142,25 @@ class Helpers {
 			return Settings::$loading_spinner_color_default;
 		} // End if().
 	}
+
+	/**
+	 * Enhanced variation of \DOMDocument->saveHTML().
+	 *
+	 * Fix for cyrillic from https://stackoverflow.com/a/47454019/7774451.
+	 * Replacement of doctype, html, and body from archon810\SmartDOMDocument.
+	 *
+	 * @param \DOMDocument $dom DOMDocument object of the dom.
+	 *
+	 * @return string DOM or empty string.
+	 */
+	public function save_html( \DOMDocument $dom ) {
+		return preg_replace(
+			array(
+				'/^\<\!DOCTYPE.*?<html><body>/si',
+				'!</body></html>$!si',
+			),
+			'',
+			$dom->saveHTML( ( new \DOMXPath( $dom ) )->query( '/' )->item( 0 ) )
+		);
+	}
 }
