@@ -286,9 +286,6 @@ class Plugin {
 		// Remove the src attribute.
 		$img->removeAttribute( 'src' );
 
-		// Save the content.
-		$dom->saveHTMLExact();
-
 		return $dom;
 	}
 
@@ -329,9 +326,6 @@ class Plugin {
 
 		// Remove the src attribute.
 		$iframe->removeAttribute( 'src' );
-
-		// Save the content.
-		$dom->saveHTMLExact();
 
 		return $dom;
 	}
@@ -375,9 +369,6 @@ class Plugin {
 		// Set the class string.
 		$video->setAttribute( 'class', $classes );
 
-		// Save the content.
-		$dom->saveHTMLExact();
-
 		return $dom;
 	}
 
@@ -407,9 +398,6 @@ class Plugin {
 
 		// Set the class string.
 		$audio->setAttribute( 'class', $classes );
-
-		// Save the content.
-		$dom->saveHTMLExact();
 
 		return $dom;
 	}
