@@ -102,7 +102,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 * Moved the `add_noscript_element()` method call to the beginning of the `modify_*_markup` methods. With that, there is no need to remove the `lazyload` class in the `add_noscript_element()` method, because it was not added yet.
 * Removed unnecessary `$new_iframe->setAttribute( 'src', $src )` call from the `add_noscript_element()`.
 * Removed unnecessary `$dom->saveHTMLExact()` calls from the `modify_*_markup` methods.
-* Use own `FlorianBrinkmann\LazyLoadResponsiveImages\Helpers()->save_html()`` method for saving the HTML.
+* Use own `FlorianBrinkmann\LazyLoadResponsiveImages\Helpers()->save_html()` method for saving the HTML.
 
 = 3.3.3 – 13.03.2018 =
 
