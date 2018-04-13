@@ -154,13 +154,16 @@ class Helpers {
 	 * @return string DOM or empty string.
 	 */
 	public function save_html( \DOMDocument $dom ) {
+		$xpath      = new \DOMXPath( $dom );
+		$first_item = $xpath->query( '/' )->item( 0 );
+
 		return preg_replace(
 			array(
 				'/^\<\!DOCTYPE.*?<html><body>/si',
 				'!</body></html>$!si',
 			),
 			'',
-			$dom->saveHTML( ( new \DOMXPath( $dom ) )->query( '/' )->item( 0 ) )
+			$dom->saveHTML( $first_item )
 		);
 	}
 }
