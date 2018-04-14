@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.5
 Tested up to: 4.9.5
-Stable tag: 3.3.4
+Stable tag: 3.3.5
 Requires PHP: 5.3
 
 == Description ==
@@ -86,6 +86,12 @@ add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_sty
 The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles). The `display: block` for `.lazyload` is important for the aspectratio plugin option.
 
 == Changelog ==
+
+= 3.3.5 – 14.04.2018 =
+
+**Fixed**
+
+* Not working with PHP 5.3.
 
 = 3.3.4 – 05.04.2018 =
 
