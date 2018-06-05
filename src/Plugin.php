@@ -11,7 +11,7 @@ use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
 
-use archon810\SmartDOMDocument as SmartDOMDocument;
+use IvoPetkov\HTML5DOMDocument as HTML5DOMDocument;
 
 /**
  * Class Plugin
@@ -156,8 +156,11 @@ class Plugin {
 			return $content;
 		} // End if().
 
-		// Create new SmartDomDocument object.
-		$dom = new SmartDOMDocument();
+		// Create new HTML5DOMDocument object.
+		$dom = new HTML5DOMDocument();
+
+		// Disable removal of duplicates.
+		$dom->internalDisableDuplicatesRemoval = true;
 
 		// Load the HTML.
 		$dom->loadHTML( $content );
@@ -217,9 +220,9 @@ class Plugin {
 	 * Modifies img markup to enable lazy loading.
 	 *
 	 * @param \DOMNode         $img The img dom node.
-	 * @param SmartDomDocument $dom SmartDomDocument() object of the HTML.
+	 * @param HTML5DOMDocument $dom HTML5DOMDocument() object of the HTML.
 	 *
-	 * @return SmartDomDocument The updated DOM.
+	 * @return HTML5DOMDocument The updated DOM.
 	 */
 	public function modify_img_markup( $img, $dom ) {
 		// Save the image original attributes.
@@ -284,9 +287,9 @@ class Plugin {
 	 * Modifies iframe markup to enable lazy loading.
 	 *
 	 * @param \DOMNode         $iframe The iframe dom node.
-	 * @param SmartDomDocument $dom    SmartDomDocument() object of the HTML.
+	 * @param HTML5DOMDocument $dom    HTML5DOMDocument() object of the HTML.
 	 *
-	 * @return SmartDomDocument The updated DOM.
+	 * @return HTML5DOMDocument The updated DOM.
 	 */
 	public function modify_iframe_markup( $iframe, $dom ) {
 		// Save the iframe original attributes.
@@ -325,9 +328,9 @@ class Plugin {
 	 * Modifies video markup to enable lazy loading.
 	 *
 	 * @param \DOMNode         $video The video dom node.
-	 * @param SmartDomDocument $dom   SmartDomDocument() object of the HTML.
+	 * @param HTML5DOMDocument $dom   HTML5DOMDocument() object of the HTML.
 	 *
-	 * @return SmartDomDocument The updated DOM.
+	 * @return HTML5DOMDocument The updated DOM.
 	 */
 	public function modify_video_markup( $video, $dom ) {
 		// Save the original attributes.
@@ -367,9 +370,9 @@ class Plugin {
 	 * Modifies audio markup to enable lazy loading.
 	 *
 	 * @param \DOMNode         $audio The audio dom node.
-	 * @param SmartDomDocument $dom   SmartDomDocument() object of the HTML.
+	 * @param HTML5DOMDocument $dom   HTML5DOMDocument() object of the HTML.
 	 *
-	 * @return SmartDomDocument The updated DOM.
+	 * @return HTML5DOMDocument The updated DOM.
 	 */
 	public function modify_audio_markup( $audio, $dom ) {
 		// Save the original attributes.
@@ -398,14 +401,14 @@ class Plugin {
 	 *
 	 * @param \DOMNamedNodeMap $orig_elem_attr Object of the original element’s
 	 *                                         attributes.
-	 * @param SmartDomDocument $dom            SmartDomDocument() object of the
+	 * @param HTML5DOMDocument $dom            HTML5DOMDocument() object of the
 	 *                                         HTML.
 	 * @param \DOMNode         $elem           Single DOM node.
 	 * @param string           $tag_name       Tag name which needs to be
 	 *                                         created inside the noscript
 	 *                                         element.
 	 *
-	 * @return SmartDomDocument The updates DOM.
+	 * @return HTML5DOMDocument The updates DOM.
 	 */
 	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name ) {
 		$noscript = $dom->createElement( 'noscript' );

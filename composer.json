@@ -4,26 +4,20 @@
   "type": "wordpress-plugin",
   "license": "GPL-2.0",
   "authors": [
-	{
-	  "name": "Florian Brinkmann",
-	  "email": "kontakt@florianbrinkmann.com"
-	}
+    {
+      "name": "Florian Brinkmann",
+      "email": "kontakt@florianbrinkmann.com"
+    }
   ],
   "autoload": {
-	"psr-4": {
-	  "FlorianBrinkmann\\LazyLoadResponsiveImages\\": "src/"
-	}
+    "psr-4": {
+      "FlorianBrinkmann\\LazyLoadResponsiveImages\\": "src/"
+    }
   },
-  "repositories": [
-	{
-	  "type": "vcs",
-	  "url": "https://bitbucket.org/archon810/smartdomdocument.git"
-	}
-  ],
   "require": {
-	"archon810/smartdomdocument": "dev-master"
+    "ivopetkov/html5-dom-document-php": "^0.5.9"
   },
   "require-dev": {
-	"wpreadme2markdown/wp2md": "*"
+    "wpreadme2markdown/wp2md": "*"
   }
 }

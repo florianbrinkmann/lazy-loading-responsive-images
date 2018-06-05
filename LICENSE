@@ -5,9 +5,9 @@ lazysizes, Copyright 2015 Alexander Farkas
 License: MIT License
 Source: https://github.com/aFarkas/lazysizes
 
-SmartDOMDocument, Copyright 2015 Artem Russakovskii
+HTML5DOMDocument, Copyright (c) 2016 Ivo Petkov
 License: MIT License
-Source: https://bitbucket.org/archon810/smartdomdocument/overview
+Source: https://github.com/ivopetkov/html5-dom-document-php
 
 Loading spinner icon, Copyright 2014 Sam Herbert
 License: MIT License
