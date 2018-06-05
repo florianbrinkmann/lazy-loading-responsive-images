@@ -274,8 +274,8 @@ class Plugin {
 		// Set the class string.
 		$img->setAttribute( 'class', $classes );
 
-		// Remove the src attribute.
-		$img->removeAttribute( 'src' );
+		// Set data URI for src attribute.
+		$img->setAttribute( 'src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
 
 		return $dom;
 	}
