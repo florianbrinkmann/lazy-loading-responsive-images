@@ -16,8 +16,5 @@
   },
   "require": {
     "ivopetkov/html5-dom-document-php": "^0.5.9"
-  },
-  "require-dev": {
-    "wpreadme2markdown/wp2md": "*"
   }
 }
