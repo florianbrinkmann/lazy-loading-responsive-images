@@ -4,7 +4,7 @@
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.5  
 **Stable tag:** 3.3.5  
-**Requires PHP:** 5.3  
+Requires PHP: 5.3
 
 
 ## Description 
@@ -91,6 +91,17 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.3.6 – 05.06.2018 
+
+**Changed**
+
+* Set a transparent data URI as img `src` instead of removing it to avoid page jumps that can happen during image loading (at least in Chrome).
+
+**Fixed**
+
+* Fix encoding issues with strings inside `script` elements. For that, I switched from `archon810/smartdomdocument` to `ivopetkov/html5-dom-document-php`.
 
 
 ### 3.3.5 – 14.04.2018 
