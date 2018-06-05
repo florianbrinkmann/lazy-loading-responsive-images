@@ -101,7 +101,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 **Fixed**
 
-* Fix encoding issues with strings inside `script` elements. For that, I switched from `archon810/smartdomdocument` to `ivopetkov/html5-dom-document-php`.
+* Fix encoding issues with strings inside `script` elements.
 
 
 ### 3.3.5 – 14.04.2018 

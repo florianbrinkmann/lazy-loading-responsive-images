@@ -14,7 +14,10 @@
       "FlorianBrinkmann\\LazyLoadResponsiveImages\\": "src/"
     }
   },
-  "require": {
-    "ivopetkov/html5-dom-document-php": "^0.5.9"
-  }
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "wimg/php-compatibility": "*",
+    "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
+  },
+  "prefer-stable" : true
 }
