@@ -2,13 +2,11 @@ language: php
 php:
 - '7.1'
 script:
--
-before_deploy:
-- composer install --no-dev
-- composer dump-autoload -o
+- composer install
 - cd src
 - ../vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 5.3
 - cd ..
+before_deploy:
 - mkdir -p lazy-loading-responsive-images
 - rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
 - zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
