@@ -1,5 +1,7 @@
 - .git/
 - lazy-loading-responsive-images/
+- vendor/bin/
+- vendor/squizlabs/
 - composer.json
 - composer.lock
 - lazy-loading-responsive-images.zip

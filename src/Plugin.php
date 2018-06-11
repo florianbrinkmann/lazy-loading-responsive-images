@@ -94,7 +94,7 @@ class Plugin {
 		), 20 );
 
 		// Adds inline style.
-		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
+		add_action( 'wp_head', [ $this, 'add_inline_style' ] );
 
 		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
