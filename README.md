@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.6  
-**Stable tag:** 3.3.6  
+**Stable tag:** 3.3.7  
 **Requires PHP:** 5.3  
 
 
@@ -91,6 +91,13 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.3.7 – 12.06.2018 
+
+**Fixed**
+
+* Disable libxml errors.
 
 
 ### 3.3.6 – 11.06.2018 
