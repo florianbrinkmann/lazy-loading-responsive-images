@@ -154,6 +154,9 @@ class Plugin {
 			return $content;
 		} // End if().
 
+		// Disable libxml errors.
+		libxml_use_internal_errors( true );
+
 		// Create new \DOMDocument object.
 		$dom = new \DOMDocument();
 
