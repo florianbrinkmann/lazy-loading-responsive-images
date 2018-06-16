@@ -3,10 +3,7 @@ php:
 - '7.1'
 script:
 - composer install
-- composer dump-autoload -o
-- cd src
-- ../vendor/bin/phpcs -p . --standard=PHPCompatibility --runtime-set testVersion 5.3
-- cd ..
+- vendor/bin/phpcs -p src/ --standard=PHPCompatibility --runtime-set testVersion 5.3
 before_deploy:
 - composer install --no-dev
 - composer dump-autoload -o
