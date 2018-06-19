@@ -197,6 +197,10 @@ class Plugin {
 				$dom = $this->modify_img_markup( $node, $dom );
 			} // End if().
 
+			if ( 'source' === $node->tagName && $node->hasAttribute( 'srcset' ) ) {
+				$dom = $this->modify_source_markup( $node, $dom );
+			} // End if().
+
 			if ( '1' === $this->settings->enable_for_iframes && 'iframe' === $node->tagName ) {
 				$dom = $this->modify_iframe_markup( $node, $dom );
 			} // End if().
@@ -278,6 +282,33 @@ class Plugin {
 
 		// Set data URI for src attribute.
 		$img->setAttribute( 'src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
+
+		return $dom;
+	}
+
+	/**
+	 * Modifies source element markup to enable lazy loading.
+	 *
+	 * @param \DOMNode     $source The source dom node.
+	 * @param \DOMDocument $dom    \DOMDocument() object of the HTML.
+	 *
+	 * @return \DOMDocument The updated DOM.
+	 */
+	public function modify_source_markup( $source, $dom ) {
+		// Save the image original attributes.
+		$source_attributes = $source->attributes;
+
+		// Add noscript element.
+		$dom = $this->add_noscript_element( $source_attributes, $dom, $source, 'SOURCE' );
+
+		// Change srcset attr to data-srcset.
+		$srcset = $source->getAttribute( 'srcset' );
+
+		// Set data-srcset attribute.
+		$source->setAttribute( 'data-srcset', $srcset );
+
+		// Remove srcset attribute.
+		$source->removeAttribute( 'srcset' );
 
 		return $dom;
 	}
