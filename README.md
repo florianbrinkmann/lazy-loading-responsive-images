@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.6  
-**Stable tag:** 3.3.7  
+**Stable tag:** 3.4.0  
 **Requires PHP:** 5.3  
 
 
@@ -91,6 +91,17 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.4.0 –  
+
+**Added**
+
+* Support for `picture` element.
+
+**Fixed**
+
+* Only use `data-sizes` attribute, if value is `auto`.
 
 
 ### 3.3.7 – 12.06.2018 
