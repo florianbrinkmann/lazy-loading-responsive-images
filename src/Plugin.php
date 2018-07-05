@@ -299,7 +299,7 @@ class Plugin {
 		$img->setAttribute( 'class', $classes );
 
 		// Set data URI for src attribute.
-		$img->setAttribute( 'src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
+		$img->setAttribute( 'src', $this->src_placeholder );
 
 		return $dom;
 	}
@@ -361,7 +361,7 @@ class Plugin {
 					$source_element->setAttribute( 'data-src', $src );
 
 					// Set data URI for src attribute.
-					$source_element->setAttribute( 'src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==' );
+					$source_element->setAttribute( 'src', $this->src_placeholder );
 				} // End if().
 			}
 		} // End if().
