@@ -270,12 +270,6 @@ class Plugin {
 		// Get src value.
 		$src = $img->getAttribute( 'src' );
 
-		// Check if we have a src.
-		if ( '' === $src ) {
-			// Set the value from data-noscript as src.
-			$src = $img->getAttribute( 'data-noscript' );
-		} // End if().
-
 		// Set data-src value.
 		$img->setAttribute( 'data-src', $src );
 
