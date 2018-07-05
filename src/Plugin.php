@@ -49,6 +49,13 @@ class Plugin {
 	public $basename;
 
 	/**
+	 * Placeholder data uri for img src attributes.
+	 *
+	 * @var string
+	 */
+	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -397,6 +404,15 @@ class Plugin {
 					$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
 				} // End if().
 			} // End if().
+
+			// Get src value.
+			$src = $img->getAttribute( 'src' );
+
+			// Set data-src value.
+			$img->setAttribute( 'data-src', $src );
+
+			// Set data URI for src attribute.
+			$img->setAttribute( 'src', $this->src_placeholder );
 
 			// Get the classes.
 			$classes = $img->getAttribute( 'class' );
