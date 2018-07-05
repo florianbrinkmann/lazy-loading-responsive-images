@@ -199,6 +199,20 @@ class Plugin {
 				continue;
 			} // End if().
 
+			// Check if the element has a style attribute with a background image.
+			if (
+				$node->hasAttribute( 'style' )
+				&& 'img' !== $node->tagName
+				&& 'picture' !== $node->tagName
+				&& 'iframe' !== $node->tagName
+				&& 'video' !== $node->tagName
+				&& 'audio' !== $node->tagName
+			) {
+				if ( 1 === preg_match( '/background-image: ?url\(["\']([^"\']*)["\']\);?/', $node->getAttribute( 'style' ), $matches ) ) {
+					$dom = $this->modify_background_img_markup( $node, $dom, $matches );
+				}
+			}
+
 			// Check if it is one of the supported elements and support for it is enabled.
 			if ( 'img' === $node->tagName && 'source' !== $node->parentNode->tagName && 'picture' !== $node->parentNode->tagName ) {
 				$dom = $this->modify_img_markup( $node, $dom );
@@ -485,6 +499,36 @@ class Plugin {
 	}
 
 	/**
+	 * Modifies element markup for lazy loading inline background image.
+	 *
+	 * @param \DOMNode     $node    The node with the inline background image.
+	 * @param \DOMDocument $dom     \DOMDocument() object of the HTML.
+	 * @param array        $matches The result of preg_match().
+	 *
+	 * @return \DOMDocument The updated DOM.
+	 */
+	public function modify_background_img_markup( $node, $dom, $matches ) {
+		// Add data-bg attribute to node with img src as value.
+		$node->setAttribute( 'data-bg', $matches[1] );
+
+		// Remove the background-image rule from the inline style.
+		$inline_style = $node->getAttribute( 'style' );
+		$inline_style = str_replace( $matches[0], '', $inline_style );
+		$node->setAttribute( 'style', $inline_style );
+
+		// Get the classes.
+		$classes = $node->getAttribute( 'class' );
+
+		// Add lazyload class.
+		$classes .= ' lazyload lazyload-background-image';
+
+		// Set the class string.
+		$node->setAttribute( 'class', $classes );
+
+		return $dom;
+	}
+
+	/**
 	 * Adds noscript element before DOM node.
 	 *
 	 * @param \DOMNamedNodeMap $orig_elem_attr Object of the original element’s
@@ -609,7 +653,7 @@ class Plugin {
 		echo apply_filters( 'lazy_load_responsive_images_inline_styles', $default_styles );
 
 		// Hide images if no JS.
-		echo '<noscript><style>.lazyload { display: none; }</style></noscript>';
+		echo '<noscript><style>.lazyload { display: none; } .lazyload.lazyload-background-image { display: block; opacity: 1 }</style></noscript>';
 	}
 
 	/**
