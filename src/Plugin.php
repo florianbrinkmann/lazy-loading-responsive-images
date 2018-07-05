@@ -229,17 +229,20 @@ class Plugin {
 	/**
 	 * Modifies img markup to enable lazy loading.
 	 *
-	 * @param \DOMNode     $img The img dom node.
-	 * @param \DOMDocument $dom \DOMDocument() object of the HTML.
+	 * @param \DOMNode     $img             The img dom node.
+	 * @param \DOMDocument $dom             \DOMDocument() object of the HTML.
+	 * @param boolean      $create_noscript Whether to create a noscript element for the img or not.
 	 *
 	 * @return \DOMDocument The updated DOM.
 	 */
-	public function modify_img_markup( $img, $dom ) {
+	public function modify_img_markup( $img, $dom, $create_noscript = true ) {
 		// Save the image original attributes.
 		$img_attributes = $img->attributes;
 
 		// Add noscript element.
-		$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG' );
+		if ( true === $create_noscript ) {
+			$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG' );
+		}
 
 		// Check if the image has sizes and srcset attribute.
 		if ( $img->hasAttribute( 'sizes' ) ) {
@@ -315,7 +318,7 @@ class Plugin {
 
 		// Get source elements and image element from picture.
 		$source_elements = $picture->getElementsByTagName( 'source' );
-		$img_element = $picture->getElementsByTagName( 'img' );
+		$img_element     = $picture->getElementsByTagName( 'img' );
 
 		// Loop the source elements if there are some.
 		if ( 0 !== $source_elements->length ) {
@@ -362,60 +365,7 @@ class Plugin {
 
 		// Loop the img element.
 		foreach ( $img_element as $img ) {
-			// Check if we have a sizes attribute.
-			if ( $img->hasAttribute( 'sizes' ) ) {
-				// Get sizes value.
-				$sizes_attr = $img->getAttribute( 'sizes' );
-
-				// Check if the value is auto. If so, we modify it to data-sizes.
-				if ( 'auto' === $sizes_attr ) {
-					// Set data-sizes attribute.
-					$img->setAttribute( 'data-sizes', $sizes_attr );
-
-					// Remove sizes attribute.
-					$img->removeAttribute( 'sizes' );
-				} // End if().
-			} // End if().
-
-			// Check for srcset.
-			if ( $img->hasAttribute( 'srcset' ) ) {
-				// Get srcset value.
-				$srcset = $img->getAttribute( 'srcset' );
-
-				// Set data-srcset attribute.
-				$img->setAttribute( 'data-srcset', $srcset );
-
-				// Remove srcset attribute.
-				$img->removeAttribute( 'srcset' );
-			} // End if().
-			
-			if ( '1' === $this->settings->load_aspectratio_plugin ) {
-				// Get width and height.
-				$img_width  = $img->getAttribute( 'width' );
-				$img_height = $img->getAttribute( 'height' );
-
-				if ( '' !== $img_width && '' !== $img_height ) {
-					$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
-				} // End if().
-			} // End if().
-
-			// Get src value.
-			$src = $img->getAttribute( 'src' );
-
-			// Set data-src value.
-			$img->setAttribute( 'data-src', $src );
-
-			// Set data URI for src attribute.
-			$img->setAttribute( 'src', $this->src_placeholder );
-
-			// Get the classes.
-			$classes = $img->getAttribute( 'class' );
-
-			// Add lazyload class.
-			$classes .= ' lazyload';
-
-			// Set the class string.
-			$img->setAttribute( 'class', $classes );
+			$this->modify_img_markup( $img, $dom, false );
 		} // End foreach().
 
 		return $dom;
