@@ -304,8 +304,8 @@ class Plugin {
 	/**
 	 * Modifies picture element markup to enable lazy loading.
 	 *
-	 * @param \DOMNode     $source The source dom node.
-	 * @param \DOMDocument $dom    \DOMDocument() object of the HTML.
+	 * @param \DOMNode     $picture The source dom node.
+	 * @param \DOMDocument $dom     \DOMDocument() object of the HTML.
 	 *
 	 * @return \DOMDocument The updated DOM.
 	 */
