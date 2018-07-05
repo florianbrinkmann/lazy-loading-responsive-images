@@ -13,7 +13,7 @@ Lazy loading plugin that supports images, iFrames, video and audio elements and 
 
 Lazy loads (without the need of any manually modifications):
 
-* Images inserted in posts, pages, Custom Post Types, Text Widgets, …
+* Images inserted via `img` or `picture` in posts, pages, Custom Post Types, Text Widgets, …
 * Post thumbnails.
 * iFrames.*
 * Video elements.*
@@ -93,7 +93,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 ## Changelog 
 
 
-### 3.4.0 –  
+### 3.4.0 – 05.07.2018 
 
 **Added**
 
@@ -102,6 +102,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 **Fixed**
 
 * Only use `data-sizes` attribute, if value is `auto`.
+* Removed unnecessary check for `src` attribute in `modify_img_markup()`.
 
 
 ### 3.3.7 – 12.06.2018 
