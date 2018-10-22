@@ -177,6 +177,8 @@ class Plugin {
 		// @link https://stackoverflow.com/a/19348287/7774451.
 		$nodes = $xpath->query( '//*[not(ancestor-or-self::noscript)]' );
 
+		$is_modified = false;
+
 		foreach ( $nodes as $node ) {
 			// Check if it is an element that should not be lazy loaded.
 			// Get the classes as an array.
@@ -202,26 +204,33 @@ class Plugin {
 			// Check if it is one of the supported elements and support for it is enabled.
 			if ( 'img' === $node->tagName && 'source' !== $node->parentNode->tagName && 'picture' !== $node->parentNode->tagName ) {
 				$dom = $this->modify_img_markup( $node, $dom );
+				$is_modified = true;
 			} // End if().
 
 			if ( 'picture' === $node->tagName ) {
 				$dom = $this->modify_picture_markup( $node, $dom );
+				$is_modified = true;
 			} // End if().
 
 			if ( '1' === $this->settings->enable_for_iframes && 'iframe' === $node->tagName ) {
 				$dom = $this->modify_iframe_markup( $node, $dom );
+				$is_modified = true;
 			} // End if().
 
 			if ( '1' === $this->settings->enable_for_videos && 'video' === $node->tagName ) {
 				$dom = $this->modify_video_markup( $node, $dom );
+				$is_modified = true;
 			} // End if().
 
 			if ( '1' === $this->settings->enable_for_audios && 'audio' === $node->tagName ) {
 				$dom = $this->modify_audio_markup( $node, $dom );
+				$is_modified = true;
 			} // End if().
 		} // End foreach().
 
-		$content = $this->helpers->save_html( $dom );
+		if ( true === $is_modified ) {
+			$content = $this->helpers->save_html( $dom );
+		}
 
 		return $content;
 	}
