@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
 **Tested up to:** 4.9.6  
-**Stable tag:** 3.4.0  
+**Stable tag:** 3.4.1  
 **Requires PHP:** 5.3  
 
 
@@ -91,6 +91,14 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 3.4.1 – 29.10.2018 
+
+**Changed**
+
+* Updated lazysizes to 4.1.4.
+* Add note about limited browser support to loading spinner option.
 
 
 ### 3.4.0 – 05.07.2018 
