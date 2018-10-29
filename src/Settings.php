@@ -163,7 +163,7 @@ class Settings {
 			'lazy_load_responsive_images_loading_spinner'       => array(
 				'value'             => get_option( 'lazy_load_responsive_images_loading_spinner', '0' ),
 				'label'             => __( 'Display a loading spinner', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'To give the users a hint that there is something loading where they just see empty space. Works best with the aspectratio option.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'To give the users a hint that there is something loading where they just see empty space. Works best with the aspectratio option. <a href="https://caniuse.com/#feat=svg-smil">Limited browser support.</a>', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
