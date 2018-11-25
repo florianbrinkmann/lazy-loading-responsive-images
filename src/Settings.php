@@ -94,6 +94,13 @@ class Settings {
 	public $loading_spinner_color;
 
 	/**
+	 * Value of setting for displaying the option to disable the plugin per page/post.
+	 *
+	 * @var string
+	 */
+	public $granular_disable_option;
+
+	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
@@ -180,6 +187,16 @@ class Settings {
 					'sanitize_hex_color',
 				),
 			),
+			'lazy_load_responsive_images_granular_disable_option' => array(
+				'value'             => get_option( 'lazy_load_responsive_images_granular_disable_option', '0' ),
+				'label'             => __( 'Enable option to disable plugin per page/post', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Displays a checkbox in the publish area of all post types (pages/posts/CPTs) that lets you disable the plugin on that specific post.', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'checkbox_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
+			),
 		);
 
 		// Fill properties with setting values.
@@ -191,6 +208,7 @@ class Settings {
 		$this->load_aspectratio_plugin = $this->options['lazy_load_responsive_images_aspectratio_plugin']['value'];
 		$this->loading_spinner         = $this->options['lazy_load_responsive_images_loading_spinner']['value'];
 		$this->loading_spinner_color   = $this->options['lazy_load_responsive_images_loading_spinner_color']['value'];
+		$this->granular_disable_option = $this->options['lazy_load_responsive_images_granular_disable_option']['value'];
 
 		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
@@ -200,6 +218,15 @@ class Settings {
 			$this,
 			'add_color_picker',
 		) );
+
+		if ( '1' === $this->granular_disable_option ) {
+			// Register meta for disabling per page.
+			add_action( 'init', array( $this, 'register_post_meta' ) );
+
+			// Publish post actions.
+			add_action( 'post_submitbox_misc_actions', array( $this, 'add_checkbox' ), 9 );
+			add_action( 'save_post', array( $this, 'save_checkbox' ) );
+		}
 	}
 
 	/**
@@ -355,5 +382,74 @@ class Settings {
 		wp_add_inline_script( 'wp-color-picker', "jQuery(document).ready(function($){
     $('.lazy-load-responsive-images-color-field').wpColorPicker();
 });" );
+	}
+
+	/**
+	 * Register post meta for disabling plugin per
+	 */
+	public function register_post_meta() {
+		\register_post_meta(
+			'',
+			'lazy_load_responsive_images_disabled',
+			[
+				'type' => 'boolean',
+				'description' => __( 'If the Lazy Loader plugin should be disabled for this page/post/CPT entry', 'lazy-loading-responsive-images' ),
+				'single' => true,
+				'show_in_rest' => true,
+			]
+		);
+	}
+
+	/**
+	 * Add checkbox to Publish Post meta box.
+	 * 
+	 * @link https://github.com/deworg/dewp-planet-feed/
+	 */
+	public function add_checkbox() {
+		global $post;
+		// Check user capability. Not bailing, though, on purpose.
+		$maybe_enabled = current_user_can( 'publish_posts' );
+		// This actually defines whether post will be listed in our feed.
+		$value = absint( get_post_meta( $post->ID, 'lazy_load_responsive_images_disabled', true ) );
+		printf(
+			'<div class="misc-pub-section dewp-planet">
+				<label for="disable-lazy-loader">
+					<input type="checkbox" id="disable-lazy-loader" name="disable-lazy-loader" class="disable-lazy-loader" %s %s />
+					<span class="dewp-planet__label-text">%s</span>
+				</label>
+			</div>',
+			$maybe_enabled ? '' : 'disabled',
+			$value === 1 ? 'checked' : '',
+			__( 'Disable Lazy Loader', 'lazy-loading-responsive-images' )
+		);
+	}
+
+	/**
+	 * Save option value to post meta.
+	 * 
+	 * @link https://github.com/deworg/dewp-planet-feed/
+	 * 
+	 * @param  int $post_id ID of current post
+	 * @return int          ID of current post
+	 */
+	public function save_checkbox( $post_id ) {
+		if ( empty( $post_id ) || empty( $_POST['post_ID'] ) ) {
+			return;
+		}
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return $post_id;
+		}
+		if ( absint( $_POST['post_ID'] ) !== $post_id ) {
+			return $post_id;
+		}
+		if ( ! current_user_can( 'publish_posts' ) ) {
+			return $post_id;
+		}
+		if ( empty( $_POST['disable-lazy-loader'] ) ) {
+			\delete_post_meta( $post_id, 'lazy_load_responsive_images_disabled' );
+		} else {
+			\add_post_meta( $post_id, 'lazy_load_responsive_images_disabled', true, true );
+		}
+		return $post_id;
 	}
 }

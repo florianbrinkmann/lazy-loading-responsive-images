@@ -56,6 +56,13 @@ class Plugin {
 	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
 
 	/**
+	 * Hint if the plugin is disabled for this page.
+	 * 
+	 * @var null|int
+	 */
+	private $disabled_for_current_post = null;
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -103,6 +110,9 @@ class Plugin {
 		// Adds inline style.
 		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
 
+		// Enqueue Gutenberg script.
+		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
+
 		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
@@ -141,6 +151,15 @@ class Plugin {
 	 * @return string Modified HTML.
 	 */
 	public function filter_markup( $content ) {
+		// Check if the plugin is disabled.
+		if ( null === $this->disabled_for_current_post ) {
+			$this->disabled_for_current_post = absint( get_post_meta( get_the_ID(), 'lazy_load_responsive_images_disabled', true ) );
+		}
+
+		if ( 1 === $this->disabled_for_current_post ) {
+			return $content;
+		}
+		
 		// Check if we have no content.
 		if ( empty( $content ) ) {
 			return $content;
@@ -546,18 +565,18 @@ class Plugin {
 	 */
 	public function enqueue_script() {
 		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url() . '/lazy-loading-responsive-images/js/lazysizes.min.js', '', false, true );
+		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), '', false, true );
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url() . '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js', 'lazysizes', false, true );
+			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), 'lazysizes', false, true );
 		} // End if().
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->load_aspectratio_plugin ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url() . '/lazy-loading-responsive-images/js/ls.aspectratio.min.js', 'lazysizes', false, true );
+			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), 'lazysizes', false, true );
 		} // End if().
 	}
 
@@ -619,6 +638,15 @@ class Plugin {
 
 		// Hide images if no JS.
 		echo '<noscript><style>.lazyload { display: none; }</style></noscript>';
+	}
+
+	/**
+	 * Enqueue script to Gutenberg editor view.
+	 */
+	public function enqueue_block_editor_assets() {
+		$file_data  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
+		$assets_url = trailingslashit( plugin_dir_url( __FILE__ ) );
+		wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );
 	}
 
 	/**

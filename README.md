@@ -93,12 +93,16 @@ The CSS from the example are the default styles that are used by the plugin (wit
 ## Changelog 
 
 
-### 3.4.1 – 29.10.2018 
+### 3.4.1 – 25.11.2018 
 
 **Changed**
 
 * Updated lazysizes to 4.1.4.
 * Add note about limited browser support to loading spinner option.
+
+**Fixed**
+
+* Only use `save_html()` method if markup was modified.
 
 
 ### 3.4.0 – 05.07.2018 
