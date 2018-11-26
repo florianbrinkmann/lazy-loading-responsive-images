@@ -1,4 +1,5 @@
 // Highly inspired by https://github.com/inpsyde/gutenberg-example/blob/ceac1c6fa0f1484b955d2ba5b7414cc5672617b1/assets/js/src/EditorPicks/index.js
+// And the final fix by https://github.com/WordPress/gutenberg/issues/12289#issuecomment-441585195
 const { CheckboxControl } = wp.components;
 const { PluginPostStatusInfo } = wp.editPost;
 const { 
