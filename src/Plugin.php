@@ -368,6 +368,7 @@ class Plugin {
 		if ( 0 !== $source_elements->length ) {
 			foreach ( $source_elements as $source_element ) {
 				// Check if we have a sizes attribute.
+				$sizes_attr = '';
 				if ( $source_element->hasAttribute( 'sizes' ) ) {
 					// Get sizes value.
 					$sizes_attr = $source_element->getAttribute( 'sizes' );
@@ -390,8 +391,18 @@ class Plugin {
 					// Set data-srcset attribute.
 					$source_element->setAttribute( 'data-srcset', $srcset );
 
-					// Remove srcset attribute.
-					$source_element->removeAttribute( 'srcset' );
+					// Set srcset attribute with src placeholder to produce valid markup.
+					if ( '' !== $sizes_attr ) {
+						$width = preg_replace( '/.+ (\d+)px$/', '$1', $sizes_attr );
+						if ( \is_numeric ( $width ) ) {
+							$source_element->setAttribute( 'srcset', "$this->src_placeholder {$width}w" );
+						} else {
+							$source_element->removeAttribute( 'srcset' );
+						}
+					} else {
+						// Remove srcset attribute.
+						$source_element->removeAttribute( 'srcset' );
+					}
 				} // End if().
 
 				if ( $source_element->hasAttribute( 'src' ) ) {
