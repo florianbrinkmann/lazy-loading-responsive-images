@@ -9,35 +9,47 @@ const { withSelect, withDispatch } = wp.data;
 const { registerPlugin } = wp.plugins;
 const { __ } = wp.i18n;
 
-const LazyLoadCheckboxRender = ({ isLazyLoaderDisableCheckboxChecked = false, onChangeLazyLoaderCheckbox }) => (
-	<PluginPostStatusInfo className='lazy-loader-plugin'>
-		<div>
-			<CheckboxControl
-					label={ __( 'Disable Lazy Loader', 'lazy-loading-responsive-images' ) }
-					checked={ isLazyLoaderDisableCheckboxChecked }
-					onChange={ () => onChangeLazyLoaderCheckbox( ! isLazyLoaderDisableCheckboxChecked ) }
-			/>
-		</div>
-	</PluginPostStatusInfo>
-)
+const LazyLoadCheckboxRender = ( { meta, updateMeta } ) => {
+	const lazyLoaderDisabled = meta.lazy_load_responsive_images_disabled;
+	return (
+		<PluginPostStatusInfo className='lazy-loader-plugin'>
+			<div>
+				<CheckboxControl
+						label={ __( 'Disable Lazy Loader', 'lazy-loading-responsive-images' ) }
+						checked={ lazyLoaderDisabled }
+						onChange={ ( value ) => {
+							updateMeta( { lazy_load_responsive_images_disabled: value || 0 } );
+						} }
+				/>
+			</div>
+		</PluginPostStatusInfo>
+	)
+}
 
 const LazyLoaderGutenberg = compose(
 	[
-		withSelect((select) => {
+		withSelect( ( select ) => {
+			const {
+				getEditedPostAttribute,
+			} = select( 'core/editor' );
+	
 			return {
-				isLazyLoaderDisableCheckboxChecked: select('core/editor').getEditedPostAttribute('meta').lazy_load_responsive_images_disabled
-			}
-		}),
-		withDispatch((dispatch) => {
-			return {
-				onChangeLazyLoaderCheckbox (lazy_load_responsive_images_disabled) {
-					dispatch('core/editor').editPost({ meta: { lazy_load_responsive_images_disabled} })
-				}
-			}
-		})
-	]
-)(LazyLoadCheckboxRender)
+				meta: getEditedPostAttribute( 'meta' ),
+			};
+		} ),
+		withDispatch( ( dispatch, { meta } ) => {
+			const { editPost } = dispatch( 'core/editor' );
 
-registerPlugin('lazy-loader-gutenberg', {
+			return {
+				updateMeta( newMeta ) {
+					// Important: Old and new meta need to be merged in a non-mutating way!
+					editPost( { meta: { ...meta, ...newMeta } } );
+				},
+			};
+		} )
+	]
+)( LazyLoadCheckboxRender )
+
+registerPlugin( 'lazy-loader-gutenberg', {
   render: LazyLoaderGutenberg
-})
+} )
