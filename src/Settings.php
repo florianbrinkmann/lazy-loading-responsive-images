@@ -391,12 +391,12 @@ class Settings {
 		\register_post_meta(
 			'',
 			'lazy_load_responsive_images_disabled',
-			[
+			array(
 				'type' => 'boolean',
 				'description' => __( 'If the Lazy Loader plugin should be disabled for this page/post/CPT entry', 'lazy-loading-responsive-images' ),
 				'single' => true,
 				'show_in_rest' => true,
-			]
+			)
 		);
 	}
 
