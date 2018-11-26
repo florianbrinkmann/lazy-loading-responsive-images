@@ -273,6 +273,7 @@ class Plugin {
 		}
 
 		// Check if the image has sizes and srcset attribute.
+		$sizes_attr = '';
 		if ( $img->hasAttribute( 'sizes' ) ) {
 			// Get sizes value.
 			$sizes_attr = $img->getAttribute( 'sizes' );
@@ -294,8 +295,21 @@ class Plugin {
 			// Set data-srcset attribute.
 			$img->setAttribute( 'data-srcset', $srcset );
 
-			// Remove srcset attribute.
-			$img->removeAttribute( 'srcset' );
+			// Set srcset attribute with src placeholder to produce valid markup.
+			$img_width  = $img->getAttribute( 'width' );
+			if ( '' !== $img_width ) {
+				$img->setAttribute( 'srcset', "$this->src_placeholder {$img_width}w" );
+			} elseif ( '' === $img_width && '' !== $sizes_attr ) {
+				$width = preg_replace( '/.+ (\d+)px$/', '$1', $sizes_attr );
+				if ( \is_numeric ( $width ) ) {
+					$img->setAttribute( 'srcset', "$this->src_placeholder {$width}w" );
+				} else {
+					$img->removeAttribute( 'srcset' );
+				}
+			} else {
+				// Remove srcset attribute.
+				$img->removeAttribute( 'srcset' );
+			}
 		} // End if().
 
 		// Get src value.
