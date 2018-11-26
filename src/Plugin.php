@@ -50,10 +50,12 @@ class Plugin {
 
 	/**
 	 * Placeholder data uri for img src attributes.
+	 * 
+	 * @link https://stackoverflow.com/a/13139830
 	 *
 	 * @var string
 	 */
-	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 	/**
 	 * Hint if the plugin is disabled for this page.
