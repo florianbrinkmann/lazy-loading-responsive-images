@@ -7,6 +7,8 @@ script:
 before_deploy:
 - composer install --no-dev
 - composer dump-autoload -o
+- npm install
+- npm run build:production
 - mkdir -p lazy-loading-responsive-images
 - rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
 - zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
