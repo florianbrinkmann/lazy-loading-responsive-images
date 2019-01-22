@@ -101,6 +101,13 @@ class Settings {
 	public $granular_disable_option;
 
 	/**
+	 * Array of object types that should show the checkbox to disable lazy loading.
+	 * 
+	 * @var array
+	 */
+	public $disable_option_object_types = array();
+
+	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
@@ -220,6 +227,27 @@ class Settings {
 		) );
 
 		if ( '1' === $this->granular_disable_option ) {
+			add_action( 'init', function() {
+				$public_post_types = get_post_types( array(
+					'public' => true,
+				), 'names' );
+	
+				// Remove attachment post type.
+				if ( is_array( $public_post_types ) && isset( $public_post_types['attachment'] ) ) {
+					unset( $public_post_types['attachment'] );
+				}
+
+				/**
+				 * Filter for the object types that should show the checkbox
+				 * for disabling the lazy loading functionality. By default, all
+				 * public post types (except attachment) are included.
+				 * 
+				 * @param array $public_post_types An array of post types that should have the option
+				 *                                 for disabling.
+				 */
+				$this->disable_option_object_types = apply_filters( 'lazy_loader_disable_option_object_types', $public_post_types );
+			} );
+
 			// Register meta for disabling per page.
 			add_action( 'init', array( $this, 'register_post_meta' ) );
 
@@ -340,7 +368,7 @@ class Settings {
 	 *                                  Argument array.
 	 *
 	 * @type string $label_for          (Required) The label for the color
-	 *       field.
+	 *                                  field.
 	 * @type string $value              (Required) The value.
 	 * @type string $description        (Required) Description.
 	 * }
@@ -388,25 +416,34 @@ class Settings {
 	 * Register post meta for disabling plugin per
 	 */
 	public function register_post_meta() {
-		\register_post_meta(
-			'',
-			'lazy_load_responsive_images_disabled',
-			array(
-				'type' => 'boolean',
-				'description' => __( 'If the Lazy Loader plugin should be disabled for this page/post/CPT entry', 'lazy-loading-responsive-images' ),
-				'single' => true,
-				'show_in_rest' => true,
-			)
-		);
+		if ( is_array( $this->disable_option_object_types ) ) {
+			foreach ( $this->disable_option_object_types as $object_type ) {
+				\register_post_meta(
+					$object_type,
+					'lazy_load_responsive_images_disabled',
+					array(
+						'type' => 'boolean',
+						'description' => __( 'If the Lazy Loader plugin should be disabled for this page/post/CPT entry', 'lazy-loading-responsive-images' ),
+						'single' => true,
+						'show_in_rest' => true,
+					)
+				);
+			}
+		}
 	}
 
 	/**
 	 * Add checkbox to Publish Post meta box.
-	 * 
+	 *
 	 * @link https://github.com/deworg/dewp-planet-feed/
 	 */
 	public function add_checkbox() {
 		global $post;
+
+		if ( ! in_array( $post->post_type, $this->disable_option_object_types ) ) {
+			return;
+		}
+
 		// Check user capability. Not bailing, though, on purpose.
 		$maybe_enabled = current_user_can( 'publish_posts' );
 		// This actually defines whether post will be listed in our feed.
@@ -426,11 +463,12 @@ class Settings {
 
 	/**
 	 * Save option value to post meta.
-	 * 
+	 *
 	 * @link https://github.com/deworg/dewp-planet-feed/
-	 * 
-	 * @param  int $post_id ID of current post
-	 * @return int          ID of current post
+	 *
+	 * @param  int $post_id ID of current post.
+	 *
+	 * @return int          ID of current post.
 	 */
 	public function save_checkbox( $post_id ) {
 		if ( empty( $post_id ) || empty( $_POST['post_ID'] ) ) {
@@ -440,6 +478,9 @@ class Settings {
 			return $post_id;
 		}
 		if ( absint( $_POST['post_ID'] ) !== $post_id ) {
+			return $post_id;
+		}
+		if ( ! in_array( $_POST['post_type'], $this->disable_option_object_types ) ) {
 			return $post_id;
 		}
 		if ( ! current_user_can( 'publish_posts' ) ) {
