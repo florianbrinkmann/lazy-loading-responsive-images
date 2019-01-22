@@ -2,8 +2,8 @@
 **Contributors:** FlorianBrinkmann, MarcDK  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
-**Tested up to:** 4.9.6  
-**Stable tag:** 3.4.1  
+**Tested up to:** 5.0.3  
+**Stable tag:** 3.5.0  
 **Requires PHP:** 5.3  
 
 
@@ -30,6 +30,7 @@ Lazy loads (without the need of any manually modifications):
 * Enable lazy loading for audio elements.
 * Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 * Display a loading spinner.
+* Disable the plugin on specific posts/pages (this shows a checkbox in the edit view of all public post types (except attachments) to disable lazy loading for an entire post).
 
 \* The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
 
@@ -42,6 +43,8 @@ The plugin adds a `noscript` element as fallback for disabled JavaScript.
 The auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
 
 You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the data-no-lazyload attribute.
+
+If you want to disable lazy loading for a specific element and its children (for example, if you have no access to the classes of the image element), you can use the `disable-lazyload` class.
 
 
 ## Installation 
@@ -93,16 +96,23 @@ The CSS from the example are the default styles that are used by the plugin (wit
 ## Changelog 
 
 
-### 3.4.1 – 25.11.2018 
+### 3.5.0 – 26.11.2018 
+
+**Added**
+
+* Option to disable lazy loading for specific posts/pages via a checkbox. The checkbox can be enabled via an option under *Settings* › *Media* › *Lazy Loader options*.
+* Possibility to use the `disable-lazyload` class to disable the lazy loader for an element and its children.
 
 **Changed**
 
-* Updated lazysizes to 4.1.4.
+* Updated lazysizes to 4.1.5.
 * Add note about limited browser support to loading spinner option.
+* Updated placeholder source to a more stable variation (thanks diegocanal for the hint).
 
 **Fixed**
 
 * Only use `save_html()` method if markup was modified.
+* Keep `srcset` attribute with placeholder source to get valid HTML.
 
 
 ### 3.4.0 – 05.07.2018 
