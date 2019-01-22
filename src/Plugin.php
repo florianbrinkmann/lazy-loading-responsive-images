@@ -68,7 +68,14 @@ class Plugin {
 	 * Plugin constructor.
 	 */
 	public function __construct() {
-		// Init customizer settings.
+		
+	}
+
+	/**
+	 * Runs the filters and actions.
+	 */
+	public function init() {
+		// Init settings.
 		$this->settings = new Settings();
 
 		// Set helpers.
@@ -76,12 +83,7 @@ class Plugin {
 
 		// Get the disabled classes and save in property.
 		$this->disabled_classes = $this->settings->disabled_classes;
-	}
 
-	/**
-	 * Runs the filters and actions.
-	 */
-	public function init() {
 		// Add link to settings in the plugin list.
 		add_filter( 'plugin_action_links', array(
 			$this,
