@@ -4,6 +4,9 @@
 - vendor/squizlabs/
 - composer.json
 - composer.lock
+- package.json
+- package-lock.json
+- webpack.config.json
 - lazy-loading-responsive-images.zip
 - README.md
 - .*
