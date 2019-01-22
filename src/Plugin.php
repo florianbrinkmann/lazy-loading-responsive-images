@@ -196,7 +196,7 @@ class Plugin {
 
 		// Get all nodes except the ones that live inside a noscript element.
 		// @link https://stackoverflow.com/a/19348287/7774451.
-		$nodes = $xpath->query( '//*[not(ancestor-or-self::noscript)]' );
+		$nodes = $xpath->query( "//*[not(ancestor-or-self::noscript)][not(ancestor-or-self::*[contains(@class, 'disable-lazyload')])]" );
 
 		$is_modified = false;
 
