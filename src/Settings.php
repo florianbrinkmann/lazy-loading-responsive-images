@@ -227,26 +227,7 @@ class Settings {
 		) );
 
 		if ( '1' === $this->granular_disable_option ) {
-			add_action( 'init', function() {
-				$public_post_types = get_post_types( array(
-					'public' => true,
-				), 'names' );
-	
-				// Remove attachment post type.
-				if ( is_array( $public_post_types ) && isset( $public_post_types['attachment'] ) ) {
-					unset( $public_post_types['attachment'] );
-				}
-
-				/**
-				 * Filter for the object types that should show the checkbox
-				 * for disabling the lazy loading functionality. By default, all
-				 * public post types (except attachment) are included.
-				 * 
-				 * @param array $public_post_types An array of post types that should have the option
-				 *                                 for disabling.
-				 */
-				$this->disable_option_object_types = apply_filters( 'lazy_loader_disable_option_object_types', $public_post_types );
-			} );
+			add_action( 'init', array( $this, 'disable_option_object_types_filter' ) );
 
 			// Register meta for disabling per page.
 			add_action( 'init', array( $this, 'register_post_meta' ) );
@@ -410,6 +391,27 @@ class Settings {
 		wp_add_inline_script( 'wp-color-picker', "jQuery(document).ready(function($){
     $('.lazy-load-responsive-images-color-field').wpColorPicker();
 });" );
+	}
+
+	public function disable_option_object_types_filter() {
+		$public_post_types = get_post_types( array(
+			'public' => true,
+		), 'names' );
+
+		// Remove attachment post type.
+		if ( is_array( $public_post_types ) && isset( $public_post_types['attachment'] ) ) {
+			unset( $public_post_types['attachment'] );
+		}
+
+		/**
+		 * Filter for the object types that should show the checkbox
+		 * for disabling the lazy loading functionality. By default, all
+		 * public post types (except attachment) are included.
+		 * 
+		 * @param array $public_post_types An array of post types that should have the option
+		 *                                 for disabling.
+		 */
+		$this->disable_option_object_types = apply_filters( 'lazy_loader_disable_option_object_types', $public_post_types );
 	}
 
 	/**
