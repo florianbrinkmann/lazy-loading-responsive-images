@@ -10,4 +10,5 @@
 - lazy-loading-responsive-images.zip
 - README.md
 - js/src
+- node_modules/
 - .*
