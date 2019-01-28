@@ -160,7 +160,12 @@ class Plugin {
 			$this->disabled_for_current_post = absint( get_post_meta( get_the_ID(), 'lazy_load_responsive_images_disabled', true ) );
 		}
 
-		if ( 1 === $this->disabled_for_current_post ) {
+		/**
+		 * Filter for disabling Lazy Loader on specific pages/posts/….
+		 * 
+		 * @param boolean True if lazy loader should be disabled, false if not.
+		 */
+		if ( 1 === $this->disabled_for_current_post || true === apply_filters( 'lazy_loader_disabled', false ) ) {
 			return $content;
 		}
 		
