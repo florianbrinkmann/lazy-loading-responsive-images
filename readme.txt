@@ -88,9 +88,13 @@ add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_sty
 
 The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles). The `display: block` for `.lazyload` is important for the aspectratio plugin option.
 
+= How can I adjust the lazy load threshold? =
+
+[I described that in a support forum post](https://wordpress.org/support/topic/lazy-load-css-background-2/#post-10219851).
+
 == Changelog ==
 
-= 3.5.0 – 26.11.2018 =
+= 3.5.0 – 28.01.2910 =
 
 **Added**
 
