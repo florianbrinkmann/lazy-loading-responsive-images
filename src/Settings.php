@@ -393,6 +393,9 @@ class Settings {
 });" );
 	}
 
+	/**
+	 * Set array of post types that support granular disabling of Lazy Loader features.
+	 */
 	public function disable_option_object_types_filter() {
 		$public_post_types = get_post_types( array(
 			'public' => true,
