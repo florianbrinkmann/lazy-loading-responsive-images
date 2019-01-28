@@ -104,7 +104,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 **Changed**
 
 * Updated lazysizes to 4.1.5.
-* Add note about limited browser support to loading spinner option.
+* Added note about limited browser support to loading spinner option.
 * Updated placeholder source to a more stable variation (thanks diegocanal for the hint).
 
 **Fixed**
