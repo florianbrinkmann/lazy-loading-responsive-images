@@ -94,13 +94,13 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 == Changelog ==
 
-= 3.5.1 – 28.01.2910 =
+= 3.5.1 – 28.01.2019 =
 
 **Fixed**
 
 * Wrong version number in plugin file.
 
-= 3.5.0 – 28.01.2910 =
+= 3.5.0 – 28.01.2019 =
 
 **Added**
 
