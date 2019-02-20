@@ -46,11 +46,18 @@ class Plugin {
 	 *
 	 * @var string
 	 */
-	public $basename;
+	protected $basename;
+
+	/**
+	 * Absolute path of main plugin file.
+	 *
+	 * @var string
+	 */
+	protected $plugin_file;
 
 	/**
 	 * Placeholder data uri for img src attributes.
-	 * 
+	 *
 	 * @link https://stackoverflow.com/a/13139830
 	 *
 	 * @var string
@@ -59,7 +66,7 @@ class Plugin {
 
 	/**
 	 * Hint if the plugin is disabled for this page.
-	 * 
+	 *
 	 * @var null|int
 	 */
 	private $disabled_for_current_post = null;
@@ -68,7 +75,7 @@ class Plugin {
 	 * Plugin constructor.
 	 */
 	public function __construct() {
-		
+
 	}
 
 	/**
@@ -121,8 +128,8 @@ class Plugin {
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
 		// Action on uninstall.
-		register_uninstall_hook( __FILE__, array(
-			'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin',
+		register_uninstall_hook( $this->plugin_file, array(
+			$this,
 			'uninstall',
 		) );
 	}
@@ -162,13 +169,13 @@ class Plugin {
 
 		/**
 		 * Filter for disabling Lazy Loader on specific pages/posts/….
-		 * 
+		 *
 		 * @param boolean True if lazy loader should be disabled, false if not.
 		 */
 		if ( 1 === $this->disabled_for_current_post || true === apply_filters( 'lazy_loader_disabled', false ) ) {
 			return $content;
 		}
-		
+
 		// Check if we have no content.
 		if ( empty( $content ) ) {
 			return $content;
@@ -656,8 +663,8 @@ class Plugin {
         .lazyloading {
 			opacity: 0;
 		}
-		
-		
+
+
 		.lazyloaded {
 			opacity: 1;
 			transition: opacity 300ms;
@@ -681,7 +688,7 @@ class Plugin {
 		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->disable_option_object_types ) ) {
 			$file_data  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
 			$assets_url = trailingslashit( plugin_dir_url( __FILE__ ) );
-			wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );	
+			wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );
 		}
 	}
 
@@ -690,6 +697,24 @@ class Plugin {
 	 */
 	public function load_translation() {
 		load_plugin_textdomain( 'lazy-loading-responsive-images' );
+	}
+
+	/**
+	 * Sets plugin basename.
+	 *
+	 * @param string $basename The plugin basename.
+	 */
+	public function set_basename( $basename ) {
+		$this->basename = $basename;
+	}
+
+	/**
+	 * Sets plugin file path.
+	 *
+	 * @param string $plugin_file The plugin file path.
+	 */
+	public function set_plugin_file( $plugin_file ) {
+		$this->plugin_file = $plugin_file;
 	}
 
 	/**
