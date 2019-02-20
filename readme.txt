@@ -118,6 +118,7 @@ The CSS from the example are the default styles that are used by the plugin (wit
 **Fixed**
 
 * Wrong year in changelog for 3.5.0 and 3.5.1. Thanks @pra85!
+* Correctly remove the plugin options from the options database table.
 
 = 3.5.1 – 28.01.2019 =
 
