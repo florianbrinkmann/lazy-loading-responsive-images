@@ -120,8 +120,6 @@ class Plugin {
 		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
-		error_log( $this->basename );
-
 		// Action on uninstall.
 		register_uninstall_hook( $this->basename, 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin::uninstall' );
 	}
