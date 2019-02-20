@@ -2,8 +2,8 @@
 **Contributors:** FlorianBrinkmann, MarcDK  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
-**Tested up to:** 5.0.3  
-**Stable tag:** 3.5.1  
+**Tested up to:** 5.1  
+**Stable tag:** 4.0.0  
 **Requires PHP:** 5.3  
 
 
@@ -57,6 +57,19 @@ If you want to disable lazy loading for a specific element and its children (for
 ## Frequently Asked Questions 
 
 
+### Is there a way to manually call the plugin to modify markup of not-supported image functions? 
+
+Yes. See the following example that would generate lazy-load-ready output for the result of the not-supported `wp_get_attachment_image()` function:
+
+`
+if ( isset( $lazy_loader ) && $lazy_loader instanceof FlorianBrinkmann\LazyLoadResponsiveImages\Plugin ) {
+	echo $lazy_loader->filter_markup( wp_get_attachment_image( 1261 ) );
+}
+`
+
+To make it happen, you need to pass the markup that contains the image (or images) to `$lazy_loader->filter_markup()`. The `if` statement ensures that the Lazy Loader object is there and that it is an object of the correct class.
+
+
 ### How can I disable/modify the inline styles? 
 
 **Important:** If you modify or remove the inline styles, also the style that shows the loading spinner is affected. So if you remove the styles or modify them without adding back the spinner styles, the spinner option will not work. [I created a Gist with the spinner styles – just add them to your modification to make it work](https://gist.github.com/florianbrinkmann/937495c7b41df3c1600ef7d9c6e95a9e).
@@ -99,6 +112,21 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 
 ## Changelog 
+
+
+### 4.0.0 – 20.02.2019 
+
+*Tested with WordPress 5.1.*
+
+**Changed**
+* Renamed object in main plugin file from `$plugin` to `$lazy_loader` to make it accessible via the theme.
+* Added an example for calling the `filter_markup()` method of the plugin from the theme to modify markup of not-supported image functions like `wp_get_attachment_image()`.
+* Updated lazysizes to 4.1.6.
+
+**Fixed**
+
+* Wrong year in changelog for 3.5.0 and 3.5.1. Thanks @pra85!
+
 
 ### 3.5.1 – 28.01.2019 
 
