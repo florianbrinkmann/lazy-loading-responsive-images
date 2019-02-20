@@ -31,11 +31,8 @@ if ( ! defined( 'WPINC' ) ) {
 // Create object.
 $lazy_loader = new Plugin();
 
-// Init the plugin.
-$lazy_loader->init();
-
 // Set plugin basename.
 $lazy_loader->set_basename( plugin_basename( __FILE__ ) );
 
-// Set plugin file path.
-$lazy_loader->set_plugin_file( __FILE__ );
+// Init the plugin.
+$lazy_loader->init();

@@ -49,13 +49,6 @@ class Plugin {
 	protected $basename;
 
 	/**
-	 * Absolute path of main plugin file.
-	 *
-	 * @var string
-	 */
-	protected $plugin_file;
-
-	/**
 	 * Placeholder data uri for img src attributes.
 	 *
 	 * @link https://stackoverflow.com/a/13139830
@@ -127,11 +120,10 @@ class Plugin {
 		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 
+		error_log( $this->basename );
+
 		// Action on uninstall.
-		register_uninstall_hook( $this->plugin_file, array(
-			$this,
-			'uninstall',
-		) );
+		register_uninstall_hook( $this->basename, 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin::uninstall' );
 	}
 
 	/**
@@ -709,21 +701,24 @@ class Plugin {
 	}
 
 	/**
-	 * Sets plugin file path.
-	 *
-	 * @param string $plugin_file The plugin file path.
-	 */
-	public function set_plugin_file( $plugin_file ) {
-		$this->plugin_file = $plugin_file;
-	}
-
-	/**
 	 * Action on plugin uninstall.
 	 */
-	public function uninstall() {
+	public static function uninstall() {
+		$options_array = array(
+			'lazy_load_responsive_images_disabled_classes',
+			'lazy_load_responsive_images_enable_for_iframes',
+			'lazy_load_responsive_images_unveilhooks_plugin',
+			'lazy_load_responsive_images_enable_for_videos',
+			'lazy_load_responsive_images_enable_for_audios',
+			'lazy_load_responsive_images_aspectratio_plugin',
+			'lazy_load_responsive_images_loading_spinner',
+			'lazy_load_responsive_images_loading_spinner_color',
+			'lazy_load_responsive_images_granular_disable_option',
+		);
+
 		// Delete options.
-		foreach ( $this->settings->options as $option_id => $option ) {
-			delete_option( $option_id );
+		foreach ( $options_array as $option ) {
+			delete_option( $option );
 		}
 	}
 }
