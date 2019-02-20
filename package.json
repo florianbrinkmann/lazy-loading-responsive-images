@@ -1,6 +1,6 @@
 {
   "name": "lazy-loading-responsive-images",
-  "version": "3.4.1",
+  "version": "4.0.0",
   "description": "Lazy Loader plugin.",
   "scripts": {
     "build:dev": "webpack",
