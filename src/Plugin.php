@@ -58,13 +58,6 @@ class Plugin {
 	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 	/**
-	 * Hint if the plugin is disabled for this page.
-	 *
-	 * @var null|int
-	 */
-	private $disabled_for_current_post = null;
-
-	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -152,17 +145,7 @@ class Plugin {
 	 * @return string Modified HTML.
 	 */
 	public function filter_markup( $content ) {
-		// Check if the plugin is disabled.
-		if ( null === $this->disabled_for_current_post ) {
-			$this->disabled_for_current_post = absint( get_post_meta( get_the_ID(), 'lazy_load_responsive_images_disabled', true ) );
-		}
-
-		/**
-		 * Filter for disabling Lazy Loader on specific pages/posts/….
-		 *
-		 * @param boolean True if lazy loader should be disabled, false if not.
-		 */
-		if ( 1 === $this->disabled_for_current_post || true === apply_filters( 'lazy_loader_disabled', false ) ) {
+		if ( $this->helpers->is_disabled_for_post() ) {
 			return $content;
 		}
 
@@ -595,6 +578,10 @@ class Plugin {
 	 * Enqueues scripts and styles.
 	 */
 	public function enqueue_script() {
+		if ( $this->helpers->is_disabled_for_post() ) {
+			return;
+		}
+
 		// Enqueue lazysizes.
 		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), '', false, true );
 
@@ -619,6 +606,10 @@ class Plugin {
 	 * echo it.
 	 */
 	public function add_inline_style() {
+		if ( $this->helpers->is_disabled_for_post() ) {
+			return;
+		}
+
 		// Create loading spinner style if needed.
 		$spinner_styles = '';
 		$spinner_color  = $this->settings->loading_spinner_color;
