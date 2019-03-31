@@ -256,6 +256,12 @@ class Plugin {
 		// Save the image original attributes.
 		$img_attributes = $img->attributes;
 
+		// Check if the element already has a data-src attribute (might be the case for
+		// plugins that bring their own lazy load functionality) and skip it to prevent conflicts.
+		if ( $img->hasAttribute( 'data-src' ) ) {
+			return $dom;
+		}
+
 		// Add noscript element.
 		if ( true === $create_noscript ) {
 			$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG' );
