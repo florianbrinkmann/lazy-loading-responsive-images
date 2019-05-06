@@ -110,7 +110,8 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 You can add this snippet to your theme or plugin and adjust the `lazySizesConfig.expand = 100;` part to your needs. 
 
-`function slug_enqueue_lazysizes_options() {
+`
+function slug_enqueue_lazysizes_options() {
 	wp_add_inline_script( 'lazysizes', 'window.lazySizesConfig = window.lazySizesConfig || {}; lazySizesConfig.expand = 100;', 'before' );
 }
 add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
