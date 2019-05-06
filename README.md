@@ -2,7 +2,7 @@
 **Contributors:** FlorianBrinkmann, MarcDK  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.5  
-**Tested up to:** 5.1  
+**Tested up to:** 5.2  
 **Stable tag:** 4.0.1  
 **Requires PHP:** 5.3  
 
@@ -106,9 +106,15 @@ add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_sty
 The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles). The `display: block` for `.lazyload` is important for the aspectratio plugin option.
 
 
-### How can I adjust the lazy load threshold? 
+### How can I adjust the lazy load threshold/other lazysizes settings? 
 
-[I described that in a support forum post](https://wordpress.org/support/topic/lazy-load-css-background-2/#post-10219851).
+You can add this snippet to your theme or plugin and adjust the `lazySizesConfig.expand = 100;` part to your needs. 
+
+`function slug_enqueue_lazysizes_options() {
+	wp_add_inline_script( 'lazysizes', 'window.lazySizesConfig = window.lazySizesConfig || {}; lazySizesConfig.expand = 100;', 'before' );
+}
+add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
+`
 
 
 ## Changelog 
