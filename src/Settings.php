@@ -227,10 +227,10 @@ class Settings {
 		) );
 
 		if ( '1' === $this->granular_disable_option ) {
-			add_action( 'init', array( $this, 'disable_option_object_types_filter' ) );
+			add_action( 'init', array( $this, 'disable_option_object_types_filter' ), 11 );
 
 			// Register meta for disabling per page.
-			add_action( 'init', array( $this, 'register_post_meta' ) );
+			add_action( 'init', array( $this, 'register_post_meta' ), 11 );
 
 			// Publish post actions.
 			add_action( 'post_submitbox_misc_actions', array( $this, 'add_checkbox' ), 9 );
