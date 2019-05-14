@@ -175,11 +175,14 @@ class Plugin {
 		// Create new \DOMDocument object.
 		$dom = new \DOMDocument();
 
-		// Preserve html entities
+		// Preserve html entities and script tags.
 		// @link https://github.com/ivopetkov/html5-dom-document-php.
 		$content = preg_replace( '/&([a-zA-Z]*);/', 'lazy-loading-responsive-images-entity1-$1-end', $content );
 		$content = preg_replace( '/&#([0-9]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
-		
+		$content = str_replace( '<script>', '<!--<script>', $content );
+		$content = str_replace( '<script ', '<!--<script ', $content );
+		$content = str_replace( '</script>', '</script>-->', $content );
+
 		// Load the HTML.
 		// Trick with <?xml endocing="utf-8" loadHTML() method from https://github.com/ivopetkov/html5-dom-document-php.
 		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $content, 0 | LIBXML_NOENT );
@@ -245,11 +248,14 @@ class Plugin {
 			$content = $this->helpers->save_html( $dom );
 		}
 
-		// Restore the entities.
+		// Restore the entities and script tags.
 		// @link https://github.com/ivopetkov/html5-dom-document-php/blob/9560a96f63a7cf236aa18b4f2fbd5aab4d756f68/src/HTML5DOMDocument.php#L343.
-		if ( strpos( $content, 'lazy-loading-responsive-images-entity') !== false ) {
+		if ( strpos( $content, 'lazy-loading-responsive-images-entity') !== false || strpos( $content, '<!--<script' ) !== false ) {
 			$content = preg_replace('/lazy-loading-responsive-images-entity1-(.*?)-end/', '&$1;', $content );
 			$content = preg_replace('/lazy-loading-responsive-images-entity2-(.*?)-end/', '&#$1;', $content );
+			$content = str_replace( '<!--<script>', '<script>', $content );
+			$content = str_replace( '<!--<script ', '<script ', $content );
+			$content = str_replace( '</script>-->', '</script>', $content );
 		}
 
 		return $content;
