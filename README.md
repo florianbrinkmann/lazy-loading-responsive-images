@@ -127,7 +127,7 @@ add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
 
 **Changed**
 
-* Updated lazysizes to 4.1.7.
+* Updated lazysizes to 5.0.0.
 
 **Fixed**
 
