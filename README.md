@@ -121,7 +121,7 @@ add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
 ## Changelog 
 
 
-### 4.0.2 – 
+### 4.0.2 –  
 
 *Tested with WordPress 5.2*
 
@@ -133,6 +133,7 @@ add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
 
 * Do not load assets on pages where Lazy Loader is disabled.
 * Preserve HTML and hex entities.
+* Ignore inline scripts.
 * Skip images that already have a `data-src` attribute.
 * Fireing action later that gets the publich post types to support CPTs that are added via plugins.
 
