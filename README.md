@@ -1,7 +1,7 @@
 # Lazy Loader 
 **Contributors:** FlorianBrinkmann, MarcDK  
 **Tags:** lazysizes, lazy loading, performance, images  
-**Requires at least:** 4.5  
+**Requires at least:** 4.9.8  
 **Tested up to:** 5.2  
 **Stable tag:** 4.0.1  
 **Requires PHP:** 5.3  
