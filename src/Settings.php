@@ -151,9 +151,7 @@ class Settings {
 			'lazy_load_responsive_images_native_loading_plugin'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_native_loading_plugin', '0' ),
 				'label'             => __( 'Include lazysizes native loading plugin' ),
-				'description'       => sprintf(
-					__( 'The plugin transforms images and iframes to use native lazyloading in browsers that support it.', 'lazy-loading-responsive-images' ),
-				),
+				'description'       => __( 'The plugin transforms images and iframes to use native lazyloading in browsers that support it.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
@@ -235,9 +233,7 @@ class Settings {
 				'label'             => __( 'Modify the default config', 'lazy-loading-responsive-images' ),
 				'description'       => sprintf( /* translators: s=code example. */
 					__( 'Here you can add custom values for the config settings of the <a href="https://github.com/aFarkas/lazysizes/#js-api---options">lazysizes script</a>. An example could look like this, modifying the value for the expand option:%s', 'lazy-loading-responsive-images' ),
-					sprintf(
-						'<br><br><code>window.lazySizesConfig = window.lazySizesConfig || {};</code><br><code>lazySizesConfig.expand = 300;</code>'
-					)
+					'<br><br><code>window.lazySizesConfig = window.lazySizesConfig || {};</code><br><code>lazySizesConfig.expand = 300;</code>'
 				),
 				'field_callback'    => array( $this, 'textarea_field_cb' ),
 				'sanitize_callback' => array(
