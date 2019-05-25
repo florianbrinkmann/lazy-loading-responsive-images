@@ -9,7 +9,7 @@
  * Plugin Name: Lazy Loader
  * Plugin URI:  https://florianbrinkmann.com/en/3350/responsive-images-and-lazy-loading-in-wordpress/
  * Description: Lazy loading plugin that supports images, iFrames, video and audio elements and uses lazysizes.js. With manual modification of the markup it is also possible to lazy load background images, scripts, and styles.
- * Version:     4.0.1
+ * Version:     4.1.0
  * Author:      Florian Brinkmann, MarcDK
  * Author URI:  https://florianbrinkmann.com/en/
  * License:     GPL v2 http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
