@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
 Tested up to: 5.2.1
-Stable tag: 4.0.1
+Stable tag: 4.1.0
 Requires PHP: 5.3
 
 == Description ==

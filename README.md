@@ -2,8 +2,8 @@
 **Contributors:** FlorianBrinkmann, MarcDK  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
-**Tested up to:** 5.2  
-**Stable tag:** 4.0.1  
+**Tested up to:** 5.2.1  
+**Stable tag:** 4.1.0  
 **Requires PHP:** 5.3  
 
 
@@ -108,22 +108,20 @@ The CSS from the example are the default styles that are used by the plugin (wit
 
 ### How can I adjust the lazy load threshold/other lazysizes settings? 
 
-You can add this snippet to your theme or plugin and adjust the `lazySizesConfig.expand = 100;` part to your needs. 
-
-`
-function slug_enqueue_lazysizes_options() {
-	wp_add_inline_script( 'lazysizes', 'window.lazySizesConfig = window.lazySizesConfig || {}; lazySizesConfig.expand = 100;', 'before' );
-}
-add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
-`
+There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 
 ## Changelog 
 
 
-### 4.0.2 –  
+### 4.1.0 –  
 
 *Tested with WordPress 5.2*
+
+**Added**
+
+* Option for using the native loading extension from lazysizes.
+* Textarea for custom lazysizes config values.
 
 **Changed**
 
@@ -135,7 +133,7 @@ add_action( 'wp_enqueue_scripts', 'slug_enqueue_lazysizes_options', 50 );
 * Preserve HTML and hex entities.
 * Ignore inline scripts.
 * Skip images that already have a `data-src` attribute.
-* Fireing action later that gets the publich post types to support CPTs that are added via plugins.
+* Checkbox for disabling Lazy Loader not showing for Custom Post Types added via a plugin.
 
 
 ### 4.0.1 – 20.02.2019 
