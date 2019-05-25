@@ -49,6 +49,13 @@ class Settings {
 	 *
 	 * @var string
 	 */
+	public $load_native_loading_plugin;
+
+	/**
+	 * Value of setting for loading the unveilhooks plugin.
+	 *
+	 * @var string
+	 */
 	public $load_unveilhooks_plugin;
 
 	/**
@@ -134,10 +141,22 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
+			'lazy_load_responsive_images_native_loading_plugin'    => array(
+				'value'             => get_option( 'lazy_load_responsive_images_native_loading_plugin', '0' ),
+				'label'             => __( 'Include lazysizes native loading plugin' ),
+				'description'       => sprintf(
+					__( 'The plugin transforms images and iframes to use native lazyloading in browsers that support it.', 'lazy-loading-responsive-images' ),
+				),
+				'field_callback'    => array( $this, 'checkbox_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
+			),
 			'lazy_load_responsive_images_unveilhooks_plugin'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_unveilhooks_plugin', '0' ),
 				'label'             => __( 'Include lazysizes unveilhooks plugin' ),
-				'description'       => __( 'The plugin adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>. Size of the additional JavaScript file: 1.43&nbsp;KB.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'The plugin adds support for lazy loading of background images, scripts, styles, and videos. To use it with background images, scripts and styles, you will need to <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks">manually modify the markup</a>.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
@@ -167,7 +186,7 @@ class Settings {
 			'lazy_load_responsive_images_aspectratio_plugin'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_aspectratio_plugin', '0' ),
 				'label'             => __( 'Include lazysizes aspectratio plugin', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'The plugin helps to avoid content jumping when images are loaded and makes lazy loading work with masonry grids. Works only if width and height attribute are set for the img element. <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio">More info on the plugin page</a>. Size of the additional JavaScript file: 2.61&nbsp;KB.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'The plugin helps to avoid content jumping when images are loaded and makes lazy loading work with masonry grids. Works only if width and height attribute are set for the img element. <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio">More info on the plugin page</a>.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
@@ -209,6 +228,7 @@ class Settings {
 		// Fill properties with setting values.
 		$this->disabled_classes        = explode( ',', $this->options['lazy_load_responsive_images_disabled_classes']['value'] );
 		$this->enable_for_iframes      = $this->options['lazy_load_responsive_images_enable_for_iframes']['value'];
+		$this->load_native_loading_plugin = $this->options['lazy_load_responsive_images_native_loading_plugin']['value'];
 		$this->load_unveilhooks_plugin = $this->options['lazy_load_responsive_images_unveilhooks_plugin']['value'];
 		$this->enable_for_videos       = $this->options['lazy_load_responsive_images_enable_for_videos']['value'];
 		$this->enable_for_audios       = $this->options['lazy_load_responsive_images_enable_for_audios']['value'];

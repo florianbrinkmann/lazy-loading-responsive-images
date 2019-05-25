@@ -152,22 +152,22 @@ class Plugin {
 		// Check if we have no content.
 		if ( empty( $content ) ) {
 			return $content;
-		} // End if().
+		}
 
 		// Check if we are on a feed page.
 		if ( is_feed() ) {
 			return $content;
-		} // End if().
+		}
 
 		// Check if this is a request in the backend.
 		if ( $this->helpers->is_admin_request() ) {
 			return $content;
-		} // End if().
+		}
 
 		// Check for AMP page.
 		if ( true === $this->helpers->is_amp_page() ) {
 			return $content;
-		} // End if().
+		}
 
 		// Disable libxml errors.
 		libxml_use_internal_errors( true );
@@ -215,34 +215,34 @@ class Plugin {
 			 */
 			if ( ! empty( $result ) || $node->hasAttribute( 'data-no-lazyload' ) || in_array( 'lazyload', $node_classes, true ) ) {
 				continue;
-			} // End if().
+			}
 
 			// Check if it is one of the supported elements and support for it is enabled.
 			if ( 'img' === $node->tagName && 'source' !== $node->parentNode->tagName && 'picture' !== $node->parentNode->tagName ) {
 				$dom = $this->modify_img_markup( $node, $dom );
 				$is_modified = true;
-			} // End if().
+			}
 
 			if ( 'picture' === $node->tagName ) {
 				$dom = $this->modify_picture_markup( $node, $dom );
 				$is_modified = true;
-			} // End if().
+			}
 
 			if ( '1' === $this->settings->enable_for_iframes && 'iframe' === $node->tagName ) {
 				$dom = $this->modify_iframe_markup( $node, $dom );
 				$is_modified = true;
-			} // End if().
+			}
 
 			if ( '1' === $this->settings->enable_for_videos && 'video' === $node->tagName ) {
 				$dom = $this->modify_video_markup( $node, $dom );
 				$is_modified = true;
-			} // End if().
+			}
 
 			if ( '1' === $this->settings->enable_for_audios && 'audio' === $node->tagName ) {
 				$dom = $this->modify_audio_markup( $node, $dom );
 				$is_modified = true;
-			} // End if().
-		} // End foreach().
+			}
+		}
 
 		if ( true === $is_modified ) {
 			$content = $this->helpers->save_html( $dom );
@@ -323,7 +323,7 @@ class Plugin {
 				// Remove srcset attribute.
 				$img->removeAttribute( 'srcset' );
 			}
-		} // End if().
+		}
 
 		// Get src value.
 		$src = $img->getAttribute( 'src' );
@@ -338,8 +338,12 @@ class Plugin {
 
 			if ( '' !== $img_width && '' !== $img_height ) {
 				$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
-			} // End if().
-		} // End if().
+			}
+		}
+
+		if ( '1' === $this->settings->load_native_loading_plugin ) {
+			$img->setAttribute( 'loading', 'lazy' );
+		}
 
 		// Get the classes.
 		$classes = $img->getAttribute( 'class' );
@@ -391,8 +395,8 @@ class Plugin {
 
 						// Remove sizes attribute.
 						$source_element->removeAttribute( 'sizes' );
-					} // End if().
-				} // End if().
+					}
+				}
 
 				// Check for srcset.
 				if ( $source_element->hasAttribute( 'srcset' ) ) {
@@ -414,7 +418,7 @@ class Plugin {
 						// Remove srcset attribute.
 						$source_element->removeAttribute( 'srcset' );
 					}
-				} // End if().
+				}
 
 				if ( $source_element->hasAttribute( 'src' ) ) {
 					// Get src value.
@@ -425,14 +429,14 @@ class Plugin {
 
 					// Set data URI for src attribute.
 					$source_element->setAttribute( 'src', $this->src_placeholder );
-				} // End if().
+				}
 			}
-		} // End if().
+		}
 
 		// Loop the img element.
 		foreach ( $img_element as $img ) {
 			$this->modify_img_markup( $img, $dom, false );
-		} // End foreach().
+		}
 
 		return $dom;
 	}
@@ -461,7 +465,11 @@ class Plugin {
 			$iframe->setAttribute( 'data-src', $src );
 		} else {
 			return $dom;
-		} // End if().
+		}
+
+		if ( '1' === $this->settings->load_native_loading_plugin ) {
+			$iframe->setAttribute( 'loading', 'lazy' );
+		}
 
 		// Get the classes.
 		$classes = $iframe->getAttribute( 'class' );
@@ -503,7 +511,7 @@ class Plugin {
 
 			// Set data-poster value.
 			$video->setAttribute( 'data-poster', $poster );
-		} // End if().
+		}
 
 		// Set preload to none.
 		$video->setAttribute( 'preload', 'none' );
@@ -613,13 +621,18 @@ class Plugin {
 		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), 'lazysizes', false, true );
-		} // End if().
+		}
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->load_aspectratio_plugin ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), 'lazysizes', false, true );
-		} // End if().
+		}
+
+		// Check if native loading plugin should be loaded.
+		if ( '1' === $this->settings->load_native_loading_plugin ) {
+			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), 'lazysizes', false, true );
+		}
 	}
 
 	/**
@@ -657,7 +670,7 @@ class Plugin {
 }',
 				rawurlencode( $spinner_markup )
 			);
-		} // End if().
+		}
 
 		// Display the default styles.
 		$default_styles = "<style>.lazyload {
@@ -727,6 +740,7 @@ class Plugin {
 			'lazy_load_responsive_images_loading_spinner',
 			'lazy_load_responsive_images_loading_spinner_color',
 			'lazy_load_responsive_images_granular_disable_option',
+			'lazy_load_responsive_images_native_loading_plugin',
 		);
 
 		// Delete options.
