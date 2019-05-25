@@ -633,6 +633,11 @@ class Plugin {
 		if ( '1' === $this->settings->load_native_loading_plugin ) {
 			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), 'lazysizes', false, true );
 		}
+
+		// Include custom lazysizes config if not empty.
+		if ( '' !== $this->settings->lazysizes_config ) {
+			wp_add_inline_script( 'lazysizes', $this->settings->lazysizes_config, 'before' );
+		}
 	}
 
 	/**
@@ -741,6 +746,7 @@ class Plugin {
 			'lazy_load_responsive_images_loading_spinner_color',
 			'lazy_load_responsive_images_granular_disable_option',
 			'lazy_load_responsive_images_native_loading_plugin',
+			'lazy_load_responsive_images_lazysizes_config',
 		);
 
 		// Delete options.

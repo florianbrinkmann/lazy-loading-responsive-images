@@ -115,6 +115,13 @@ class Settings {
 	public $disable_option_object_types = array();
 
 	/**
+	 * String to modify lazysizes config.
+	 * 
+	 * @var string
+	 */
+	public $lazysizes_config = '';
+
+	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
@@ -223,6 +230,21 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
+			'lazy_load_responsive_images_lazysizes_config' => array(
+				'value'             => get_option( 'lazy_load_responsive_images_lazysizes_config', '' ),
+				'label'             => __( 'Modify the default config', 'lazy-loading-responsive-images' ),
+				'description'       => sprintf( /* translators: s=code example. */
+					__( 'Here you can add custom values for the config settings of the <a href="https://github.com/aFarkas/lazysizes/#js-api---options">lazysizes script</a>. An example could look like this, modifying the value for the expand option:%s', 'lazy-loading-responsive-images' ),
+					sprintf(
+						'<br><br><code>window.lazySizesConfig = window.lazySizesConfig || {};</code><br><code>lazySizesConfig.expand = 300;</code>'
+					)
+				),
+				'field_callback'    => array( $this, 'textarea_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_textarea',
+				),
+			),
 		);
 
 		// Fill properties with setting values.
@@ -236,6 +258,7 @@ class Settings {
 		$this->loading_spinner         = $this->options['lazy_load_responsive_images_loading_spinner']['value'];
 		$this->loading_spinner_color   = $this->options['lazy_load_responsive_images_loading_spinner_color']['value'];
 		$this->granular_disable_option = $this->options['lazy_load_responsive_images_granular_disable_option']['value'];
+		$this->lazysizes_config = $this->options['lazy_load_responsive_images_lazysizes_config']['value'];
 
 		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
@@ -352,6 +375,34 @@ class Settings {
 		$label_for = esc_attr( $args['label_for'] ); ?>
 		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
 		       type="text" value="<?php echo $option_value; ?>">
+		<?php
+		// Check for description.
+		if ( '' !== $args['description'] ) { ?>
+			<p class="description">
+				<?php echo $args['description']; ?>
+			</p>
+			<?php
+		}
+	}
+
+	/**
+	 * Textarea field callback.
+	 *
+	 * @param array $args               {
+	 *                                  Argument array.
+	 *
+	 * @type string $label_for          (Required) The label for the textarea.
+	 * @type string $value              (Required) The value.
+	 * @type string $description        (Required) Description.
+	 * }
+	 */
+	public function textarea_field_cb( $args ) {
+		// Get option value.
+		$option_value = $args['value'];
+
+		// Get label for.
+		$label_for = esc_attr( $args['label_for'] ); ?>
+		<textarea id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>" style="width: 100%;"><?php echo $option_value; ?></textarea>
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>

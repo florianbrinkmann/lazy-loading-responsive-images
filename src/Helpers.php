@@ -144,7 +144,7 @@ class Helpers {
 	}
 
 	/**
-	 * Sanitize comma separated list of class names.
+	 * Sanitize checkbox.
 	 *
 	 * @link https://github.com/WPTRT/code-examples/blob/master/customizer/sanitization-callbacks.php
 	 *
@@ -154,6 +154,17 @@ class Helpers {
 	 */
 	public function sanitize_checkbox( $checked ) {
 		return ( ( isset( $checked ) && true == $checked ) ? true : false );
+	}
+
+	/**
+	 * Sanitize textarea input.
+	 *
+	 * @param bool $checked Whether the checkbox is checked.
+	 *
+	 * @return bool Whether the checkbox is checked.
+	 */
+	public function sanitize_textarea( $value ) {
+		return strip_tags( $value );
 	}
 
 	/**
