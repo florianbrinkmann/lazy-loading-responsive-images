@@ -665,6 +665,7 @@ class Plugin {
 	color: transparent;
 	opacity: 1;
 	transition: opacity 300ms;
+	transition: opacity var(--lazy-loader-animation-duration);
 	background: url("data:image/svg+xml,%s") no-repeat;
 	background-size: 2em 2em;
 	background-position: center center;
@@ -673,6 +674,7 @@ class Plugin {
 .lazyloaded {
 	animation-name: loaded;
 	animation-duration: 300ms;
+	animation-duration: var(--lazy-loader-animation-duration);
 	transition: none;
 }
 
@@ -690,7 +692,11 @@ class Plugin {
 		}
 
 		// Display the default styles.
-		$default_styles = "<style>.lazyload {
+		$default_styles = "<style>:root {
+			--lazy-loader-animation-duration: 300ms;
+		}
+		  
+		.lazyload {
 	display: block;
 }
 
@@ -703,6 +709,7 @@ class Plugin {
 		.lazyloaded {
 			opacity: 1;
 			transition: opacity 300ms;
+			transition: opacity var(--lazy-loader-animation-duration);
 		}$spinner_styles</style>";
 
 		/**

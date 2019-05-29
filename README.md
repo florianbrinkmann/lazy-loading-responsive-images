@@ -82,24 +82,18 @@ add_filter( 'lazy_load_responsive_images_inline_styles', function () {
 } );
 `
 
-If you want to modify it, you can overwrite the plugin’s styles like that (remember to include the opening and closing `style` tags):
+If you want to modify it, you can do that like in the following code block (remember to include the opening and closing `style` tags for additions/replacements). The code modifies the duration of the fade-in-effect:
 
 `
 add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_styles ) {
-	return '<style>.lazyload {
-			display: block;
-		}
-
-		.lazyload,
-		.lazyloading {
-			opacity: 0;
-		}
-
-
-		.lazyloaded {
-			opacity: 1;
-			transition: opacity 300ms;
-		}</style>';
+	$default_styles = sprintf(
+		'%s <style>:root {
+	--lazy-loader-animation-duration: 600ms;
+}</style>',
+		$default_styles
+	);
+	
+	return $default_styles;
 } );
 `
 
@@ -126,6 +120,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 **Changed**
 
 * Updated lazysizes to 5.0.0.
+* Use CSS variable `var(--lazy-loader-animation-duration)` for duration of fade-in-effect after loading.
 
 **Fixed**
 
