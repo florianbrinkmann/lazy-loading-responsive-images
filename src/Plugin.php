@@ -662,16 +662,28 @@ class Plugin {
 		if ( '1' === $this->settings->loading_spinner ) {
 			$spinner_styles = sprintf(
 				'.lazyloading {
-  color: transparent;
-  opacity: 1;
-  transition: opacity 300ms;
-  background: url("data:image/svg+xml,%s") no-repeat;
-  background-size: 2em 2em;
-  background-position: center center;
+	color: transparent;
+	opacity: 1;
+	transition: opacity 300ms;
+	background: url("data:image/svg+xml,%s") no-repeat;
+	background-size: 2em 2em;
+	background-position: center center;
 }
 
 .lazyloaded {
-  transition: none;
+	animation-name: loaded;
+	animation-duration: 300ms;
+	transition: none;
+}
+
+@keyframes loaded {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
 }',
 				rawurlencode( $spinner_markup )
 			);
