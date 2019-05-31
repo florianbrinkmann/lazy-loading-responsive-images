@@ -100,7 +100,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 == Changelog ==
 
-= 4.1.0 –  =
+= 4.1.0 – 31.05.2019 =
 
 *Tested with WordPress 5.2*
 
@@ -111,7 +111,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 **Changed**
 
-* Updated lazysizes to 5.0.0.
+* Updated lazysizes to 5.1.0.
 * Use CSS variable `var(--lazy-loader-animation-duration)` for duration of fade-in-effect after loading.
 
 **Fixed**
