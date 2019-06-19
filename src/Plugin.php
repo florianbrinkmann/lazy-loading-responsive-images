@@ -84,7 +84,7 @@ class Plugin {
 		), 10, 2 );
 
 		// Filter markup of the_content() calls to modify media markup for lazy loading.
-		add_filter( 'the_content', array( $this, 'filter_markup' ), 500 );
+		add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
 
 		// Filter markup of Text widget to modify media markup for lazy loading.
 		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
@@ -96,7 +96,7 @@ class Plugin {
 		add_filter( 'post_thumbnail_html', array(
 			$this,
 			'filter_markup',
-		), 500, 1 );
+		), 10001, 1 );
 
 		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array(
