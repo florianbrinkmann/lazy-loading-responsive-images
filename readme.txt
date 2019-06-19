@@ -102,6 +102,12 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 == Changelog ==
 
+= 4.1.1 – =
+
+**Fixed**
+
+* Audio shortcode stripped from frontend with all following content.
+
 = 4.1.0 – 31.05.2019 =
 
 *Tested with WordPress 5.2*
