@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
-Tested up to: 5.2.1
-Stable tag: 4.1.0
+Tested up to: 5.2.2
+Stable tag: 5.0.0
 Requires PHP: 5.3
 
 == Description ==
@@ -102,7 +102,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 == Changelog ==
 
-= 5.0.0 – =
+= 5.0.0 – 28.06.2019 =
 
 **Changed**
 
