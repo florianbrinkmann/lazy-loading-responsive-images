@@ -234,7 +234,7 @@ class Plugin {
 				&& 'video' !== $node->tagName
 				&& 'audio' !== $node->tagName
 			) {
-				if ( 1 === preg_match_all( '/background(-[a-z]+)?:(.)*url\(["\']?([^"\']*)["\']?\)([^;])*;?/', $node->getAttribute( 'style' ) ) ) {
+				if ( 1 === preg_match( '/background(-[a-z]+)?:(.)*url\(["\']?([^"\']*)["\']?\)([^;])*;?/', $node->getAttribute( 'style' ) ) ) {
 					$dom = $this->modify_background_img_markup( $node, $dom );
 					$is_modified = true;
 				}
