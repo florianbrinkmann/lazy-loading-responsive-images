@@ -71,10 +71,10 @@ class Helpers {
 				}
 			}
 		} else {
-			if (! defined('REST_REQUEST') || ! REST_REQUEST) {
+			if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 				return false;
 			}
-			return (isset($_REQUEST['context']) && 'edit' === $_REQUEST['context']);
+			return ( isset( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'] );
 		}
 	}
 
