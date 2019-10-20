@@ -58,6 +58,11 @@ class Plugin {
 	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 
 	/**
+	 * Counter for background image classes.
+	 */
+	private $background_image_number = 1;
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -219,6 +224,22 @@ class Plugin {
 				continue;
 			}
 
+			// Check if the element has a style attribute with a background image.
+			if (
+				'1' === $this->settings->enable_for_background_images
+				&& $node->hasAttribute( 'style' )
+				&& 'img' !== $node->tagName
+				&& 'picture' !== $node->tagName
+				&& 'iframe' !== $node->tagName
+				&& 'video' !== $node->tagName
+				&& 'audio' !== $node->tagName
+			) {
+				if ( 1 === preg_match_all( '/background(-[a-z]+)?:(.)*url\(["\']?([^"\']*)["\']?\)([^;])*;?/', $node->getAttribute( 'style' ) ) ) {
+					$dom = $this->modify_background_img_markup( $node, $dom );
+					$is_modified = true;
+				}
+			}
+
 			// Check if it is one of the supported elements and support for it is enabled.
 			if ( 'img' === $node->tagName && 'source' !== $node->parentNode->tagName && 'picture' !== $node->parentNode->tagName ) {
 				$dom = $this->modify_img_markup( $node, $dom );
@@ -263,6 +284,53 @@ class Plugin {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Modifies element markup for lazy loading inline background image.
+	 *
+	 * @param \DOMNode     $node    The node with the inline background image.
+	 * @param \DOMDocument $dom     \DOMDocument() object of the HTML.
+	 *
+	 * @return \DOMDocument The updated DOM.
+	 */
+	public function modify_background_img_markup( $node, $dom ) {
+		$original_css = $node->getAttribute( 'style' );
+		$classes = $node->getAttribute( 'class' );
+		// It is possible that there are multiple background rules for a inline element (including ones for size, position, et cetera).
+		// We will insert all of them to the inline style element, to not mess up their order.
+		if ( 0 !== preg_match_all( '/background(-[a-z]+)?:([^;])*;?/', $node->getAttribute( 'style' ), $matches ) ) {
+			// $matches[0] contains the full CSS background rules.
+			// We remove the rules from the inline style.
+			$modified_css = str_replace( $matches[0], '', $original_css );
+			$node->setAttribute( 'style', $modified_css );
+
+			// Build string of background rules.
+			$background_rules_string = implode( ' ', $matches[0] );
+
+			// Add unique class and lazyload class to element.
+			$unique_class = "lazy-loader-background-element-$this->background_image_number";
+			$classes .= " lazyload $unique_class ";
+			$node->setAttribute( 'class', $classes );
+			$this->background_image_number++;
+
+			// Create style element with the background rule.
+			$background_style_elem = $dom->createElement( 'style', ".$unique_class.lazyloaded{ $background_rules_string }" );
+			$node->parentNode->insertBefore( $background_style_elem, $node );
+
+			// Add the noscript element.
+			$noscript = $dom->createElement( 'noscript' );
+
+			// Insert it before the img node.
+			$noscript_node = $node->parentNode->insertBefore( $noscript, $node );
+
+			// Create element.
+			$background_style_elem_noscript = $dom->createElement( 'style', ".$unique_class.lazyload{ $background_rules_string }" );
+
+			// Add media node to noscript node.
+			$noscript_node->appendChild( $background_style_elem_noscript );
+		}
+		return $dom;
 	}
 
 	/**
@@ -730,7 +798,7 @@ class Plugin {
 		echo apply_filters( 'lazy_load_responsive_images_inline_styles', $default_styles );
 
 		// Hide images if no JS.
-		echo '<noscript><style>.lazyload { display: none; }</style></noscript>';
+		echo '<noscript><style>.lazyload { display: none; } .lazyload[class*="lazy-loader-background-element-"] { display: block; opacity: 1; }</style></noscript>';
 	}
 
 	/**
@@ -776,6 +844,7 @@ class Plugin {
 			'lazy_load_responsive_images_granular_disable_option',
 			'lazy_load_responsive_images_native_loading_plugin',
 			'lazy_load_responsive_images_lazysizes_config',
+			'lazy_load_responsive_images_enable_for_background_images',
 		);
 
 		// Delete options.
