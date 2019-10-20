@@ -520,6 +520,12 @@ class Plugin {
 		// Set preload to none.
 		$video->setAttribute( 'preload', 'none' );
 
+		// Check for autoplay attribute and change it for lazy loading.
+		if ( $video->hasAttribute( 'autoplay' ) ) {
+			$video->removeAttribute( 'autoplay' );
+			$video->setAttribute( 'data-autoplay', '' );
+		}
+
 		// Get the classes.
 		$classes = $video->getAttribute( 'class' );
 
