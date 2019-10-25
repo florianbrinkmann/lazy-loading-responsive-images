@@ -805,7 +805,7 @@ class Plugin {
 	 * Enqueue script to Gutenberg editor view.
 	 */
 	public function enqueue_block_editor_assets() {
-		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->disable_option_object_types ) ) {
+		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->disable_option_object_types ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
 			$file_data  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
 			$assets_url = trailingslashit( plugin_dir_url( __FILE__ ) );
 			wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );

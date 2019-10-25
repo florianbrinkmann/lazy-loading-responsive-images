@@ -243,7 +243,7 @@ class Settings {
 			'lazy_load_responsive_images_granular_disable_option' => array(
 				'value'             => get_option( 'lazy_load_responsive_images_granular_disable_option', '0' ),
 				'label'             => __( 'Enable option to disable plugin per page/post', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'Displays a checkbox in the publish area of all post types (pages/posts/CPTs) that lets you disable the plugin on that specific post.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Displays a checkbox in the publish area of all post types (pages/posts/CPTs) that lets you disable the plugin on that specific post. To make it work for CPTs, they must support <code>custom-fields</code>.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
