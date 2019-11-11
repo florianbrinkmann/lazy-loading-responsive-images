@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
 Tested up to: 5.3
-Stable tag: 5.1.0
+Stable tag: 5.1.1
 Requires PHP: 5.3
 
 == Description ==
@@ -28,6 +28,7 @@ Lazy loads (without the need of any manually modifications):
 * Include the [lazysizes unveilhooks plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) that adds support for more elements, for example, video and audio elements.*
 * Enable lazy loading for the poster frame of video elements.
 * Enable lazy loading for audio elements.
+* Enable lazy loading for inline background images.
 * Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 * Display a loading spinner.
 * Disable the plugin on specific posts/pages (this shows a checkbox in the edit view of all public post types (except attachments) to disable lazy loading for an entire post).

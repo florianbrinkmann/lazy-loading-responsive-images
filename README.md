@@ -3,7 +3,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.3  
-**Stable tag:** 5.1.0  
+**Stable tag:** 5.1.1  
 **Requires PHP:** 5.3  
 
 
@@ -27,6 +27,7 @@ Lazy loads (without the need of any manually modifications):
 * Enable lazy loading for iFrames.
 * Include the [lazysizes native loading plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/native-loading) that modifies images and iFrames to use the native lazy loading feature of browsers that already support it.
 * Include the [lazysizes unveilhooks plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) that adds support for more elements, for example, video and audio elements.*
+* Enable lazy loading for inline background images.
 * Enable lazy loading for the poster frame of video elements.
 * Enable lazy loading for audio elements.
 * Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
