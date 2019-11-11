@@ -27,9 +27,9 @@ Lazy loads (without the need of any manually modifications):
 * Enable lazy loading for iFrames.
 * Include the [lazysizes native loading plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/native-loading) that modifies images and iFrames to use the native lazy loading feature of browsers that already support it.
 * Include the [lazysizes unveilhooks plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) that adds support for more elements, for example, video and audio elements.*
-* Enable lazy loading for inline background images.
 * Enable lazy loading for the poster frame of video elements.
 * Enable lazy loading for audio elements.
+* Enable lazy loading for inline background images.
 * Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 * Display a loading spinner.
 * Disable the plugin on specific posts/pages (this shows a checkbox in the edit view of all public post types (except attachments) to disable lazy loading for an entire post).
@@ -109,6 +109,13 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 
 ## Changelog 
+
+
+### 5.1.1 – 11.11.2019 
+
+**Changed**
+
+* Updated readme.
 
 
 ### 5.1.0 – 11.11.2019 
