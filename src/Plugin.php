@@ -693,23 +693,23 @@ class Plugin {
 		}
 
 		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), '', false, true );
+		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), [], false, true );
 
 		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos ) {
+		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos || '1' === $this->settings->enable_for_background_images ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), 'lazysizes', false, true );
+			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), [ 'lazysizes' ], false, true );
 		}
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->load_aspectratio_plugin ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), 'lazysizes', false, true );
+			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), [ 'lazysizes' ], false, true );
 		}
 
 		// Check if native loading plugin should be loaded.
 		if ( '1' === $this->settings->load_native_loading_plugin ) {
-			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), 'lazysizes', false, true );
+			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), [ 'lazysizes' ], false, true );
 		}
 
 		// Include custom lazysizes config if not empty.
