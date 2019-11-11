@@ -103,6 +103,12 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 == Changelog ==
 
+= 5.1.1 – 11.11.2019 =
+
+**Changed**
+
+* Updated readme.
+
 = 5.1.0 – 11.11.2019 =
 
 **Added**
