@@ -120,6 +120,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 **Changed**
 
 * Updated lazysizes and its extensions to 5.1.2.
+* Updated tested up to version to 5.3.
 
 **Fixed**
 
