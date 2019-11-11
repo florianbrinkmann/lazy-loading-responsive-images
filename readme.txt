@@ -2,8 +2,8 @@
 Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
-Tested up to: 5.2.2
-Stable tag: 5.0.0
+Tested up to: 5.3
+Stable tag: 5.1.0
 Requires PHP: 5.3
 
 == Description ==
@@ -101,6 +101,22 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 5.1.0 – 11.11.2019 =
+
+**Added**
+
+* Lazy loading of background images.
+* Lazy loading of videos with autoplay.
+
+**Changed**
+
+* Updated lazysizes and its extensions to 5.1.2.
+
+**Fixed**
+
+* Handle rest api requests with edit context as admin requests (thanks @websupporter!).
+* Check if a post type supports `custom-fields` before loading block editor script.
 
 = 5.0.0 – 28.06.2019 =
 
