@@ -3,7 +3,7 @@ Contributors: FlorianBrinkmann, MarcDK
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
 Tested up to: 5.3
-Stable tag: 5.1.1
+Stable tag: 5.1.2
 Requires PHP: 5.3
 
 == Description ==
@@ -102,6 +102,12 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 5.1.2 – 12.11.2019 =
+
+**Changed**
+
+* Updated background image option text.
 
 = 5.1.1 – 11.11.2019 =
 

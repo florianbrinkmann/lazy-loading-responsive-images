@@ -177,7 +177,7 @@ class Settings {
 			),
 			'lazy_load_responsive_images_enable_for_background_images'     => array(
 				'value'             => get_option( 'lazy_load_responsive_images_enable_for_background_images', '0' ),
-				'label'             => __( 'Enable lazy loading for background images', 'lazy-loading-responsive-images' ),
+				'label'             => __( 'Enable lazy loading for inline background images', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'This feature needs the unveilhooks plugin and will automatically load it, regardless of the option to load the unveilhooks plugin is enabled or not. 
 				<strong>It is possible that this setting causes issues, because:</strong> To also support multiple background images and to provide a 
 				fallback for disabled JavaScript, the plugin removes the background rules from the element and adds a style element instead.
