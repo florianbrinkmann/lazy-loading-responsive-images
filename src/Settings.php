@@ -522,7 +522,10 @@ class Settings {
 	 * Register post meta for disabling plugin per
 	 */
 	public function register_post_meta() {
-		if ( is_array( $this->disable_option_object_types ) ) {
+		if ( ! is_array( $this->disable_option_object_types ) ) {
+			return;
+		}
+
 			foreach ( $this->disable_option_object_types as $object_type ) {
 				\register_post_meta(
 					$object_type,
@@ -536,7 +539,6 @@ class Settings {
 				);
 			}
 		}
-	}
 
 	/**
 	 * Add checkbox to Publish Post meta box.
