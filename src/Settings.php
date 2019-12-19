@@ -405,7 +405,7 @@ class Settings {
 		// Get label for.
 		?>
 		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
-			   type="text" value="<?php echo $option_value; ?>">
+			   type="text" value="<?php echo esc_attr( $option_value ); ?>">
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
@@ -432,7 +432,7 @@ class Settings {
 		$option_value = $args['value'];
 
 		?>
-		<textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>" style="width: 100%;"><?php echo $option_value; ?></textarea>
+		<textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>" style="width: 100%;"><?php echo esc_textarea( $option_value ); ?></textarea>
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
@@ -462,8 +462,8 @@ class Settings {
 		// Get label for.
 		?>
 		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
-			   type="text" value="<?php echo $option_value; ?>"
-			   data-default-color="<?php echo self::$loading_spinner_color_default; ?>"
+			   type="text" value="<?php echo esc_attr( $option_value ); ?>"
+			   data-default-color="<?php echo esc_attr( self::$loading_spinner_color_default ); ?>"
 			   class="lazy-load-responsive-images-color-field">
 		<?php
 		// Check for description.
@@ -563,7 +563,7 @@ class Settings {
 			</div>',
 			$maybe_enabled ? '' : 'disabled',
 			$value === 1 ? 'checked' : '',
-			__( 'Disable Lazy Loader', 'lazy-loading-responsive-images' )
+			esc_html__( 'Disable Lazy Loader', 'lazy-loading-responsive-images' )
 		);
 	}
 
