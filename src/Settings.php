@@ -129,6 +129,18 @@ class Settings {
 	public $lazysizes_config = '';
 
 	/**
+	 * Allowed HTML tags in descriptions.
+	 *
+	 * @var array
+	 */
+	private $allowed_description_html = array(
+			'a' => array( 'href' => array() ),
+			'br' => array(),
+			'code' => array(),
+			'strong' => array(),
+	);
+
+	/**
 	 * Settings constructor.
 	 */
 	public function __construct() {
@@ -369,7 +381,7 @@ class Settings {
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
 			</p>
 			<?php
 		}
@@ -398,7 +410,7 @@ class Settings {
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
 			</p>
 			<?php
 		}
@@ -425,7 +437,7 @@ class Settings {
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
 			</p>
 			<?php
 		}
@@ -457,7 +469,7 @@ class Settings {
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], array( 'a', 'strong', 'code', 'br' ) ); ?>
 			</p>
 			<?php
 		}
