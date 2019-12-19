@@ -116,14 +116,14 @@ class Settings {
 
 	/**
 	 * Array of object types that should show the checkbox to disable lazy loading.
-	 * 
+	 *
 	 * @var array
 	 */
 	public $disable_option_object_types = array();
 
 	/**
 	 * String to modify lazysizes config.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $lazysizes_config = '';
@@ -362,9 +362,9 @@ class Settings {
 		$option_value = $args['value'];
 
 		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
-		       type="checkbox" <?php echo ( $option_value == '1' || $option_value == 'on' ) ? 'checked="checked"' : ''; ?>>
+		?>
+		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
+			   type="checkbox" <?php echo ( $option_value == '1' || $option_value == 'on' ) ? 'checked="checked"' : ''; ?>>
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
@@ -391,9 +391,9 @@ class Settings {
 		$option_value = $args['value'];
 
 		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
-		       type="text" value="<?php echo $option_value; ?>">
+		?>
+		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
+			   type="text" value="<?php echo $option_value; ?>">
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
@@ -419,9 +419,8 @@ class Settings {
 		// Get option value.
 		$option_value = $args['value'];
 
-		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<textarea id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>" style="width: 100%;"><?php echo $option_value; ?></textarea>
+		?>
+		<textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>" style="width: 100%;"><?php echo $option_value; ?></textarea>
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
@@ -449,11 +448,11 @@ class Settings {
 		$option_value = $args['value'];
 
 		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
-		       type="text" value="<?php echo $option_value; ?>"
-		       data-default-color="<?php echo self::$loading_spinner_color_default; ?>"
-		       class="lazy-load-responsive-images-color-field">
+		?>
+		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
+			   type="text" value="<?php echo $option_value; ?>"
+			   data-default-color="<?php echo self::$loading_spinner_color_default; ?>"
+			   class="lazy-load-responsive-images-color-field">
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
@@ -500,7 +499,7 @@ class Settings {
 		 * Filter for the object types that should show the checkbox
 		 * for disabling the lazy loading functionality. By default, all
 		 * public post types (except attachment) are included.
-		 * 
+		 *
 		 * @param array $public_post_types An array of post types that should have the option
 		 *                                 for disabling.
 		 */
