@@ -103,6 +103,12 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 == Changelog ==
 
+= unreleased =
+
+**Changed**
+
+* Security improvements via escaping and specifying allowed HTML in setting descriptions. Thanks @igmoweb
+
 = 5.1.2 – 12.11.2019 =
 
 **Changed**
