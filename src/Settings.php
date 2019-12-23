@@ -116,17 +116,29 @@ class Settings {
 
 	/**
 	 * Array of object types that should show the checkbox to disable lazy loading.
-	 * 
+	 *
 	 * @var array
 	 */
 	public $disable_option_object_types = array();
 
 	/**
 	 * String to modify lazysizes config.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $lazysizes_config = '';
+
+	/**
+	 * Allowed HTML tags in descriptions.
+	 *
+	 * @var array
+	 */
+	private $allowed_description_html = array(
+			'a' => array( 'href' => array() ),
+			'br' => array(),
+			'code' => array(),
+			'strong' => array(),
+	);
 
 	/**
 	 * Settings constructor.
@@ -362,14 +374,14 @@ class Settings {
 		$option_value = $args['value'];
 
 		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
-		       type="checkbox" <?php echo ( $option_value == '1' || $option_value == 'on' ) ? 'checked="checked"' : ''; ?>>
+		?>
+		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
+			   type="checkbox" <?php echo ( $option_value == '1' || $option_value == 'on' ) ? 'checked="checked"' : ''; ?>>
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
 			</p>
 			<?php
 		}
@@ -391,14 +403,14 @@ class Settings {
 		$option_value = $args['value'];
 
 		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
-		       type="text" value="<?php echo $option_value; ?>">
+		?>
+		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
+			   type="text" value="<?php echo esc_attr( $option_value ); ?>">
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
 			</p>
 			<?php
 		}
@@ -419,14 +431,13 @@ class Settings {
 		// Get option value.
 		$option_value = $args['value'];
 
-		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<textarea id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>" style="width: 100%;"><?php echo $option_value; ?></textarea>
+		?>
+		<textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>" style="width: 100%;"><?php echo esc_textarea( $option_value ); ?></textarea>
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
 			</p>
 			<?php
 		}
@@ -449,16 +460,16 @@ class Settings {
 		$option_value = $args['value'];
 
 		// Get label for.
-		$label_for = esc_attr( $args['label_for'] ); ?>
-		<input id="<?php echo $label_for; ?>" name="<?php echo $label_for; ?>"
-		       type="text" value="<?php echo $option_value; ?>"
-		       data-default-color="<?php echo self::$loading_spinner_color_default; ?>"
-		       class="lazy-load-responsive-images-color-field">
+		?>
+		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
+			   type="text" value="<?php echo esc_attr( $option_value ); ?>"
+			   data-default-color="<?php echo esc_attr( self::$loading_spinner_color_default ); ?>"
+			   class="lazy-load-responsive-images-color-field">
 		<?php
 		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
-				<?php echo $args['description']; ?>
+				<?php echo wp_kses( $args['description'], array( 'a', 'strong', 'code', 'br' ) ); ?>
 			</p>
 			<?php
 		}
@@ -500,7 +511,7 @@ class Settings {
 		 * Filter for the object types that should show the checkbox
 		 * for disabling the lazy loading functionality. By default, all
 		 * public post types (except attachment) are included.
-		 * 
+		 *
 		 * @param array $public_post_types An array of post types that should have the option
 		 *                                 for disabling.
 		 */
@@ -511,7 +522,10 @@ class Settings {
 	 * Register post meta for disabling plugin per
 	 */
 	public function register_post_meta() {
-		if ( is_array( $this->disable_option_object_types ) ) {
+		if ( ! is_array( $this->disable_option_object_types ) ) {
+			return;
+		}
+
 			foreach ( $this->disable_option_object_types as $object_type ) {
 				\register_post_meta(
 					$object_type,
@@ -525,7 +539,6 @@ class Settings {
 				);
 			}
 		}
-	}
 
 	/**
 	 * Add checkbox to Publish Post meta box.
@@ -552,7 +565,7 @@ class Settings {
 			</div>',
 			$maybe_enabled ? '' : 'disabled',
 			$value === 1 ? 'checked' : '',
-			__( 'Disable Lazy Loader', 'lazy-loading-responsive-images' )
+			esc_html__( 'Disable Lazy Loader', 'lazy-loading-responsive-images' )
 		);
 	}
 
