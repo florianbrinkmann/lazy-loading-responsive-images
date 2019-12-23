@@ -134,10 +134,10 @@ class Settings {
 	 * @var array
 	 */
 	private $allowed_description_html = array(
-			'a' => array( 'href' => array() ),
-			'br' => array(),
-			'code' => array(),
-			'strong' => array(),
+		'a' => array( 'href' => array() ),
+		'br' => array(),
+		'code' => array(),
+		'strong' => array(),
 	);
 
 	/**
@@ -526,19 +526,19 @@ class Settings {
 			return;
 		}
 
-			foreach ( $this->disable_option_object_types as $object_type ) {
-				\register_post_meta(
-					$object_type,
-					'lazy_load_responsive_images_disabled',
-					array(
-						'type' => 'boolean',
-						'description' => __( 'If the Lazy Loader plugin should be disabled for this page/post/CPT entry', 'lazy-loading-responsive-images' ),
-						'single' => true,
-						'show_in_rest' => true,
-					)
-				);
-			}
+		foreach ( $this->disable_option_object_types as $object_type ) {
+			\register_post_meta(
+				$object_type,
+				'lazy_load_responsive_images_disabled',
+				array(
+					'type' => 'boolean',
+					'description' => __( 'If the Lazy Loader plugin should be disabled for this page/post/CPT entry', 'lazy-loading-responsive-images' ),
+					'single' => true,
+					'show_in_rest' => true,
+				)
+			);
 		}
+	}
 
 	/**
 	 * Add checkbox to Publish Post meta box.
