@@ -343,9 +343,6 @@ class Plugin {
 	 * @return \DOMDocument The updated DOM.
 	 */
 	public function modify_img_markup( $img, $dom, $create_noscript = true ) {
-		// Save the image original attributes.
-		$img_attributes = $img->attributes;
-
 		// Check if the element already has a data-src attribute (might be the case for
 		// plugins that bring their own lazy load functionality) and skip it to prevent conflicts.
 		if ( $img->hasAttribute( 'data-src' ) ) {
@@ -354,7 +351,7 @@ class Plugin {
 
 		// Add noscript element.
 		if ( true === $create_noscript ) {
-			$dom = $this->add_noscript_element( $img_attributes, $dom, $img, 'IMG' );
+			$dom = $this->add_noscript_element( $dom, $img );
 		}
 
 		// Check if the image has sizes and srcset attribute.
@@ -441,11 +438,8 @@ class Plugin {
 	 * @return \DOMDocument The updated DOM.
 	 */
 	public function modify_picture_markup( $picture, $dom ) {
-		// Save the image original attributes.
-		$source_attributes = $picture->attributes;
-
 		// Add noscript element.
-		$dom = $this->add_noscript_element( $source_attributes, $dom, $picture, 'PICTURE' );
+		$dom = $this->add_noscript_element( $dom, $picture );
 
 		// Get source elements and image element from picture.
 		$source_elements = $picture->getElementsByTagName( 'source' );
@@ -522,11 +516,8 @@ class Plugin {
 	 * @return \DOMDocument The updated DOM.
 	 */
 	public function modify_iframe_markup( $iframe, $dom ) {
-		// Save the iframe original attributes.
-		$iframe_attributes = $iframe->attributes;
-
 		// Add noscript element.
-		$dom = $this->add_noscript_element( $iframe_attributes, $dom, $iframe, 'IFRAME' );
+		$dom = $this->add_noscript_element( $dom, $iframe );
 
 		// Check if the iframe has a src attribute.
 		if ( $iframe->hasAttribute( 'src' ) ) {
@@ -567,11 +558,8 @@ class Plugin {
 	 * @return \DOMDocument The updated DOM.
 	 */
 	public function modify_video_markup( $video, $dom ) {
-		// Save the original attributes.
-		$video_attributes = $video->attributes;
-
 		// Add noscript element.
-		$dom = $this->add_noscript_element( $video_attributes, $dom, $video, 'VIDEO' );
+		$dom = $this->add_noscript_element( $dom, $video );
 
 		// Check if the video has a poster attribute.
 		if ( $video->hasAttribute( 'poster' ) ) {
@@ -615,11 +603,8 @@ class Plugin {
 	 * @return \DOMDocument The updated DOM.
 	 */
 	public function modify_audio_markup( $audio, $dom ) {
-		// Save the original attributes.
-		$audio_attributes = $audio->attributes;
-
 		// Add noscript element.
-		$dom = $this->add_noscript_element( $audio_attributes, $dom, $audio, 'AUDIO' );
+		$dom = $this->add_noscript_element( $dom, $audio );
 
 		// Set preload to none.
 		$audio->setAttribute( 'preload', 'none' );
@@ -639,47 +624,19 @@ class Plugin {
 	/**
 	 * Adds noscript element before DOM node.
 	 *
-	 * @param \DOMNamedNodeMap $orig_elem_attr Object of the original element’s
-	 *                                         attributes.
 	 * @param \DOMDocument     $dom            \DOMDocument() object of the
 	 *                                         HTML.
 	 * @param \DOMNode         $elem           Single DOM node.
-	 * @param string           $tag_name       Tag name which needs to be
-	 *                                         created inside the noscript
-	 *                                         element.
 	 *
 	 * @return \DOMDocument The updates DOM.
 	 */
-	public function add_noscript_element( $orig_elem_attr, $dom, $elem, $tag_name ) {
+	public function add_noscript_element( $dom, $elem ) {
+		// Create noscript element and add it before the element that gets lazy loading.
 		$noscript = $dom->createElement( 'noscript' );
-
-		// Insert it before the img node.
 		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
 
-		// Create element.
-		$media_element = $dom->createElement( $tag_name );
-
-		// Add the other attributes of the original element.
-		foreach ( $orig_elem_attr as $attr ) {
-			// Save name and value.
-			$name  = $attr->nodeName;
-			$value = $attr->nodeValue;
-
-			// Set attribute to noscript element.
-			$media_element->setAttribute( $name, $value );
-		} // End foreach().
-
-		// Check if this is a noscript for picture.
-		if ( 'PICTURE' === $tag_name ) {
-			// Get the child nodes and add them to the picture element as child.
-			foreach ( $elem->childNodes as $child_node ) {
-				$node = $child_node->cloneNode( true );
-				$media_element->appendChild( $node );
-			}
-		}
-
-		// Add media node to noscript node.
-		$noscript_node->appendChild( $media_element );
+		// Add a copy of the media element to the noscript.
+		$noscript_node->appendChild( $elem->cloneNode( true ) );
 
 		return $dom;
 	}
