@@ -116,6 +116,11 @@ There is a textarea in the plugin settings where you can insert custom settings 
 **Changed**
 
 * Security improvements via escaping and specifying allowed HTML in setting descriptions. Thanks @igmoweb
+* Simplified `Plugin\add_noscript_element()` method. It just clones the source element now, instead of creating a new empty element and adding all attributes to it.
+
+**Fixed**
+
+* Error with invalid attribute names in `Plugin\add_noscript_element()` method.
 
 
 ### 5.1.2 – 12.11.2019 
