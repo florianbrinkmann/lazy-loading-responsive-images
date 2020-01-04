@@ -129,6 +129,13 @@ class Settings {
 	private $lazysizes_config = '';
 
 	/**
+	 * Value of setting for processing the complete website markup.
+	 *
+	 * @var string
+	 */
+	private $process_complete_markup;
+
+	/**
 	 * Allowed HTML tags in descriptions.
 	 *
 	 * @var array
@@ -262,6 +269,16 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
+			'lazy_load_responsive_images_process_complete_markup' => array(
+				'value'             => get_option( 'lazy_load_responsive_images_process_complete_markup', '0' ),
+				'label'             => __( 'Process the complete markup', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Instead of just modifying specific parts of the page (for example, the post content, post thumbnail), the complete generated markup is processed. With that, all images (and other media, if you enabled it) will be lazy loaded. Because the plugin needs to process more markup with that option enabled, it might slow down the page generation time a bit.', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'checkbox_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
+			),
 			'lazy_load_responsive_images_lazysizes_config' => array(
 				'value'             => get_option( 'lazy_load_responsive_images_lazysizes_config', '' ),
 				'label'             => __( 'Modify the default config', 'lazy-loading-responsive-images' ),
@@ -288,6 +305,7 @@ class Settings {
 		$this->loading_spinner         = $this->options['lazy_load_responsive_images_loading_spinner']['value'];
 		$this->loading_spinner_color   = $this->options['lazy_load_responsive_images_loading_spinner_color']['value'];
 		$this->granular_disable_option = $this->options['lazy_load_responsive_images_granular_disable_option']['value'];
+		$this->process_complete_markup = $this->options['lazy_load_responsive_images_process_complete_markup']['value'];
 		$this->lazysizes_config = $this->options['lazy_load_responsive_images_lazysizes_config']['value'];
 		$this->enable_for_background_images = $this->options['lazy_load_responsive_images_enable_for_background_images']['value'];
 
@@ -717,5 +735,14 @@ class Settings {
 	 */
 	public function get_disable_option_object_types() {
 		return $this->disable_option_object_types;
+	}
+
+	/**
+	 * Return process_complete_markup value.
+	 * 
+	 * @return string
+	 */
+	public function get_process_complete_markup() {
+		return $this->process_complete_markup;
 	}
 }

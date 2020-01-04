@@ -88,21 +88,39 @@ class Plugin {
 			'plugin_action_links',
 		), 10, 2 );
 
-		// Filter markup of the_content() calls to modify media markup for lazy loading.
-		add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
+		add_action( 'init', function() {
+			// If this is no content we should process, exit as early as possible.
+			if ( ! $this->helpers->is_post_to_process() ) {
+				return;
+			}
 
-		// Filter markup of Text widget to modify media markup for lazy loading.
-		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
+			// Check if the complete markup should be processed.
+			if ( '1' === $this->settings->get_process_complete_markup() ) {
+				add_action( 'template_redirect', function() {
+					if ( ! $this->helpers->is_post_to_process() ) {
+						return;
+					}
+					
+					ob_start( array( $this, 'filter_markup' ) );
+				} );
+			} else {
+				// Filter markup of the_content() calls to modify media markup for lazy loading.
+				add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
 
-		// Filter markup of gravatars to modify markup for lazy loading.
-		add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
+				// Filter markup of Text widget to modify media markup for lazy loading.
+				add_filter( 'widget_text', array( $this, 'filter_markup' ) );
 
-		// Adds lazyload markup and noscript element to post thumbnail.
-		add_filter( 'post_thumbnail_html', array(
-			$this,
-			'filter_markup',
-		), 10001, 1 );
+				// Filter markup of gravatars to modify markup for lazy loading.
+				add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
 
+				// Adds lazyload markup and noscript element to post thumbnail.
+				add_filter( 'post_thumbnail_html', array(
+					$this,
+					'filter_markup',
+				), 10001, 1 );
+			}
+		} );
+		
 		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array(
 			$this,
@@ -150,27 +168,8 @@ class Plugin {
 	 * @return string Modified HTML.
 	 */
 	public function filter_markup( $content ) {
-		if ( $this->helpers->is_disabled_for_post() ) {
-			return $content;
-		}
-
 		// Check if we have no content.
 		if ( empty( $content ) ) {
-			return $content;
-		}
-
-		// Check if we are on a feed page.
-		if ( is_feed() ) {
-			return $content;
-		}
-
-		// Check if this is a request in the backend.
-		if ( $this->helpers->is_admin_request() ) {
-			return $content;
-		}
-
-		// Check for AMP page.
-		if ( true === $this->helpers->is_amp_page() ) {
 			return $content;
 		}
 
@@ -191,8 +190,12 @@ class Plugin {
 		$content = str_replace( '</script>', '</script>-->', $content );
 
 		// Load the HTML.
-		// Trick with <?xml endocing="utf-8" loadHTML() method from https://github.com/ivopetkov/html5-dom-document-php.
-		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $content, 0 | LIBXML_NOENT );
+		if ( '1' === $this->settings->get_process_complete_markup() ) {
+			$dom->loadHTML( $content, 0 | LIBXML_NOENT );
+		} else {
+			// Trick with <?xml endocing="utf-8" loadHTML() method from https://github.com/ivopetkov/html5-dom-document-php.
+			$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $content, 0 | LIBXML_NOENT );
+		}
 
 		$xpath = new \DOMXPath( $dom );
 
@@ -268,7 +271,11 @@ class Plugin {
 		}
 
 		if ( true === $is_modified ) {
-			$content = $this->helpers->save_html( $dom );
+			if ( '1' === $this->settings->get_process_complete_markup() ) {
+				$content = $dom->saveHTML( ( new \DOMXPath( $dom ) )->query( '/' )->item( 0 ) );
+			} else {
+				$content = $this->helpers->save_html( $dom );
+			}
 		}
 
 		// Restore the entities and script tags.
@@ -802,6 +809,7 @@ class Plugin {
 			'lazy_load_responsive_images_native_loading_plugin',
 			'lazy_load_responsive_images_lazysizes_config',
 			'lazy_load_responsive_images_enable_for_background_images',
+			'lazy_load_responsive_images_process_complete_markup',
 		);
 
 		// Delete options.

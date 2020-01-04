@@ -116,6 +116,34 @@ class Helpers {
 	}
 
 	/**
+	 * Check if the displayed content is something that the plugin should process.
+	 * 
+	 * @return bool
+	 */
+	public function is_post_to_process() {
+		if ( $this->is_disabled_for_post() ) {
+			return false;
+		}
+
+		// Check if we are on a feed page.
+		if ( is_feed() ) {
+			return false;
+		}
+
+		// Check if this is a request in the backend.
+		if ( $this->is_admin_request() ) {
+			return false;
+		}
+
+		// Check for AMP page.
+		if ( $this->is_amp_page() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Sanitize comma separated list of class names.
 	 *
 	 * @param string $class_names Comma separated list of HTML class names.
