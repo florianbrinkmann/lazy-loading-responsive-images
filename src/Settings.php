@@ -28,105 +28,105 @@ class Settings {
 	 *
 	 * @var array
 	 */
-	public $options;
+	private $options;
 
 	/**
 	 * Classes which should not be lazy loaded.
 	 *
 	 * @var array
 	 */
-	public $disabled_classes;
+	private $disabled_classes;
 
 	/**
 	 * Value of settings for enabling lazy loading for iFrames.
 	 *
 	 * @var string
 	 */
-	public $enable_for_iframes;
+	private $enable_for_iframes;
 
 	/**
 	 * Value of setting for loading the unveilhooks plugin.
 	 *
 	 * @var string
 	 */
-	public $load_native_loading_plugin;
+	private $load_native_loading_plugin;
 
 	/**
 	 * Value of setting for loading the unveilhooks plugin.
 	 *
 	 * @var string
 	 */
-	public $load_unveilhooks_plugin;
+	private $load_unveilhooks_plugin;
 
 	/**
 	 * Value of settings for enabling lazy loading for background images.
 	 *
 	 * @var string
 	 */
-	public $enable_for_background_images;
+	private $enable_for_background_images;
 
 	/**
 	 * Value of settings for enabling lazy loading for videos.
 	 *
 	 * @var string
 	 */
-	public $enable_for_videos;
+	private $enable_for_videos;
 
 	/**
 	 * Value of settings for enabling lazy loading for audios.
 	 *
 	 * @var string
 	 */
-	public $enable_for_audios;
+	private $enable_for_audios;
 
 	/**
 	 * Value of setting for loading the aspectratio plugin.
 	 *
 	 * @var string
 	 */
-	public $load_aspectratio_plugin;
+	private $load_aspectratio_plugin;
 
 	/**
 	 * Value of setting for displaying a loading spinner.
 	 *
 	 * @var string
 	 */
-	public $loading_spinner;
+	private $loading_spinner;
 
 	/**
 	 * Default loading spinner color.
 	 *
 	 * @var string
 	 */
-	public static $loading_spinner_color_default = '#333333';
+	private $loading_spinner_color_default = '#333333';
 
 	/**
 	 * Value of setting for loading spinner color.
 	 *
 	 * @var string
 	 */
-	public $loading_spinner_color;
+	private $loading_spinner_color;
 
 	/**
 	 * Value of setting for displaying the option to disable the plugin per page/post.
 	 *
 	 * @var string
 	 */
-	public $granular_disable_option;
+	private $granular_disable_option;
 
 	/**
 	 * Array of object types that should show the checkbox to disable lazy loading.
 	 *
 	 * @var array
 	 */
-	public $disable_option_object_types = array();
+	private $disable_option_object_types = array();
 
 	/**
 	 * String to modify lazysizes config.
 	 *
 	 * @var string
 	 */
-	public $lazysizes_config = '';
+	private $lazysizes_config = '';
 
 	/**
 	 * Allowed HTML tags in descriptions.
@@ -243,7 +243,7 @@ class Settings {
 				),
 			),
 			'lazy_load_responsive_images_loading_spinner_color' => array(
-				'value'             => get_option( 'lazy_load_responsive_images_loading_spinner_color', self::$loading_spinner_color_default ),
+				'value'             => get_option( 'lazy_load_responsive_images_loading_spinner_color', $this->loading_spinner_color_default ),
 				'label'             => __( 'Color of the spinner', 'lazy-loading-responsive-images' ),
 				'description'       => __( 'Spinner color in hex format. Default: #333333', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'color_field_cb' ),
@@ -463,7 +463,7 @@ class Settings {
 		?>
 		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
 			   type="text" value="<?php echo esc_attr( $option_value ); ?>"
-			   data-default-color="<?php echo esc_attr( self::$loading_spinner_color_default ); ?>"
+			   data-default-color="<?php echo esc_attr( $this->loading_spinner_color_default ); ?>"
 			   class="lazy-load-responsive-images-color-field">
 		<?php
 		// Check for description.
@@ -600,5 +600,122 @@ class Settings {
 			\add_post_meta( $post_id, 'lazy_load_responsive_images_disabled', true, true );
 		}
 		return $post_id;
+	}
+
+	/**
+	 * Return disabled classes setting value.
+	 * 
+	 * @return array
+	 */
+	public function get_disabled_classes() {
+		return $this->disabled_classes;
+	}
+
+	/**
+	 * Return load_unveilhooks_plugin value.
+	 * 
+	 * @return string
+	 */
+	public function get_load_unveilhooks_plugin() {
+		return $this->load_unveilhooks_plugin;
+	}
+
+	/**
+	 * Return enable_for_audios value.
+	 * 
+	 * @return string
+	 */
+	public function get_enable_for_audios() {
+		return $this->enable_for_audios;
+	}
+
+	/**
+	 * Return enable_for_videos value.
+	 * 
+	 * @return string
+	 */
+	public function get_enable_for_videos() {
+		return $this->enable_for_videos;
+	}
+
+	/**
+	 * Return enable_for_iframes value.
+	 * 
+	 * @return string
+	 */
+	public function get_enable_for_iframes() {
+		return $this->enable_for_iframes;
+	}
+
+	/**
+	 * Return enable_for_background_images value.
+	 * 
+	 * @return string
+	 */
+	public function get_enable_for_background_images() {
+		return $this->enable_for_background_images;
+	}
+
+	/**
+	 * Return load_aspectratio_plugin value.
+	 * 
+	 * @return string
+	 */
+	public function get_load_aspectratio_plugin() {
+		return $this->load_aspectratio_plugin;
+	}
+
+	/**
+	 * Return load_native_loading_plugin value.
+	 * 
+	 * @return string
+	 */
+	public function get_load_native_loading_plugin() {
+		return $this->load_native_loading_plugin;
+	}
+
+	/**
+	 * Return lazysizes_config value.
+	 * 
+	 * @return string
+	 */
+	public function get_lazysizes_config() {
+		return $this->lazysizes_config;
+	}
+
+	/**
+	 * Return loading_spinner_color value.
+	 * 
+	 * @return string
+	 */
+	public function get_loading_spinner_color() {
+		return $this->loading_spinner_color;
+	}
+
+	/**
+	 * Return loading_spinner_color_default value.
+	 * 
+	 * @return string
+	 */
+	public function get_loading_spinner_color_default() {
+		return $this->loading_spinner_color_default;
+	}
+
+	/**
+	 * Return loading_spinner value.
+	 * 
+	 * @return string
+	 */
+	public function get_loading_spinner() {
+		return $this->loading_spinner;
+	}
+
+	/**
+	 * Return disable_option_object_types value.
+	 * 
+	 * @return array
+	 */
+	public function get_disable_option_object_types() {
+		return $this->disable_option_object_types;
 	}
 }

@@ -80,7 +80,7 @@ class Plugin {
 		$this->helpers = new Helpers();
 
 		// Get the disabled classes and save in property.
-		$this->disabled_classes = $this->settings->disabled_classes;
+		$this->disabled_classes = $this->settings->get_disabled_classes();
 
 		// Add link to settings in the plugin list.
 		add_filter( 'plugin_action_links', array(
@@ -226,7 +226,7 @@ class Plugin {
 
 			// Check if the element has a style attribute with a background image.
 			if (
-				'1' === $this->settings->enable_for_background_images
+				'1' === $this->settings->get_enable_for_background_images()
 				&& $node->hasAttribute( 'style' )
 				&& 'img' !== $node->tagName
 				&& 'picture' !== $node->tagName
@@ -251,17 +251,17 @@ class Plugin {
 				$is_modified = true;
 			}
 
-			if ( '1' === $this->settings->enable_for_iframes && 'iframe' === $node->tagName ) {
+			if ( '1' === $this->settings->get_enable_for_iframes() && 'iframe' === $node->tagName ) {
 				$dom = $this->modify_iframe_markup( $node, $dom );
 				$is_modified = true;
 			}
 
-			if ( '1' === $this->settings->enable_for_videos && 'video' === $node->tagName ) {
+			if ( '1' === $this->settings->get_enable_for_videos() && 'video' === $node->tagName ) {
 				$dom = $this->modify_video_markup( $node, $dom );
 				$is_modified = true;
 			}
 
-			if ( '1' === $this->settings->enable_for_audios && 'audio' === $node->tagName ) {
+			if ( '1' === $this->settings->get_enable_for_audios() && 'audio' === $node->tagName ) {
 				$dom = $this->modify_audio_markup( $node, $dom );
 				$is_modified = true;
 			}
@@ -400,7 +400,7 @@ class Plugin {
 		// Set data-src value.
 		$img->setAttribute( 'data-src', $src );
 
-		if ( '1' === $this->settings->load_aspectratio_plugin ) {
+		if ( '1' === $this->settings->get_load_aspectratio_plugin() ) {
 			// Get width and height.
 			$img_width  = $img->getAttribute( 'width' );
 			$img_height = $img->getAttribute( 'height' );
@@ -410,7 +410,7 @@ class Plugin {
 			}
 		}
 
-		if ( '1' === $this->settings->load_native_loading_plugin ) {
+		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
 			$img->setAttribute( 'loading', 'lazy' );
 		}
 
@@ -530,7 +530,7 @@ class Plugin {
 			return $dom;
 		}
 
-		if ( '1' === $this->settings->load_native_loading_plugin ) {
+		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
 			$iframe->setAttribute( 'loading', 'lazy' );
 		}
 
@@ -653,25 +653,25 @@ class Plugin {
 		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), false, true );
 
 		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->load_unveilhooks_plugin || '1' === $this->settings->enable_for_audios || '1' === $this->settings->enable_for_videos || '1' === $this->settings->enable_for_background_images ) {
+		if ( '1' === $this->settings->get_load_unveilhooks_plugin() || '1' === $this->settings->get_enable_for_audios() || '1' === $this->settings->get_enable_for_videos() || '1' === $this->settings->get_enable_for_background_images() ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), false, true );
 		}
 
 		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->load_aspectratio_plugin ) {
+		if ( '1' === $this->settings->get_load_aspectratio_plugin() ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), array( 'lazysizes' ), false, true );
 		}
 
 		// Check if native loading plugin should be loaded.
-		if ( '1' === $this->settings->load_native_loading_plugin ) {
+		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
 			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), false, true );
 		}
 
 		// Include custom lazysizes config if not empty.
-		if ( '' !== $this->settings->lazysizes_config ) {
-			wp_add_inline_script( 'lazysizes', $this->settings->lazysizes_config, 'before' );
+		if ( '' !== $this->settings->get_lazysizes_config() ) {
+			wp_add_inline_script( 'lazysizes', $this->settings->get_lazysizes_config(), 'before' );
 		}
 	}
 
@@ -689,12 +689,12 @@ class Plugin {
 
 		// Create loading spinner style if needed.
 		$spinner_styles = '';
-		$spinner_color  = $this->settings->loading_spinner_color;
+		$spinner_color  = $this->settings->get_loading_spinner_color();
 		$spinner_markup = sprintf(
 			'<svg width="44" height="44" xmlns="http://www.w3.org/2000/svg" stroke="%s"><g fill="none" fill-rule="evenodd" stroke-width="2"><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle></g></svg>',
 			$spinner_color
 		);
-		if ( '1' === $this->settings->loading_spinner ) {
+		if ( '1' === $this->settings->get_loading_spinner() ) {
 			$spinner_styles = sprintf(
 				'.lazyloading {
 	color: transparent;
@@ -762,7 +762,7 @@ class Plugin {
 	 * Enqueue script to Gutenberg editor view.
 	 */
 	public function enqueue_block_editor_assets() {
-		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->disable_option_object_types ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
+		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->get_disable_option_object_types() ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
 			$file_data  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
 			$assets_url = trailingslashit( plugin_dir_url( __FILE__ ) );
 			wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );

@@ -183,7 +183,8 @@ class Helpers {
 		if ( null !== $sanitized && '' !== $sanitized ) {
 			return $value;
 		} else {
-			return Settings::$loading_spinner_color_default;
+			$settings = new Settings();
+			return $settings->get_loading_spinner_color_default();
 		} // End if().
 	}
 
