@@ -118,6 +118,14 @@ class Plugin {
 					$this,
 					'filter_markup',
 				), 10001, 1 );
+
+				$additional_filters = $this->settings->get_additional_filters();
+
+				if ( is_array( $additional_filters ) && ! empty( $additional_filters ) ) {
+					foreach ( $additional_filters as $filter ) {
+						add_filter( $filter, array( $this, 'filter_markup' ) );
+					}
+				}
 			}
 		} );
 		
@@ -810,6 +818,7 @@ class Plugin {
 			'lazy_load_responsive_images_lazysizes_config',
 			'lazy_load_responsive_images_enable_for_background_images',
 			'lazy_load_responsive_images_process_complete_markup',
+			'lazy_load_responsive_images_additional_filters',
 		);
 
 		// Delete options.

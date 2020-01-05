@@ -136,6 +136,13 @@ class Settings {
 	private $process_complete_markup;
 
 	/**
+	 * Value of setting for additional filters to process.
+	 *
+	 * @var array
+	 */
+	private $additional_filters;
+
+	/**
 	 * Allowed HTML tags in descriptions.
 	 *
 	 * @var array
@@ -163,6 +170,16 @@ class Settings {
 				'sanitize_callback' => array(
 					$this->helpers,
 					'sanitize_class_name_list',
+				),
+			),
+			'lazy_load_responsive_images_additional_filters'      => array(
+				'value'             => get_option( 'lazy_load_responsive_images_additional_filters', '' ),
+				'label'             => __( 'Additional filters', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Enter one or more additional WordPress filters that should be processed (one per line). For example, <code>woocommerce_single_product_image_thumbnail_html</code> to add support for the WooCommerce product image on product pages. Anything that does not match the regular expression for PHP function names will be removed.', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'textarea_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_filter_name_list',
 				),
 			),
 			'lazy_load_responsive_images_enable_for_iframes'    => array(
@@ -306,6 +323,7 @@ class Settings {
 		$this->loading_spinner_color   = $this->options['lazy_load_responsive_images_loading_spinner_color']['value'];
 		$this->granular_disable_option = $this->options['lazy_load_responsive_images_granular_disable_option']['value'];
 		$this->process_complete_markup = $this->options['lazy_load_responsive_images_process_complete_markup']['value'];
+		$this->additional_filters = explode( "\n", $this->options['lazy_load_responsive_images_additional_filters']['value'] );
 		$this->lazysizes_config = $this->options['lazy_load_responsive_images_lazysizes_config']['value'];
 		$this->enable_for_background_images = $this->options['lazy_load_responsive_images_enable_for_background_images']['value'];
 
@@ -744,5 +762,14 @@ class Settings {
 	 */
 	public function get_process_complete_markup() {
 		return $this->process_complete_markup;
+	}
+
+	/**
+	 * Return additional_filters value.
+	 * 
+	 * @return array
+	 */
+	public function get_additional_filters() {
+		return $this->additional_filters;
 	}
 }

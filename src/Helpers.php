@@ -175,6 +175,40 @@ class Helpers {
 	}
 
 	/**
+	 * Sanitize list of filter names.
+	 *
+	 * @param string $filters One or more WordPress filters, one per line.
+	 *
+	 * @return string Sanitized list.
+	 */
+	public function sanitize_filter_name_list( $filters ) {
+		// Get array of the filter names.
+		$filters_array = explode( "\n", $filters );
+
+		if ( false === $filters_array ) {
+			return '';
+		}
+
+		// Loop through the filter names.
+		foreach ( $filters_array as $i => $filter ) {
+			$function_name_regex = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
+			
+			$filters_array[$i] = trim( $filters_array[$i] );
+			
+			// Check if the filter is a valid PHP function name.
+			if ( preg_match( $function_name_regex, $filters_array[$i] ) !== 1 ) {
+				unset( $filters_array[$i] );
+				continue;
+			}
+		}
+
+		// Implode the filter names.
+		$filters = implode( "\n", $filters_array );
+
+		return $filters;
+	}
+
+	/**
 	 * Sanitize checkbox.
 	 *
 	 * @link https://github.com/WPTRT/code-examples/blob/master/customizer/sanitization-callbacks.php
