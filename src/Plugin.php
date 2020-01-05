@@ -88,46 +88,7 @@ class Plugin {
 			'plugin_action_links',
 		), 10, 2 );
 
-		add_action( 'init', function() {
-			// If this is no content we should process, exit as early as possible.
-			if ( ! $this->helpers->is_post_to_process() ) {
-				return;
-			}
-
-			// Check if the complete markup should be processed.
-			if ( '1' === $this->settings->get_process_complete_markup() ) {
-				add_action( 'template_redirect', function() {
-					if ( ! $this->helpers->is_post_to_process() ) {
-						return;
-					}
-					
-					ob_start( array( $this, 'filter_markup' ) );
-				} );
-			} else {
-				// Filter markup of the_content() calls to modify media markup for lazy loading.
-				add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
-
-				// Filter markup of Text widget to modify media markup for lazy loading.
-				add_filter( 'widget_text', array( $this, 'filter_markup' ) );
-
-				// Filter markup of gravatars to modify markup for lazy loading.
-				add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
-
-				// Adds lazyload markup and noscript element to post thumbnail.
-				add_filter( 'post_thumbnail_html', array(
-					$this,
-					'filter_markup',
-				), 10001, 1 );
-
-				$additional_filters = $this->settings->get_additional_filters();
-
-				if ( is_array( $additional_filters ) && ! empty( $additional_filters ) ) {
-					foreach ( $additional_filters as $filter ) {
-						add_filter( $filter, array( $this, 'filter_markup' ) );
-					}
-				}
-			}
-		} );
+		add_action( 'init', array( $this, 'init_content_processing' ) );
 		
 		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array(
@@ -146,6 +107,47 @@ class Plugin {
 
 		// Action on uninstall.
 		register_uninstall_hook( $this->basename, 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin::uninstall' );
+	}
+
+	public function init_content_processing() {
+		// If this is no content we should process, exit as early as possible.
+		if ( ! $this->helpers->is_post_to_process() ) {
+			return;
+		}
+
+		// Check if the complete markup should be processed.
+		if ( '1' === $this->settings->get_process_complete_markup() ) {
+			add_action( 'template_redirect', function() {
+				if ( ! $this->helpers->is_post_to_process() ) {
+					return;
+				}
+				
+				ob_start( array( $this, 'filter_markup' ) );
+			} );
+		} else {
+			// Filter markup of the_content() calls to modify media markup for lazy loading.
+			add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
+
+			// Filter markup of Text widget to modify media markup for lazy loading.
+			add_filter( 'widget_text', array( $this, 'filter_markup' ) );
+
+			// Filter markup of gravatars to modify markup for lazy loading.
+			add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
+
+			// Adds lazyload markup and noscript element to post thumbnail.
+			add_filter( 'post_thumbnail_html', array(
+				$this,
+				'filter_markup',
+			), 10001, 1 );
+
+			$additional_filters = $this->settings->get_additional_filters();
+
+			if ( is_array( $additional_filters ) && ! empty( $additional_filters ) ) {
+				foreach ( $additional_filters as $filter ) {
+					add_filter( $filter, array( $this, 'filter_markup' ) );
+				}
+			}
+		}
 	}
 
 	/**
