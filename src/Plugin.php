@@ -109,6 +109,9 @@ class Plugin {
 		register_uninstall_hook( $this->basename, 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin::uninstall' );
 	}
 
+	/**
+	 * Run actions and filters to start content processing.
+	 */
 	public function init_content_processing() {
 		// If this is no content we should process, exit as early as possible.
 		if ( ! $this->helpers->is_post_to_process() ) {
@@ -117,13 +120,7 @@ class Plugin {
 
 		// Check if the complete markup should be processed.
 		if ( '1' === $this->settings->get_process_complete_markup() ) {
-			add_action( 'template_redirect', function() {
-				if ( ! $this->helpers->is_post_to_process() ) {
-					return;
-				}
-				
-				ob_start( array( $this, 'filter_markup' ) );
-			} );
+			add_action( 'template_redirect', array( $this, 'process_complete_markup' ) );
 		} else {
 			// Filter markup of the_content() calls to modify media markup for lazy loading.
 			add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
@@ -148,6 +145,13 @@ class Plugin {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Run output buffering, to process the complete markup.
+	 */
+	public function process_complete_markup() {
+		ob_start( array( $this, 'filter_markup' ) );
 	}
 
 	/**
