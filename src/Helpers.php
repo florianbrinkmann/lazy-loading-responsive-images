@@ -154,24 +154,20 @@ class Helpers {
 		// Get array of the class names.
 		$class_names_array = explode( ',', $class_names );
 
-		// Check if we have an array and not false.
-		if ( false !== $class_names_array ) {
-			$counter = 0;
-
-			// Loop through the class names.
-			foreach ( $class_names_array as $class_name ) {
-				// Save the sanitized class name.
-				$class_names_array[ $counter ] = sanitize_html_class( $class_name );
-				$counter ++;
-			}
-
-			// Implode the class names.
-			$class_names = implode( ',', $class_names_array );
-
-			return $class_names;
-		} else {
+		if ( false === $class_names_array ) {
 			return '';
 		}
+
+		// Loop through the class names.
+		foreach ( $class_names_array as $i => $class_name ) {
+			// Save the sanitized class name.
+			$class_names_array[ $i ] = sanitize_html_class( $class_name );
+		}
+
+		// Implode the class names.
+		$class_names = implode( ',', $class_names_array );
+
+		return $class_names;
 	}
 
 	/**
