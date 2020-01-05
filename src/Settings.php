@@ -289,7 +289,7 @@ class Settings {
 			'lazy_load_responsive_images_process_complete_markup' => array(
 				'value'             => get_option( 'lazy_load_responsive_images_process_complete_markup', '0' ),
 				'label'             => __( 'Process the complete markup', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'Instead of just modifying specific parts of the page (for example, the post content, post thumbnail), the complete generated markup is processed. With that, all images (and other media, if you enabled it) will be lazy loaded. Because the plugin needs to process more markup with that option enabled, it might slow down the page generation time a bit.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Instead of just modifying specific parts of the page (for example, the post content, post thumbnail), the complete generated markup is processed. With that, all images (and other media, if you enabled it) will be lazy loaded. Because the plugin needs to process more markup with that option enabled, it might slow down the page generation time a bit. If your page contains HTML errors, like unclosed tags, this might lead to unwanted behavior, because the DOM parser used by Lazy Loader tries to correct that.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
