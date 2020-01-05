@@ -113,6 +113,11 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ### unreleased 
 
+**Added**
+
+* Option to process the complete markup of a page instead of only parts of it via the filters.
+* Option to define additional filters for the plugin to process.
+
 **Changed**
 
 * Security improvements via escaping and specifying allowed HTML in setting descriptions. Thanks @igmoweb
