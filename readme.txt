@@ -107,7 +107,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 **Added**
 
-* Option to process the complete markup of a page instead of only parts of it via the filters.
+* Option to process the complete markup of a page instead of only parts of it via the filters (might take a little longer and, if your site contains HTML errors, lead to unwanted behavior, because the DOM Parser tries to correct that).
 * Option to define additional filters for the plugin to process.
 
 **Changed**
