@@ -165,7 +165,7 @@ class Settings {
 			'lazy_load_responsive_images_disabled_classes'      => array(
 				'value'             => get_option( 'lazy_load_responsive_images_disabled_classes', '' ),
 				'label'             => __( 'CSS classes to exclude', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'Enter one or more CSS classes to exclude them from lazy loading (separated by comma).', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Enter one or more CSS classes to exclude them from lazy loading (separated by comma). This works only if the element that would get lazy loaded has the class, not on wrapper elements. To exclude an element and its children, use the <code>skip-lazy</code> class or the <code>data-skip-lazy</code> attribute.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'text_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
