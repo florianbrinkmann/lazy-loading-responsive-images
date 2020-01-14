@@ -4,7 +4,7 @@
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.3  
 **Stable tag:** 5.1.2  
-**Requires PHP:** 5.3  
+**Requires PHP:** 7.0  
 
 
 ## Description 
@@ -113,6 +113,8 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ### unreleased 
 
+**This release needs PHP 7**
+
 **Added**
 
 * Option to process the complete markup of a page instead of only parts of it via the filters (might take a little longer and, if your site contains HTML errors, lead to unwanted behavior, because the DOM Parser tries to correct that).
@@ -120,6 +122,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 **Changed**
 
+* Updated required PHP version to 7.0.
 * Security improvements via escaping and specifying allowed HTML in setting descriptions. Thanks @igmoweb
 * Simplified `Plugin\add_noscript_element()` method. It just clones the source element now, instead of creating a new empty element and adding all attributes to it.
 
