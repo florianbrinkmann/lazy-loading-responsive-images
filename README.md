@@ -24,6 +24,7 @@ Lazy loads (without the need of any manually modifications):
 **The plugin comes with the following options (under Settings › Media › Lazy Loader options):**
 
 * Do not lazy load elements with specific CSS classes.
+* Add filters that should be processed by Lazy Loader.
 * Enable lazy loading for iFrames.
 * Include the [lazysizes native loading plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/native-loading) that modifies images and iFrames to use the native lazy loading feature of browsers that already support it.
 * Include the [lazysizes unveilhooks plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/unveilhooks) that adds support for more elements, for example, video and audio elements.*
@@ -33,6 +34,7 @@ Lazy loads (without the need of any manually modifications):
 * Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 * Display a loading spinner.
 * Disable the plugin on specific posts/pages (this shows a checkbox in the edit view of all public post types (except attachments) to disable lazy loading for an entire post).
+* Process the complete markup of the site.
 * A textarea to modify the default lazysizes config values.
 
 \* The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
@@ -45,9 +47,7 @@ The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
 The auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
 
-You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the data-no-lazyload attribute.
-
-If you want to disable lazy loading for a specific element and its children (for example, if you have no access to the classes of the image element), you can use the `disable-lazyload` class.
+You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the `skip-lazy` class or the `data-skip-lazy` attribute. `skip-lazy` and `data-skip-lazy` also work on wrapper elements to exclude the wrapper and its children from being processed.
 
 
 ## Installation 
@@ -119,6 +119,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 * Option to process the complete markup of a page instead of only parts of it via the filters (might take a little longer and, if your site contains HTML errors, lead to unwanted behavior, because the DOM Parser tries to correct that).
 * Option to define additional filters for the plugin to process.
+* Ignore patterns for `skip-lazy` class and `data-skip-lazy` attribute. Use them if you want Lazy Loader to ignore an element and its children. The `disable-lazyload` class and `data-no-lazyload` attribute will keep working for backwards compatibility. Adding the new class and attribute goes back to an initiative of Frank Goossens, developer of Autoptimize, who reached out to several devs of lazy loading plugins or plugins that also have a lazy loading feature to get a standard class and attribute across multiple plugins.
 
 **Changed**
 
