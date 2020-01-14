@@ -285,7 +285,21 @@ class Plugin {
 
 		if ( true === $is_modified ) {
 			if ( '1' === $this->settings->get_process_complete_markup() ) {
-				$content = $html5->saveHTML( $dom );
+				// If someone directly passed markup to the plugin, no doctype will be present. So we need to check for a parse error first.
+				$errors = $html5->getErrors();
+				$no_doctype = false;
+				if ( is_array( $errors ) && ! empty( $errors ) ) {
+					foreach ( $errors as $error ) {
+						if ( strpos( $error, 'No DOCTYPE specified.' ) !== false ) {
+							$no_doctype = true;
+							$content = $this->helpers->save_html( $dom, $html5 );
+							break;
+						}
+					}
+				}
+				if ( $no_doctype === false ) {
+					$content = $html5->saveHTML( $dom );
+				}
 			} else {
 				$content = $this->helpers->save_html( $dom, $html5 );
 			}
