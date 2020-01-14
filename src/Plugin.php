@@ -193,9 +193,9 @@ class Plugin {
 		libxml_use_internal_errors( true );
 
 		// Create new HTML5 object.
-		$html5 = new HTML5([
+		$html5 = new HTML5( array(
             'disable_html_ns' => true,
-        ]);
+        ) );
 
 		// Preserve html entities, script tags and conditional IE comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php.
