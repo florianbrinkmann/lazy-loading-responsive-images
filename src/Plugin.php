@@ -11,6 +11,8 @@ use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
 
 use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
 
+use Masterminds\HTML5;
+
 /**
  * Class Plugin
  *
@@ -190,8 +192,10 @@ class Plugin {
 		// Disable libxml errors.
 		libxml_use_internal_errors( true );
 
-		// Create new \DOMDocument object.
-		$dom = new \DOMDocument();
+		// Create new HTML5 object.
+		$html5 = new HTML5([
+            'disable_html_ns' => true,
+        ]);
 
 		// Preserve html entities, script tags and conditional IE comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php.
@@ -204,12 +208,7 @@ class Plugin {
 		$content = str_replace( '</script>', '</script>-->', $content );
 
 		// Load the HTML.
-		if ( '1' === $this->settings->get_process_complete_markup() ) {
-			$dom->loadHTML( $content, 0 | LIBXML_NOENT );
-		} else {
-			// Trick with <?xml endocing="utf-8" loadHTML() method from https://github.com/ivopetkov/html5-dom-document-php.
-			$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $content, 0 | LIBXML_NOENT );
-		}
+		$dom = $html5->loadHTML( $content );
 
 		$xpath = new \DOMXPath( $dom );
 
@@ -286,9 +285,9 @@ class Plugin {
 
 		if ( true === $is_modified ) {
 			if ( '1' === $this->settings->get_process_complete_markup() ) {
-				$content = $dom->saveHTML( ( new \DOMXPath( $dom ) )->query( '/' )->item( 0 ) );
+				$content = $html5->saveHTML( $dom );
 			} else {
-				$content = $this->helpers->save_html( $dom );
+				$content = $this->helpers->save_html( $dom, $html5 );
 			}
 		}
 

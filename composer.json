@@ -19,5 +19,8 @@
     "wimg/php-compatibility": "*",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4"
   },
-  "prefer-stable" : true
+  "prefer-stable" : true,
+  "require": {
+    "masterminds/html5": "^2.7"
+  }
 }

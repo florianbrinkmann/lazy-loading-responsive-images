@@ -253,20 +253,23 @@ class Helpers {
 	 * Replacement of doctype, html, and body from archon810\SmartDOMDocument.
 	 *
 	 * @param \DOMDocument $dom DOMDocument object of the dom.
+	 * @param Masterminds\HTML5 $html5 HTML5 object.
 	 *
 	 * @return string DOM or empty string.
 	 */
-	public function save_html( \DOMDocument $dom ) {
+	public function save_html( \DOMDocument $dom, $html5 ) {
 		$xpath      = new \DOMXPath( $dom );
 		$first_item = $xpath->query( '/' )->item( 0 );
 
+		error_log( print_r( $html5->saveHTML( $first_item ), true ) );
+
 		return preg_replace(
 			array(
-				'/^\<\!DOCTYPE.*?<html><body>/si',
-				'!</body></html>$!si',
+				'/^\<\!DOCTYPE html>.*?<html>/si',
+				'/<\/html>[\n\r]?$/si',
 			),
 			'',
-			$dom->saveHTML( $first_item )
+			$html5->saveHTML( $first_item )
 		);
 	}
 }
