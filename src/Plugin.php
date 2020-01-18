@@ -189,6 +189,11 @@ class Plugin {
 			return $content;
 		}
 
+		// Check if content contains caption shortcode.
+		if ( has_shortcode( $content, 'caption' ) ) {
+			return $content;
+		}
+
 		// Disable libxml errors.
 		libxml_use_internal_errors( true );
 
