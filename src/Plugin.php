@@ -472,12 +472,20 @@ class Plugin {
 	 * @return \DOMDocument The updated DOM.
 	 */
 	public function modify_picture_markup( $picture, $dom ) {
+		// Check if img element already has `layzload` class.
+		$img_element = $picture->getElementsByTagName( 'img' );
+
+		foreach ( $img_element as $img ) {
+			if ( in_array( 'lazyload', explode( ' ', $img->getAttribute( 'class' ) ) ) ) {
+				return $dom;
+			}
+		}
+		
 		// Add noscript element.
 		$dom = $this->add_noscript_element( $dom, $picture );
 
-		// Get source elements and image element from picture.
+		// Get source elements from picture.
 		$source_elements = $picture->getElementsByTagName( 'source' );
-		$img_element     = $picture->getElementsByTagName( 'img' );
 
 		// Loop the source elements if there are some.
 		if ( 0 !== $source_elements->length ) {
