@@ -175,7 +175,7 @@ class Settings {
 			'lazy_load_responsive_images_additional_filters'      => array(
 				'value'             => get_option( 'lazy_load_responsive_images_additional_filters', '' ),
 				'label'             => __( 'Additional filters', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'Enter one or more additional WordPress filters that should be processed (one per line). For example, <code>woocommerce_single_product_image_thumbnail_html</code> to add support for the WooCommerce product image on product pages. Anything that does not match the regular expression for PHP function names will be removed.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'Enter one or more additional WordPress filters that should be processed (one per line). Anything that does not match the regular expression for PHP function names will be removed.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'textarea_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
