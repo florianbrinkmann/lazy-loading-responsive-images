@@ -261,8 +261,6 @@ class Helpers {
 		$xpath      = new \DOMXPath( $dom );
 		$first_item = $xpath->query( '/' )->item( 0 );
 
-		error_log( print_r( $html5->saveHTML( $first_item ), true ) );
-
 		return preg_replace(
 			array(
 				'/^\<\!DOCTYPE html>.*?<html>/si',
