@@ -128,6 +128,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 * Security improvements via escaping and specifying allowed HTML in setting descriptions. Thanks @igmoweb
 * Simplified `Plugin\add_noscript_element()` method. It just clones the source element now, instead of creating a new empty element and adding all attributes to it.
 * Check markup for `[caption]` shortcode to prevent duplicated images in Elementor.
+* Class properties are private now.
 
 **Fixed**
 
