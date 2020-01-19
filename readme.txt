@@ -61,6 +61,7 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 Yes. See the following example that would generate lazy-load-ready output for the result of the not-supported `wp_get_attachment_image()` function:
 
 `
+global $lazy_loader;
 if ( isset( $lazy_loader ) && $lazy_loader instanceof FlorianBrinkmann\LazyLoadResponsiveImages\Plugin ) {
 	echo $lazy_loader->filter_markup( wp_get_attachment_image( 1261 ) );
 }
