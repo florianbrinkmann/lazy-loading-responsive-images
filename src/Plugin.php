@@ -115,11 +115,6 @@ class Plugin {
 	 * Run actions and filters to start content processing.
 	 */
 	public function init_content_processing() {
-		// If this is no content we should process, exit as early as possible.
-		if ( ! $this->helpers->is_post_to_process() ) {
-			return;
-		}
-
 		// Check if the complete markup should be processed.
 		if ( '1' === $this->settings->get_process_complete_markup() ) {
 			add_action( 'template_redirect', array( $this, 'process_complete_markup' ) );
@@ -153,6 +148,11 @@ class Plugin {
 	 * Run output buffering, to process the complete markup.
 	 */
 	public function process_complete_markup() {
+		// If this is no content we should process, exit as early as possible.
+		if ( ! $this->helpers->is_post_to_process() ) {
+			return;
+		}
+
 		ob_start( array( $this, 'filter_markup' ) );
 	}
 
@@ -184,6 +184,11 @@ class Plugin {
 	 * @return string Modified HTML.
 	 */
 	public function filter_markup( $content ) {
+		// If this is no content we should process, exit as early as possible.
+		if ( ! $this->helpers->is_post_to_process() ) {
+			return $content;
+		}
+
 		// Check if we have no content.
 		if ( empty( $content ) ) {
 			return $content;
