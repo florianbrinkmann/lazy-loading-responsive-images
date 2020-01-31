@@ -1,9 +1,10 @@
 # Lazy Loader 
 **Contributors:** FlorianBrinkmann, MarcDK  
+**Donate link:** https://www.paypal.me/flobrinkmann  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
-**Tested up to:** 5.3  
-**Stable tag:** 5.1.2  
+**Tested up to:** 5.3.2  
+**Stable tag:** 6.0.0  
 **Requires PHP:** 7.0  
 
 
@@ -15,6 +16,8 @@ Lazy loads (without the need of any manually modifications):
 
 * Images inserted via `img` or `picture` in posts, pages, Custom Post Types, Text Widgets, …
 * Post thumbnails.
+* Inline background images.
+* Or all images and other enabled media in the markup (that is not excluded or already has a lazy loading attribute), via the option to process the complete markup.
 * iFrames.*
 * Video elements.*
 * Audio elements.*
@@ -23,7 +26,7 @@ Lazy loads (without the need of any manually modifications):
 
 **The plugin comes with the following options (under Settings › Media › Lazy Loader options):**
 
-* Do not lazy load elements with specific CSS classes.
+* Do not lazy load elements with specific CSS classes (you can use the class `skip-lazy` by default).
 * Add filters that should be processed by Lazy Loader.
 * Enable lazy loading for iFrames.
 * Include the [lazysizes native loading plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/native-loading) that modifies images and iFrames to use the native lazy loading feature of browsers that already support it.
@@ -39,13 +42,13 @@ Lazy loads (without the need of any manually modifications):
 
 \* The unveilhooks extension of lazysizes supports more than video and audio elements, but you need to manually modify the markup to use it for:
 
-* Background images.
+* Background images not inserted with inline styles.
 * Scripts.
 * Styles.
 
 The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
-The auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added.
+By default, the auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added. You can enable the option to process the complete markup to make them work.
 
 You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the `skip-lazy` class or the `data-skip-lazy` attribute. `skip-lazy` and `data-skip-lazy` also work on wrapper elements to exclude the wrapper and its children from being processed.
 
@@ -112,15 +115,16 @@ There is a textarea in the plugin settings where you can insert custom settings 
 ## Changelog 
 
 
-### unreleased 
+### 6.0.0 – 31.01.2020 
 
-**This release needs PHP 7**
+**This release requires PHP 7**
 
 **Added**
 
-* Option to process the complete markup of a page instead of only parts of it via the filters (might take a little longer and, if your site contains HTML errors, lead to unwanted behavior, because the DOM Parser tries to correct that).
+* Option to process the complete markup of a page instead of only parts of it via the filters (might take a little longer because the plugin needs to process more markup and, if your site contains HTML errors, lead to unwanted behavior, because the DOM Parser tries to correct that).
 * Option to define additional filters for the plugin to process.
-* Ignore patterns for `skip-lazy` class and `data-skip-lazy` attribute. Use them if you want Lazy Loader to ignore an element and its children. The `disable-lazyload` class and `data-no-lazyload` attribute will keep working for backwards compatibility. Adding the new class and attribute goes back to an initiative of Frank Goossens, developer of Autoptimize, who reached out to several devs of lazy loading plugins or plugins that also have a lazy loading feature to get a standard class and attribute across multiple plugins.
+* Ignore patterns for `skip-lazy` class and `data-skip-lazy` attribute. Use them if you want Lazy Loader to ignore an element and its children. The `disable-lazyload` class and `data-no-lazyload` attribute will keep working for backwards compatibility. Adding the new class and attribute goes back to an initiative by Frank Goossens, developer of Autoptimize, who reached out to several devs of lazy loading plugins or plugins that also have a lazy loading feature to get a standard class and attribute across multiple plugins.
+* Added donation link to plugin header.
 
 **Changed**
 
