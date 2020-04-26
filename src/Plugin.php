@@ -701,6 +701,13 @@ class Plugin {
 			return;
 		}
 
+		// Check if something (like Avada) already included a lazysizes script. If that is the case, deregister it.
+		$lazysizes = wp_script_is( 'lazysizes' );
+
+		if ( $lazysizes ) {
+			wp_deregister_script( 'lazysizes' );
+		}
+
 		// Enqueue lazysizes.
 		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), false, true );
 
