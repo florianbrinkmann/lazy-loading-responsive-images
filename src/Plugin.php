@@ -183,7 +183,7 @@ class Plugin {
 	 *
 	 * @return string Modified HTML.
 	 */
-	public function filter_markup( $content ) {
+	public function filter_markup( $content = '' ) {
 		// If this is no content we should process, exit as early as possible.
 		if ( ! $this->helpers->is_post_to_process() ) {
 			return $content;
