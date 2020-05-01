@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
 Tested up to: 5.3.2
-Stable tag: 6.0.0
+Stable tag: 6.0.1
 Requires PHP: 7.0
 
 == Description ==
@@ -106,6 +106,13 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 6.0.1 – 01.05.2020 =
+
+**Changed**
+
+* Added empty default value for the `$content` param of `Plugin\filter_markup()` method to prevent a fatal error that occurs sometimes when Lazy Loader is used with the Content Cards plugin.
+* Check if there is already a script with the `lazysizes` handle registered and deregister it before enqueuing own version. Fixes issue with Avada theme that includes own version.
 
 = 6.0.0 – 31.01.2020 =
 
