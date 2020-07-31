@@ -216,9 +216,6 @@ class Plugin {
 		$content = preg_replace( '/&#([0-9]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
 		$content = preg_replace( '/<!--\[([\w ]*)\]>/', '<!--[$1]>-->', $content );
 		$content = str_replace( '<![endif]-->', '<!--<![endif]-->', $content );
-		$content = str_replace( '<script>', '<!--<script>', $content );
-		$content = str_replace( '<script ', '<!--<script ', $content );
-		$content = str_replace( '</script>', '</script>-->', $content );
 
 		// Load the HTML.
 		$dom = $html5->loadHTML( $content );
@@ -325,9 +322,6 @@ class Plugin {
 			$content = preg_replace('/lazy-loading-responsive-images-entity2-(.*?)-end/', '&#$1;', $content );
 			$content = preg_replace( '/<!--\[([\w ]*)\]>-->/', '<!--[$1]>', $content );
 			$content = str_replace( '<!--<![endif]-->', '<![endif]-->', $content );
-			$content = str_replace( '<!--<script>', '<script>', $content );
-			$content = str_replace( '<!--<script ', '<script ', $content );
-			$content = str_replace( '</script>-->', '</script>', $content );
 		}
 
 		return $content;
