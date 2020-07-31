@@ -686,8 +686,22 @@ class Plugin {
 		$noscript = $dom->createElement( 'noscript' );
 		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
 
+		// Create copy of media element.
+		$noscript_media_fallback_elem = $elem->cloneNode( true );
+
+		/**
+		 * Array of HTML attributes that should be stripped from the fallback element in noscript.
+		 * 
+		 * @param array Array of elements to strip from fallback.
+		 */
+		$attrs_to_strip_from_fallback = (array) apply_filters( 'lazy_loader_attrs_to_strip_from_fallback_elem', [] );
+
+		foreach ( $attrs_to_strip_from_fallback as $attr_to_strip ) {
+			$noscript_media_fallback_elem->removeAttribute( $attr_to_strip );
+		}
+
 		// Add a copy of the media element to the noscript.
-		$noscript_node->appendChild( $elem->cloneNode( true ) );
+		$noscript_node->appendChild( $noscript_media_fallback_elem );
 
 		return $dom;
 	}
