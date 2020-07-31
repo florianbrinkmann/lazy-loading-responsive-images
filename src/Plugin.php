@@ -84,6 +84,9 @@ class Plugin {
 		// Get the disabled classes and save in property.
 		$this->disabled_classes = $this->settings->get_disabled_classes();
 
+		// Disable core lazy loading.
+		add_filter( 'wp_lazy_loading_enabled', '__return_false' );
+
 		// Add link to settings in the plugin list.
 		add_filter( 'plugin_action_links', array(
 			$this,
