@@ -80,13 +80,6 @@ class Settings {
 	private $enable_for_audios;
 
 	/**
-	 * Value of setting for loading the aspectratio plugin.
-	 *
-	 * @var string
-	 */
-	private $load_aspectratio_plugin;
-
-	/**
 	 * Value of setting for displaying a loading spinner.
 	 *
 	 * @var string
@@ -246,16 +239,6 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
-			'lazy_load_responsive_images_aspectratio_plugin'    => array(
-				'value'             => get_option( 'lazy_load_responsive_images_aspectratio_plugin', '0' ),
-				'label'             => __( 'Include lazysizes aspectratio plugin', 'lazy-loading-responsive-images' ),
-				'description'       => __( 'The plugin helps to avoid content jumping when images are loaded and makes lazy loading work with masonry grids. Works only if width and height attribute are set for the img element. <a href="https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio">More info on the plugin page</a>.', 'lazy-loading-responsive-images' ),
-				'field_callback'    => array( $this, 'checkbox_field_cb' ),
-				'sanitize_callback' => array(
-					$this->helpers,
-					'sanitize_checkbox',
-				),
-			),
 			'lazy_load_responsive_images_loading_spinner'       => array(
 				'value'             => get_option( 'lazy_load_responsive_images_loading_spinner', '0' ),
 				'label'             => __( 'Display a loading spinner', 'lazy-loading-responsive-images' ),
@@ -318,7 +301,6 @@ class Settings {
 		$this->load_unveilhooks_plugin = $this->options['lazy_load_responsive_images_unveilhooks_plugin']['value'];
 		$this->enable_for_videos       = $this->options['lazy_load_responsive_images_enable_for_videos']['value'];
 		$this->enable_for_audios       = $this->options['lazy_load_responsive_images_enable_for_audios']['value'];
-		$this->load_aspectratio_plugin = $this->options['lazy_load_responsive_images_aspectratio_plugin']['value'];
 		$this->loading_spinner         = $this->options['lazy_load_responsive_images_loading_spinner']['value'];
 		$this->loading_spinner_color   = $this->options['lazy_load_responsive_images_loading_spinner_color']['value'];
 		$this->granular_disable_option = $this->options['lazy_load_responsive_images_granular_disable_option']['value'];
@@ -690,15 +672,6 @@ class Settings {
 	 */
 	public function get_enable_for_background_images() {
 		return $this->enable_for_background_images;
-	}
-
-	/**
-	 * Return load_aspectratio_plugin value.
-	 * 
-	 * @return string
-	 */
-	public function get_load_aspectratio_plugin() {
-		return $this->load_aspectratio_plugin;
 	}
 
 	/**

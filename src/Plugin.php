@@ -441,16 +441,6 @@ class Plugin {
 		// Set data-src value.
 		$img->setAttribute( 'data-src', $src );
 
-		if ( '1' === $this->settings->get_load_aspectratio_plugin() ) {
-			// Get width and height.
-			$img_width  = $img->getAttribute( 'width' );
-			$img_height = $img->getAttribute( 'height' );
-
-			if ( '' !== $img_width && '' !== $img_height ) {
-				$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
-			}
-		}
-
 		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
 			$img->setAttribute( 'loading', 'lazy' );
 		}
@@ -464,7 +454,19 @@ class Plugin {
 		// Set the class string.
 		$img->setAttribute( 'class', $classes );
 
+		// Get width and height.
+		$img_width  = $img->getAttribute( 'width' );
+		$img_height = $img->getAttribute( 'height' );
+
 		// Set data URI for src attribute.
+		if ( '' !== $img_width && '' !== $img_height ) {
+			// We have image width and height, we can set a inline SVG to prevent content jumps.
+			$svg_placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {$img_width} {$img_height}'%3E%3C/svg%3E";
+			$img->setAttribute( 'src', $svg_placeholder );
+			$img->setAttribute( 'srcset', "$svg_placeholder {$img_width}w" );
+
+			return $dom;
+		}
 		$img->setAttribute( 'src', $this->src_placeholder );
 
 		return $dom;
@@ -712,12 +714,6 @@ class Plugin {
 		if ( '1' === $this->settings->get_load_unveilhooks_plugin() || '1' === $this->settings->get_enable_for_audios() || '1' === $this->settings->get_enable_for_videos() || '1' === $this->settings->get_enable_for_background_images() ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), false, true );
-		}
-
-		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->get_load_aspectratio_plugin() ) {
-			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), array( 'lazysizes' ), false, true );
 		}
 
 		// Check if native loading plugin should be loaded.
