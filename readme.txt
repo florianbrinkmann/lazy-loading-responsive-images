@@ -111,6 +111,7 @@ There is a textarea in the plugin settings where you can insert custom settings 
 **Added**
 
 * Disable core lazy load funcionality that comes with WP 5.5.
+* `lazy_loader_attrs_to_strip_from_fallback_elem` filter that allows to provide an array of HTML attributes that should be stripped from the fallback element in the `noscript` element.
 
 **Changed**
 
