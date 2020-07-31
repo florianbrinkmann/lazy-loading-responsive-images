@@ -34,7 +34,6 @@ Lazy loads (without the need of any manually modifications):
 * Enable lazy loading for the poster frame of video elements.
 * Enable lazy loading for audio elements.
 * Enable lazy loading for inline background images.
-* Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 * Display a loading spinner.
 * Disable the plugin on specific posts/pages (this shows a checkbox in the edit view of all public post types (except attachments) to disable lazy loading for an entire post).
 * Process the complete markup of the site.
@@ -113,6 +112,24 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 
 ## Changelog 
+
+## 7.0.0 –  
+
+**Added**
+
+* Disable core lazy load funcionality that comes with WP 5.5.
+
+**Changed**
+
+* If `width` and `height` attributes are present, the plugin uses an inline SVG to prevent content reflow – thanks to WP.org user lozula.
+
+**Fixed**
+
+* Problems with inline HTML comments in `script` tags. To fix that. inline script elements are no longer wrapped in HTML comments during markup processing to hide them from the parser. That was necessary for `DOMDocument()` but is not needed when using `Masterminds\HTML5()` (what Lazy Loader does).
+
+**Removed**
+
+* Aspectratio option. The change with the inline SVG should make that obsolete.
 
 ### 6.0.1 – 01.05.2020 
 
