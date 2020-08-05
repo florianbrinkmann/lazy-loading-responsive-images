@@ -210,7 +210,7 @@ class Plugin {
             'disable_html_ns' => true,
         ) );
 
-		// Preserve html entities, script tags and conditional IE comments.
+		// Preserve html entities and conditional IE comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php.
 		$content = preg_replace( '/&([a-zA-Z]*);/', 'lazy-loading-responsive-images-entity1-$1-end', $content );
 		$content = preg_replace( '/&#([0-9]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
@@ -315,7 +315,7 @@ class Plugin {
 			}
 		}
 
-		// Restore the entities and script tags.
+		// Restore the entities and conditional comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php/blob/9560a96f63a7cf236aa18b4f2fbd5aab4d756f68/src/HTML5DOMDocument.php#L343.
 		if ( strpos( $content, 'lazy-loading-responsive-images-entity') !== false || strpos( $content, '<!--<script' ) !== false ) {
 			$content = preg_replace('/lazy-loading-responsive-images-entity1-(.*?)-end/', '&$1;', $content );
