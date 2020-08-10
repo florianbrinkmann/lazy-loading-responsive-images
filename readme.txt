@@ -106,7 +106,9 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 == Changelog ==
 
-= 7.0.0 –  =
+= 7.0.0 – 10.08.2020 =
+
+If you depend on the aspectratio script of lazysizes somehow that came with the plugin, this release has a breaking change: it removes the aspectratio option (and the script) because it uses inline SVGs as placeholders that have the same effect without needing the aspectratio script.
 
 **Added**
 

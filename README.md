@@ -3,8 +3,8 @@
 **Donate link:** https://www.paypal.me/flobrinkmann  
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
-**Tested up to:** 5.4  
-**Stable tag:** 6.0.1  
+**Tested up to:** 5.5  
+**Stable tag:** 7.0.0  
 **Requires PHP:** 7.0  
 
 
@@ -113,7 +113,9 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ## Changelog 
 
-## 7.0.0 –  
+## 7.0.0 – 10.08.2020  
+
+If you depend on the aspectratio script of lazysizes somehow that came with the plugin, this release has a breaking change: it removes the aspectratio option (and the script) because it uses inline SVGs as placeholders that have the same effect without needing the aspectratio script.
 
 **Added**
 
