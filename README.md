@@ -125,6 +125,7 @@ If you depend on the aspectratio script of lazysizes somehow that came with the 
 **Changed**
 
 * If `width` and `height` attributes are present, the plugin uses an inline SVG to prevent content reflow – thanks to WP.org user lozula.
+* Updated lazysizes and its extensions to version 5.2.2.
 
 **Fixed**
 
