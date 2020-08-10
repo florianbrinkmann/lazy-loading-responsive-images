@@ -133,7 +133,7 @@ If you depend on the aspectratio script of lazysizes somehow that came with the 
 
 **Removed**
 
-* Aspectratio option. The change with the inline SVG should make that obsolete.
+* Aspectratio option. The change with the inline SVG makes that obsolete.
 
 ### 6.0.1 – 01.05.2020 
 
