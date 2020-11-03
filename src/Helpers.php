@@ -140,6 +140,11 @@ class Helpers {
 			return false;
 		}
 
+		// Check for Oxygen Builder mode.
+		if ( defined( 'SHOW_CT_BUILDER' ) ) {
+			return false;
+		}
+
 		return true;
 	}
 
