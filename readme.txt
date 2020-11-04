@@ -3,8 +3,8 @@ Contributors: FlorianBrinkmann, MarcDK
 Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
-Tested up to: 5.5
-Stable tag: 7.0.0
+Tested up to: 5.6
+Stable tag: 7.0.1
 Requires PHP: 7.0
 
 == Description ==
@@ -105,6 +105,12 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 7.0.1 – 04.11.2020 =
+
+**Fixed**
+
+* Problem with Lazy Loader being active in Oxygen Builder editor.
 
 = 7.0.0 – 10.08.2020 =
 
