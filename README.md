@@ -4,7 +4,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.6  
-**Stable tag:** 7.0.1  
+**Stable tag:** 7.1.0  
 **Requires PHP:** 7.0  
 
 
@@ -112,7 +112,11 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ## Changelog 
 
-## 7.0.1 – 04.11.2020
+## 7.1.0 – 04.11.2020
+
+**Changed**
+
+* Add timestamp of file modification as version query string to Lazy Loader JS files instead of WordPress version.
 
 **Fixed**
 

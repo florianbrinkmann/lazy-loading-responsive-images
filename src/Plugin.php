@@ -725,17 +725,17 @@ class Plugin {
 		}
 
 		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), false, true );
+		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/lazysizes.min.js' ), true );
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->get_load_unveilhooks_plugin() || '1' === $this->settings->get_enable_for_audios() || '1' === $this->settings->get_enable_for_videos() || '1' === $this->settings->get_enable_for_background_images() ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), false, true );
+			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.unveilhooks.min.js' ), true );
 		}
 
 		// Check if native loading plugin should be loaded.
 		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
-			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), false, true );
+			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.native-loading.min.js' ), true );
 		}
 
 		// Include custom lazysizes config if not empty.
