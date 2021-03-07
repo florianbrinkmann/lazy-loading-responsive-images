@@ -131,6 +131,9 @@ class Plugin {
 			// Filter markup of gravatars to modify markup for lazy loading.
 			add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
 
+			// Filter markup of wp_get_attachment_image() calls.
+			add_filter( 'wp_get_attachment_image', array( $this, 'filter_markup' ) );
+
 			// Adds lazyload markup and noscript element to post thumbnail.
 			add_filter( 'post_thumbnail_html', array(
 				$this,

@@ -46,8 +46,6 @@ Lazy loads (without the need of any manually modifications):
 
 The plugin adds a `noscript` element as fallback for disabled JavaScript.
 
-By default, the auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added. You can enable the option to process the complete markup to make them work.
-
 You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the `skip-lazy` class or the `data-skip-lazy` attribute. `skip-lazy` and `data-skip-lazy` also work on wrapper elements to exclude the wrapper and its children from being processed.
 
 == Installation ==
