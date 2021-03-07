@@ -51,6 +51,13 @@ class Plugin {
 	protected $basename;
 
 	/**
+	 * URL to editor JS file.
+	 *
+	 * @var string
+	 */
+	protected $js_asset_url;
+
+	/**
 	 * Placeholder data uri for img src attributes.
 	 *
 	 * @link https://stackoverflow.com/a/13139830
@@ -834,9 +841,13 @@ class Plugin {
 	 */
 	public function enqueue_block_editor_assets() {
 		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->get_disable_option_object_types() ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
-			$file_data  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
-			$assets_url = trailingslashit( plugin_dir_url( __FILE__ ) );
-			wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );
+			$script_asset_file = require( __DIR__ . '/../js/build/functions.asset.php' );
+			wp_enqueue_script(
+				'lazy-loading-responsive-images-functions',
+				$this->js_asset_url,
+				$script_asset_file['dependencies'],
+				$script_asset_file['version']
+			);
 		}
 	}
 
@@ -854,6 +865,15 @@ class Plugin {
 	 */
 	public function set_basename( $basename ) {
 		$this->basename = $basename;
+	}
+
+	/**
+	 * Sets plugin basename.
+	 *
+	 * @param string $basename The plugin basename.
+	 */
+	public function set_js_asset_url( $js_asset_url ) {
+		$this->js_asset_url = $js_asset_url;
 	}
 
 	/**
