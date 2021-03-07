@@ -461,11 +461,10 @@ class Plugin {
 		// Set data URI for src attribute.
 		if ( '' !== $img_width && '' !== $img_height ) {
 			// We have image width and height, we can set a inline SVG to prevent content jumps.
-			$svg_placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 {$img_width} {$img_height}'%3E%3C/svg%3E";
-			$svg_placeholder_srcset = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$img_width}%20{$img_height}%22%3E%3C%2Fsvg%3E";
+			$svg_placeholder = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$img_width}%20{$img_height}%22%3E%3C%2Fsvg%3E";
 			$img->setAttribute( 'src', $svg_placeholder );
 			if ( $img->hasAttribute( 'srcset' ) ) {
-				$img->setAttribute( 'srcset', "$svg_placeholder_srcset {$img_width}w" );
+				$img->setAttribute( 'srcset', "$svg_placeholder {$img_width}w" );
 			}
 
 			return $dom;
