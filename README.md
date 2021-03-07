@@ -64,12 +64,12 @@ You can disable lazy loading for elements with specific CSS classes by defining 
 
 Yes. See the following example that would generate lazy-load-ready output for the result of the not-supported `wp_get_attachment_image()` function:
 
-`
+```php
 global $lazy_loader;
 if ( isset( $lazy_loader ) && $lazy_loader instanceof FlorianBrinkmann\LazyLoadResponsiveImages\Plugin ) {
 	echo $lazy_loader->filter_markup( wp_get_attachment_image( 1261 ) );
 }
-`
+```
 
 To make it happen, you need to pass the markup that contains the image (or images) to `$lazy_loader->filter_markup()`. The `if` statement ensures that the Lazy Loader object is there and that it is an object of the correct class.
 
@@ -80,15 +80,15 @@ To make it happen, you need to pass the markup that contains the image (or image
 
 To disable or modify the plugin’s inline styles (except the style that hides the `img.lazyload` elements when JS is disabled, so only the `noscript` version is displayed) you can use the `lazy_load_responsive_images_inline_styles` filter. For example, to remove the inline styles, use the following code:
 
-`
+```php
 add_filter( 'lazy_load_responsive_images_inline_styles', function () {
 	return '';
 } );
-`
+```
 
 If you want to modify it, you can do that like in the following code block (remember to include the opening and closing `style` tags for additions/replacements). The code modifies the duration of the fade-in-effect:
 
-`
+```php
 add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_styles ) {
 	$default_styles = sprintf(
 		'%s <style>:root {
@@ -99,7 +99,7 @@ add_filter( 'lazy_load_responsive_images_inline_styles', function ( $default_sty
 	
 	return $default_styles;
 } );
-`
+```
 
 The CSS from the example are the default styles that are used by the plugin (without the loading spinner styles). The `display: block` for `.lazyload` is important for the aspectratio plugin option.
 
