@@ -110,6 +110,22 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ## Changelog 
 
+## 7.2.0 – 08.03.2021
+
+Tested with WordPress 5.7.
+
+**Added**
+
+* Process `wp_get_attachment_image` filter that was added in WordPress 5.6.
+
+**Changed**
+
+* Updated lazysizes and its plugins to 5.3.0.
+
+**Fixed**
+
+* Use same escaped version of SVG placeholder for `src` and `srcset` to fix a HTML validation error.
+
 ## 7.1.0 – 04.11.2020
 
 **Changed**
