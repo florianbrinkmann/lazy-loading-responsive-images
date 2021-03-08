@@ -1,0 +1,21 @@
+name: Run things when a new commit is pushed
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: Run PHPCS check
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        tools: composer
+    - name: Install dependencies
+      run: |
+        composer install
+    - name: Run PHPCS
+      run: |
+        vendor/bin/phpcs -p src/ vendor/masterminds/ vendor/kornrunner --standard=PHPCompatibility --runtime-set testVersion 7.0
