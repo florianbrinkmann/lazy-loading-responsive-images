@@ -51,11 +51,11 @@ class Plugin {
 	protected $basename;
 
 	/**
-	 * URL to editor JS file.
+	 * URL to plugin directory.
 	 *
 	 * @var string
 	 */
-	protected $js_asset_url;
+	protected $plugin_dir_url;
 
 	/**
 	 * Placeholder data uri for img src attributes.
@@ -101,6 +101,18 @@ class Plugin {
 		), 10, 2 );
 
 		add_action( 'init', array( $this, 'init_content_processing' ) );
+
+		if ( $this->settings->image_preview_enabled() ) {
+			add_action( 'wp_print_footer_scripts', function() {
+				// Check for image previews that need to be generated.
+				$previews_to_generate = ImagePreview::get_previews_to_generate();
+				if ( ! empty( $previews_to_generate ) ) {
+					wp_schedule_single_event( time(), 'lazy_loader_generate_preview_images', array( $previews_to_generate ) );
+				}
+			} );
+		}
+
+		add_action( 'lazy_loader_generate_preview_images', array( ImagePreview::class, 'generate_preview_strings' ) );
 		
 		// Enqueues scripts and styles.
 		add_action( 'wp_enqueue_scripts', array(
@@ -405,6 +417,10 @@ class Plugin {
 			$dom = $this->add_noscript_element( $dom, $img );
 		}
 
+		// Get width and height.
+		$img_width  = $img->getAttribute( 'width' );
+		$img_height = $img->getAttribute( 'height' );
+
 		// Check if the image has sizes and srcset attribute.
 		$sizes_attr = '';
 		if ( $img->hasAttribute( 'sizes' ) ) {
@@ -429,7 +445,6 @@ class Plugin {
 			$img->setAttribute( 'data-srcset', $srcset );
 
 			// Set srcset attribute with src placeholder to produce valid markup.
-			$img_width  = $img->getAttribute( 'width' );
 			if ( '' !== $img_width ) {
 				$img->setAttribute( 'srcset', "$this->src_placeholder {$img_width}w" );
 			} elseif ( '' === $img_width && '' !== $sizes_attr ) {
@@ -448,6 +463,15 @@ class Plugin {
 		// Get src value.
 		$src = $img->getAttribute( 'src' );
 
+		if ( $this->settings->image_preview_enabled() ) {
+			$preview_data = ImagePreview::get_preview_data( $src );
+			if ( ! empty( $preview_data ) ) {
+				$img->setAttribute( 'data-blurhash', $preview_data['blurhash'] );
+				$img->setAttribute( 'data-blurhash-x', $preview_data['components_x'] );
+				$img->setAttribute( 'data-blurhash-y', $preview_data['components_y'] );
+			}
+		}
+
 		// Set data-src value.
 		$img->setAttribute( 'data-src', $src );
 
@@ -463,10 +487,6 @@ class Plugin {
 
 		// Set the class string.
 		$img->setAttribute( 'class', $classes );
-
-		// Get width and height.
-		$img_width  = $img->getAttribute( 'width' );
-		$img_height = $img->getAttribute( 'height' );
 
 		// Set data URI for src attribute.
 		if ( '' !== $img_width && '' !== $img_height ) {
@@ -734,22 +754,26 @@ class Plugin {
 		}
 
 		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/lazysizes.min.js' ), true );
+		wp_enqueue_script( 'lazysizes', $this->plugin_dir_url . '/js/lazysizes.min.js', array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/lazysizes.min.js' ), true );
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->get_load_unveilhooks_plugin() || '1' === $this->settings->get_enable_for_audios() || '1' === $this->settings->get_enable_for_videos() || '1' === $this->settings->get_enable_for_background_images() ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.unveilhooks.min.js' ), true );
+			wp_enqueue_script( 'lazysizes-unveilhooks', $this->plugin_dir_url . '/js/ls.unveilhooks.min.js', array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.unveilhooks.min.js' ), true );
 		}
 
 		// Check if native loading plugin should be loaded.
 		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
-			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.native-loading.min.js' ), true );
+			wp_enqueue_script( 'lazysizes-native-loading', $this->plugin_dir_url . '/js/ls.native-loading.min.js', array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.native-loading.min.js' ), true );
 		}
 
 		// Include custom lazysizes config if not empty.
 		if ( '' !== $this->settings->get_lazysizes_config() ) {
 			wp_add_inline_script( 'lazysizes', $this->settings->get_lazysizes_config(), 'before' );
+		}
+
+		if ( $this->settings->image_preview_enabled() ) {
+			wp_enqueue_script( 'lazysizes-image-preview', $this->plugin_dir_url . '/js/build/image-preview.js', array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/build/image-preview.js' ), true );
 		}
 	}
 
@@ -825,6 +849,12 @@ class Plugin {
 			transition: opacity var(--lazy-loader-animation-duration);
 		}$spinner_styles</style>";
 
+		// If image preview enabled, we do not need that.
+		if ( $this->settings->image_preview_enabled() ) {
+			$default_styles = '<style>img[data-blurhash]:not(.lazyloaded),
+			img[data-blurhash]:not(.lazyloaded) { background-size: cover; background-repeat: no-repeat; background-position: center; }</style>';
+		}
+
 		/**
 		 * Filter for the default inline style element.
 		 *
@@ -841,10 +871,10 @@ class Plugin {
 	 */
 	public function enqueue_block_editor_assets() {
 		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->get_disable_option_object_types() ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
-			$script_asset_file = require( __DIR__ . '/../js/build/functions.asset.php' );
+			$script_asset_file = require( __DIR__ . '/../js/build/block-editor.asset.php' );
 			wp_enqueue_script(
 				'lazy-loading-responsive-images-functions',
-				$this->js_asset_url,
+				$this->plugin_dir_url . '/js/build/block-editor.js',
 				$script_asset_file['dependencies'],
 				$script_asset_file['version']
 			);
@@ -868,12 +898,12 @@ class Plugin {
 	}
 
 	/**
-	 * Sets plugin basename.
+	 * Sets plugin directory URL.
 	 *
-	 * @param string $basename The plugin basename.
+	 * @param string $url URL to the plugin directory.
 	 */
-	public function set_js_asset_url( $js_asset_url ) {
-		$this->js_asset_url = $js_asset_url;
+	public function set_plugin_dir_url( $url ) {
+		$this->plugin_dir_url = $url;
 	}
 
 	/**
@@ -895,6 +925,7 @@ class Plugin {
 			'lazy_load_responsive_images_enable_for_background_images',
 			'lazy_load_responsive_images_process_complete_markup',
 			'lazy_load_responsive_images_additional_filters',
+			'lazy_load_responsive_images_image_preview',
 		);
 
 		// Delete options.

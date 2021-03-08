@@ -3,8 +3,8 @@
   "version": "5.0.0",
   "description": "Lazy Loader plugin.",
   "scripts": {
-    "build": "wp-scripts build js/src/functions.js --output-path=js/build",
-    "start": "wp-scripts start js/src/functions.js --output-path=js/build"
+    "build": "wp-scripts build js/src/block-editor.js js/src/image-preview.js --output-path=js/build",
+    "start": "wp-scripts start js/src/block-editor.js js/src/image-preview.js --output-path=js/build"
   },
   "repository": {
     "type": "git",
@@ -21,5 +21,8 @@
   "homepage": "https://github.com/florianbrinkmann/lazy-loading-responsive-images#readme",
   "devDependencies": {
     "@wordpress/scripts": "^13.0.3"
+  },
+  "dependencies": {
+    "blurhash": "^1.1.3"
   }
 }

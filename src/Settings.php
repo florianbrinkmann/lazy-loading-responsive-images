@@ -129,6 +129,13 @@ class Settings {
 	private $process_complete_markup;
 
 	/**
+	 * Value of setting for generating blurry image previews.
+	 *
+	 * @var string
+	 */
+	private $image_preview;
+
+	/**
 	 * Value of setting for additional filters to process.
 	 *
 	 * @var array
@@ -279,6 +286,16 @@ class Settings {
 					'sanitize_checkbox',
 				),
 			),
+			'lazy_load_responsive_images_image_preview' => array(
+				'value'             => get_option( 'lazy_load_responsive_images_image_preview', '0' ),
+				'label'             => __( 'Generate blurred preview', 'lazy-loading-responsive-images' ),
+				'description'       => __( '', 'lazy-loading-responsive-images' ),
+				'field_callback'    => array( $this, 'checkbox_field_cb' ),
+				'sanitize_callback' => array(
+					$this->helpers,
+					'sanitize_checkbox',
+				),
+			),
 			'lazy_load_responsive_images_lazysizes_config' => array(
 				'value'             => get_option( 'lazy_load_responsive_images_lazysizes_config', '' ),
 				'label'             => __( 'Modify the default config', 'lazy-loading-responsive-images' ),
@@ -308,6 +325,7 @@ class Settings {
 		$this->additional_filters = explode( "\n", $this->options['lazy_load_responsive_images_additional_filters']['value'] );
 		$this->lazysizes_config = $this->options['lazy_load_responsive_images_lazysizes_config']['value'];
 		$this->enable_for_background_images = $this->options['lazy_load_responsive_images_enable_for_background_images']['value'];
+		$this->image_preview = $this->options['lazy_load_responsive_images_image_preview']['value'];
 
 		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
@@ -735,6 +753,15 @@ class Settings {
 	 */
 	public function get_process_complete_markup() {
 		return $this->process_complete_markup;
+	}
+
+	/**
+	 * Return image_preview value.
+	 * 
+	 * @return string
+	 */
+	public function image_preview_enabled() {
+		return $this->image_preview;
 	}
 
 	/**

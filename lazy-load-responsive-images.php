@@ -33,7 +33,7 @@ $lazy_loader = new Plugin();
 
 // Set plugin basename.
 $lazy_loader->set_basename( plugin_basename( __FILE__ ) );
-$lazy_loader->set_js_asset_url( plugins_url( 'js/build/functions.js', __FILE__ ) );
+$lazy_loader->set_plugin_dir_url( plugins_url( '', __FILE__ ) );
 
 // Init the plugin.
 $lazy_loader->init();
