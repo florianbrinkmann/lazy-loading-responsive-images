@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
 Tested up to: 5.7
-Stable tag: 7.2.0
+Stable tag: 7.2.1
 Requires PHP: 7.0
 
 == Description ==
@@ -103,6 +103,12 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 7.2.1 – 09.03.2021 =
+
+**Fixed**
+
+- Missing JS files in SVN repo.
 
 = 7.2.0 – 08.03.2021 =
 
