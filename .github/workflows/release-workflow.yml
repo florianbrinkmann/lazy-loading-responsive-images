@@ -61,15 +61,16 @@ jobs:
       id: get_release
       uses: bruceadams/get-release@v1.2.0
       run: echo "VERSION=$(echo ${{ steps.get_release.outputs.tag_name }} | sed -e 's/^v//')" >> $GITHUB_ENV
-    - name: Download the release artifact and deploy it.
+    - name: Download the release artifact
       uses: actions/download-artifact@v2
+      with:
+        name: lazy-loading-responsive-images
+    - name: Deploy to W.org
       env:
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_URL: ${{ secrets.SVN_URL }}
         SVN_DIR: "/github/svn-lazy-loading-responsive-images"
-      with:
-        name: lazy-loading-responsive-images
       run: |
         svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
         cd "$SVN_DIR"
