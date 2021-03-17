@@ -132,6 +132,9 @@ class Plugin {
 			// Filter markup of the_content() calls to modify media markup for lazy loading.
 			add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
 
+			// Filter allowed html for posts to allow <noscript> tag.
+			add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
+
 			// Filter markup of Text widget to modify media markup for lazy loading.
 			add_filter( 'widget_text', array( $this, 'filter_markup' ) );
 
@@ -716,6 +719,24 @@ class Plugin {
 		$noscript_node->appendChild( $noscript_media_fallback_elem );
 
 		return $dom;
+	}
+
+	/**
+	 * Filter allowed html for posts.
+	 *
+	 * @param array  $allowedposttags Allowed post tags.
+	 * @param string $context         Context.
+	 *
+	 * @return array
+	 */
+	public function wp_kses_allowed_html( $allowedposttags, $context ) {
+		if ( 'post' !== $context ) {
+			return $allowedposttags;
+		}
+
+		$allowedposttags['noscript'] = [];
+
+		return $allowedposttags;
 	}
 
 	/**
