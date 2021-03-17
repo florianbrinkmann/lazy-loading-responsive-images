@@ -44,7 +44,7 @@ jobs:
         retention-days: 1
     - name: Get Release
       id: get_release
-      uses: bruceadams/get-release@v1
+      uses: bruceadams/get-release@v1.2.2
     - name: Upload ZIP to release
       uses: actions/upload-release-asset@v1
       with:
@@ -59,7 +59,7 @@ jobs:
     steps:
     - name: Get release for version number
       id: get_release
-      uses: bruceadams/get-release@v1
+      uses: bruceadams/get-release@v1.2.2
     - name: Download the release artifact
       id: download
       uses: actions/download-artifact@v2
