@@ -60,6 +60,10 @@ jobs:
     - name: Get release for version number
       id: get_release
       uses: bruceadams/get-release@v1.2.2
+    - name: Set version env variable.
+      env:
+        TAG_NAME: ${{ steps.get_release.outputs.tag_name }}
+      run: echo "version=$(echo $TAG_NAME | sed -e 's/^v//')" >> $GITHUB_ENV
     - name: Download the release artifact
       id: download
       uses: actions/download-artifact@v2
@@ -72,17 +76,15 @@ jobs:
         SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         SVN_URL: ${{ secrets.SVN_URL }}
         SVN_DIR: "svn-lazy-loading-responsive-images"
-        TAG_NAME: ${{ steps.get_release.outputs.tag_name }}
       run: |
-        echo "VERSION=$(echo $TAG_NAME | sed -e 's/^v//')" >> $GITHUB_ENV
         svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
         cd "$SVN_DIR"
         svn update --set-depth infinity trunk
         rsync -rav "${{steps.download.outputs.download-path}}/" trunk/ --delete
         svn add . --force > /dev/null
         svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
-        svn cp "trunk" "tags/${{ env.VERSION }}"
+        svn cp "trunk" "tags/${{ env.version }}"
         svn status
-        # svn commit -m "Update to version ${{ env.VERSION }} from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+        # svn commit -m "Update to version ${{ env.version }} from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
         
 
