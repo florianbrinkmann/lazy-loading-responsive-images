@@ -57,10 +57,9 @@ jobs:
     needs: release-asset
     runs-on: ubuntu-latest
     steps:
-    - name: Set release number env.
+    - name: Get release for version number
       id: get_release
       uses: bruceadams/get-release@v1.2.0
-      run: echo "VERSION=$(echo ${{ steps.get_release.outputs.tag_name }} | sed -e 's/^v//')" >> $GITHUB_ENV
     - name: Download the release artifact
       uses: actions/download-artifact@v2
       with:
@@ -72,6 +71,7 @@ jobs:
         SVN_URL: ${{ secrets.SVN_URL }}
         SVN_DIR: "/github/svn-lazy-loading-responsive-images"
       run: |
+        run: echo "VERSION=$(echo ${{ steps.get_release.outputs.tag_name }} | sed -e 's/^v//')" >> $GITHUB_ENV
         svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
         cd "$SVN_DIR"
         svn update --set-depth infinity trunk
