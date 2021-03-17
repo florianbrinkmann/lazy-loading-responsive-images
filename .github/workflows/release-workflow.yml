@@ -77,11 +77,11 @@ jobs:
         svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
         cd "$SVN_DIR"
         svn update --set-depth infinity trunk
-        rsync -rc "${{steps.download.outputs.download-path}}/" trunk/ --delete
+        rsync -rav "${{steps.download.outputs.download-path}}/" trunk/ --delete
         svn add . --force > /dev/null
         svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
-        svn cp "trunk" "tags/$VERSION"
+        svn cp "trunk" "tags/${{ env.VERSION }}"
         svn status
-        # svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+        # svn commit -m "Update to version ${{ env.VERSION }} from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
         
 
