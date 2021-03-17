@@ -4,7 +4,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.7  
-**Stable tag:** 7.2.1  
+**Stable tag:** 7.2.2  
 **Requires PHP:** 7.0  
 
 
@@ -110,13 +110,19 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ## Changelog 
 
-## 7.2.1 – 09.03.2021 =
+### 7.2.2 – 17.03.2021
+
+**Fixed**
+
+- Duplicate images in Ultimate Addons for Elementor widget – thanks @kagg-design.
+
+### 7.2.1 – 09.03.2021 =
 
 **Fixed**
 
 - Missing JS files in SVN repo.
 
-## 7.2.0 – 08.03.2021
+### 7.2.0 – 08.03.2021
 
 Tested with WordPress 5.7.
 
@@ -132,7 +138,7 @@ Tested with WordPress 5.7.
 
 * Use same escaped version of SVG placeholder for `src` and `srcset` to fix a HTML validation error.
 
-## 7.1.0 – 04.11.2020
+### 7.1.0 – 04.11.2020
 
 **Changed**
 
@@ -142,7 +148,7 @@ Tested with WordPress 5.7.
 
 * Problem with Lazy Loader being active in Oxygen Builder editor.
 
-## 7.0.0 – 10.08.2020  
+### 7.0.0 – 10.08.2020  
 
 If you depend on the aspectratio script of lazysizes somehow that came with the plugin, this release has a breaking change: it removes the aspectratio option (and the script) because it uses inline SVGs as placeholders that have the same effect without needing the aspectratio script.
 
