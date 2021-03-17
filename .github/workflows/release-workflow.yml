@@ -65,6 +65,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: lazy-loading-responsive-images
+        path: release-files
     - name: Deploy to W.org
       env:
         SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
