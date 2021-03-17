@@ -86,6 +86,6 @@ jobs:
         svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
         svn cp "trunk" "tags/${{ env.version }}"
         svn status
-        #svn commit -m "Update to version ${{ env.version }} from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+        svn commit -m "Update to version ${{ env.version }} from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
         
 
