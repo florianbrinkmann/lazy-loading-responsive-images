@@ -37,11 +37,11 @@ jobs:
         rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
         zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
     - name: Create artifact with files to deploy to W.org.
-        uses: actions/upload-artifact@v2
-        with:
-          name: lazy-loading-responsive-images
-          path: lazy-loading-responsive-images
-          retention-days: 1
+      uses: actions/upload-artifact@v2
+      with:
+        name: lazy-loading-responsive-images
+        path: lazy-loading-responsive-images
+        retention-days: 1
     - name: Get Release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
@@ -79,6 +79,6 @@ jobs:
         svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
         svn cp "trunk" "tags/$VERSION"
         svn status
-        #svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+        # svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
         
 
