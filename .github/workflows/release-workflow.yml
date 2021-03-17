@@ -1,9 +1,7 @@
 name: Create release and deploy to W.org
 
 on:
-  release:
-    types:
-      - created
+  release
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
