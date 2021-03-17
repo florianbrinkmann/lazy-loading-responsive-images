@@ -1,0 +1,84 @@
+name: Create release and deploy to W.org.
+
+on:
+  release:
+    types:
+      - created
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  release-asset:
+    name: Create release asset
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        tools: composer
+    - name: Install dependencies
+      run: |
+        npm install --silent
+        composer install --no-dev
+    - name: Run build steps
+      run: |
+        npm run build
+        composer dump-autoload -o
+    - name: Create deployment ZIP
+      run: |
+        mkdir -p lazy-loading-responsive-images
+        rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
+        zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
+    - name: Create artifact with files to deploy to W.org.
+        uses: actions/upload-artifact@v2
+        with:
+          name: lazy-loading-responsive-images
+          path: lazy-loading-responsive-images
+          retention-days: 1
+    - name: Get Release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+    - name: Upload ZIP to release.
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: ./lazy-loading-responsive-images.zip
+        asset_name: lazy-loading-responsive-images.zip
+        asset_content_type: application/zip
+  wordpress-repo-deploy:
+    name: Deploy to W.org
+    needs: release-asset
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set release number env.
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+      run: echo "VERSION=$(echo ${{ steps.get_release.outputs.tag_name }} | sed -e 's/^v//')" >> $GITHUB_ENV
+    - name: Download the release artifact and deploy it.
+      uses: actions/download-artifact@v2
+      env:
+        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+        SVN_URL: ${{ secrets.SVN_URL }}
+        SVN_DIR: "/github/svn-lazy-loading-responsive-images"
+      with:
+        name: lazy-loading-responsive-images
+      run: |
+        svn checkout --depth immediates "$SVN_URL" "$SVN_DIR"
+        cd "$SVN_DIR"
+        svn update --set-depth infinity trunk
+        rsync -rc "$GITHUB_WORKSPACE/lazy-loading-responsive-images/" trunk/ --delete
+        svn add . --force > /dev/null
+        svn status | grep '^\!' | sed 's/! *//' | xargs -I% svn rm %@ > /dev/null
+        svn cp "trunk" "tags/$VERSION"
+        svn status
+        #svn commit -m "Update to version $VERSION from GitHub" --no-auth-cache --non-interactive  --username "$SVN_USERNAME" --password "$SVN_PASSWORD"
+        
+
