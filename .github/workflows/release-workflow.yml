@@ -56,7 +56,7 @@ jobs:
     name: Deploy to W.org
     needs: release-asset
     runs-on: ubuntu-latest
-    if: ${{ github.event.action == 'released' }}
+    if: github.event.action == 'released'
     steps:
     - name: Get release for version number
       id: get_release
