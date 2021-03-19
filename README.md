@@ -4,7 +4,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.7  
-**Stable tag:** 7.2.2  
+**Stable tag:** 7.2.3  
 **Requires PHP:** 7.0  
 
 
@@ -109,6 +109,12 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 ## Changelog 
+
+### 7.2.3 – 19.03.2021
+
+**Fixed**
+
+- Stop processing embeds, because the lazysizes script is not loaded in the iframe and so the image in the embed can not be lazy loaded.
 
 ### 7.2.2 – 17.03.2021
 

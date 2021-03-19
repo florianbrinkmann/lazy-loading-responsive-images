@@ -130,6 +130,11 @@ class Helpers {
 			return false;
 		}
 
+		// Check if this content is embedded.
+		if ( is_embed() ) {
+			return false;
+		}
+
 		// Check if this is a request in the backend.
 		if ( $this->is_admin_request() ) {
 			return false;
