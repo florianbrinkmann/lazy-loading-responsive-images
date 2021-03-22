@@ -1,10 +1,10 @@
 === Lazy Loader ===
-Contributors: FlorianBrinkmann, MarcDK
+Contributors: FlorianBrinkmann
 Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
 Tested up to: 5.7
-Stable tag: 7.2.3
+Stable tag: 8.0.0
 Requires PHP: 7.0
 
 == Description ==
@@ -103,6 +103,12 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 8.0.0 – 22.03.2021 =
+
+**Removed**
+
+- Processing of `wp_get_attachment_image`, introduced in 7.2.0. I just noticed that processing that filter by default may break cases where a wrapper element has the `skip-lazy` class to disable lazy loading for contained media elements. Lazy Loader is not aware of this when processing `wp_get_attachment_image`, because it cannot check the parent elements. If you want to process that filter with Lazy Loader, you can enter it in the settings field for additional filters.
 
 = 7.2.3 – 17.03.2021 =
 
