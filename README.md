@@ -697,4 +697,4 @@ If you depend on the aspectratio script of lazysizes somehow that came with the 
 
 ## Thanks
 
-Thanks to @mtoensing who created a W.org plugin from the code described in one of my posts and maintained it for the first 1,5 years.
+Thanks to [@mtoensing](https://github.com/mtoensing) who created a W.org plugin from the code described in one of my posts and maintained it for the first 1,5 years.
