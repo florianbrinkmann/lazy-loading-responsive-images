@@ -287,6 +287,16 @@ class Plugin {
 				$is_modified = true;
 			}
 
+			if (
+				'input' === $node->tagName
+				&& $node->hasAttribute( 'type' )
+				&& $node->getAttribute( 'type' ) === 'image'
+				&& $node->hasAttribute( 'src' )
+			) {
+				$dom = $this->modify_input_markup( $node, $dom );
+				$is_modified = true;
+			}
+
 			if ( '1' === $this->settings->get_enable_for_iframes() && 'iframe' === $node->tagName ) {
 				$dom = $this->modify_iframe_markup( $node, $dom );
 				$is_modified = true;
@@ -480,6 +490,62 @@ class Plugin {
 			return $dom;
 		}
 		$img->setAttribute( 'src', $this->src_placeholder );
+
+		return $dom;
+	}
+
+	/**
+	 * Modifies input[type="image"] markup to enable lazy loading.
+	 *
+	 * @param \DOMNode     $node            The input dom node.
+	 * @param \DOMDocument $dom             \DOMDocument() object of the HTML.
+	 * @param boolean      $create_noscript Whether to create a noscript element for the input or not.
+	 *
+	 * @return \DOMDocument The updated DOM.
+	 */
+	public function modify_input_markup( $node, $dom, $create_noscript = true ) {
+		// Check if the element already has a data-src attribute (might be the case for
+		// plugins that bring their own lazy load functionality) and skip it to prevent conflicts.
+		if ( $node->hasAttribute( 'data-src' ) ) {
+			return $dom;
+		}
+
+		// Add noscript element.
+		if ( true === $create_noscript ) {
+			$dom = $this->add_noscript_element( $dom, $node );
+		}
+
+		// Get src value.
+		$src = $node->getAttribute( 'src' );
+
+		// Set data-src value.
+		$node->setAttribute( 'data-src', $src );
+
+		// Get the classes.
+		$classes = $node->getAttribute( 'class' );
+
+		// Add lazyload class.
+		$classes .= ' lazyload';
+
+		// Set the class string.
+		$node->setAttribute( 'class', $classes );
+
+		// Get width and height.
+		$node_width  = $node->getAttribute( 'width' );
+		$node_height = $node->getAttribute( 'height' );
+
+		// Set data URI for src attribute.
+		if ( '' !== $node_width && '' !== $node_height ) {
+			// We have image width and height, we can set a inline SVG to prevent content jumps.
+			$svg_placeholder = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$node_width}%20{$node_height}%22%3E%3C%2Fsvg%3E";
+			$node->setAttribute( 'src', $svg_placeholder );
+			if ( $node->hasAttribute( 'srcset' ) ) {
+				$node->setAttribute( 'srcset', "$svg_placeholder {$node_width}w" );
+			}
+
+			return $dom;
+		}
+		$node->setAttribute( 'src', $this->src_placeholder );
 
 		return $dom;
 	}
