@@ -187,7 +187,7 @@ class Settings {
 			'lazy_load_responsive_images_native_loading_plugin'    => array(
 				'value'             => get_option( 'lazy_load_responsive_images_native_loading_plugin', '0' ),
 				'label'             => __( 'Include lazysizes native loading plugin' ),
-				'description'       => __( 'The plugin transforms images and iframes to use native lazyloading in browsers that support it.', 'lazy-loading-responsive-images' ),
+				'description'       => __( 'The plugin transforms images and iframes to use native lazyloading in browsers that support it. <strong>Important:</strong> Supporting browsers will use their threshold to decide if media needs to be loaded. That might lead to media being loaded even if it is far away from the visible area.', 'lazy-loading-responsive-images' ),
 				'field_callback'    => array( $this, 'checkbox_field_cb' ),
 				'sanitize_callback' => array(
 					$this->helpers,
