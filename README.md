@@ -4,7 +4,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.7  
-**Stable tag:** 8.0.0  
+**Stable tag:** 8.1.0  
 **Requires PHP:** 7.0  
 
 
@@ -109,6 +109,12 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 ## Changelog 
+
+### 8.1.0 – 29.03.2021
+
+**Added**
+
+- Support for input elements of type `image`.
 
 ### 8.0.0 – 22.03.2021
 
