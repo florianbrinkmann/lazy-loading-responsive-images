@@ -21,6 +21,7 @@
   },
   "prefer-stable" : true,
   "require": {
-    "masterminds/html5": "^2.7"
+    "masterminds/html5": "^2.7",
+    "brightnucleus/config": "^0.4.12"
   }
 }

@@ -7,11 +7,10 @@
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-use FlorianBrinkmann\LazyLoadResponsiveImages\Helpers as Helpers;
-
-use FlorianBrinkmann\LazyLoadResponsiveImages\Settings as Settings;
-
-use Masterminds\HTML5;
+use BrightNucleus\Config\ConfigFactory;
+use BrightNucleus\Config\ConfigInterface;
+use BrightNucleus\Config\ConfigTrait;
+use BrightNucleus\Config\Exception\KeyNotFoundException;
 
 /**
  * Class Plugin
@@ -21,27 +20,14 @@ use Masterminds\HTML5;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages
  */
 class Plugin {
+	use ConfigTrait;
 
 	/**
-	 * Helpers object.
+	 * ProcessingNeeded object.
 	 *
-	 * @var \FlorianBrinkmann\LazyLoadResponsiveImages\Helpers
+	 * @var \FlorianBrinkmann\LazyLoadResponsiveImages\ProcessingNeededCheck
 	 */
-	private $helpers;
-
-	/**
-	 * Settings object.
-	 *
-	 * @var \FlorianBrinkmann\LazyLoadResponsiveImages\Settings
-	 */
-	private $settings;
-
-	/**
-	 * Array of classes which should not be lazy loaded.
-	 *
-	 * @var array
-	 */
-	private $disabled_classes;
+	private $processing_needed_check;
 
 	/**
 	 * Basename of the plugin.
@@ -49,33 +35,13 @@ class Plugin {
 	 * @var string
 	 */
 	protected $basename;
-
-	/**
-	 * URL to editor JS file.
-	 *
-	 * @var string
-	 */
-	protected $js_asset_url;
-
-	/**
-	 * Placeholder data uri for img src attributes.
-	 *
-	 * @link https://stackoverflow.com/a/13139830
-	 *
-	 * @var string
-	 */
-	private $src_placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-
-	/**
-	 * Counter for background image classes.
-	 */
-	private $background_image_number = 1;
-
+	
 	/**
 	 * Plugin constructor.
 	 */
-	public function __construct() {
-
+	public function __construct( ConfigInterface $config, $basename ) {
+		$this->processConfig( $config );
+		$this->basename = $basename;
 	}
 
 	/**
@@ -83,22 +49,19 @@ class Plugin {
 	 */
 	public function init() {
 		// Init settings.
-		$this->settings = new Settings();
+		try {
+			$lazy_loader_setting_controls = $this->config->getSubConfig( PLUGIN_PREFIX, 'setting_controls' );
+		} catch ( KeyNotFoundException $e ) {
+			wp_die( 'The passed config key for Lazy Loader setting controls does not exist.' );
+		}
+
+		( new Settings( $lazy_loader_setting_controls, $this->basename ) )->init();
 
 		// Set helpers.
-		$this->helpers = new Helpers();
-
-		// Get the disabled classes and save in property.
-		$this->disabled_classes = $this->settings->get_disabled_classes();
+		$this->processing_needed_check = new ProcessingNeededCheck();
 
 		// Disable core lazy loading.
 		add_filter( 'wp_lazy_loading_enabled', '__return_false' );
-
-		// Add link to settings in the plugin list.
-		add_filter( 'plugin_action_links', array(
-			$this,
-			'plugin_action_links',
-		), 10, 2 );
 
 		add_action( 'init', array( $this, 'init_content_processing' ) );
 		
@@ -111,14 +74,8 @@ class Plugin {
 		// Adds inline style.
 		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
 
-		// Enqueue Gutenberg script.
-		add_action( 'enqueue_block_editor_assets', array( $this, 'enqueue_block_editor_assets' ) );
-
 		// Load the language files.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
-
-		// Action on uninstall.
-		register_uninstall_hook( $this->basename, 'FlorianBrinkmann\LazyLoadResponsiveImages\Plugin::uninstall' );
 	}
 
 	/**
@@ -126,67 +83,49 @@ class Plugin {
 	 */
 	public function init_content_processing() {
 		// Check if the complete markup should be processed.
-		if ( '1' === $this->settings->get_process_complete_markup() ) {
+		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_PROCESS_COMPLETE_MARKUP ) ) {
 			add_action( 'template_redirect', array( $this, 'process_complete_markup' ) );
-		} else {
-			// Filter markup of the_content() calls to modify media markup for lazy loading.
-			add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
+			return;
+		}
 
-			// Filter allowed html for posts to allow <noscript> tag.
-			add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
+		// Filter markup of the_content() calls to modify media markup for lazy loading.
+		add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
 
-			// Filter markup of Text widget to modify media markup for lazy loading.
-			add_filter( 'widget_text', array( $this, 'filter_markup' ) );
+		// Filter allowed html for posts to allow <noscript> tag.
+		add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
 
-			// Filter markup of gravatars to modify markup for lazy loading.
-			add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
+		// Filter markup of Text widget to modify media markup for lazy loading.
+		add_filter( 'widget_text', array( $this, 'filter_markup' ) );
 
-			// Adds lazyload markup and noscript element to post thumbnail.
-			add_filter( 'post_thumbnail_html', array(
-				$this,
-				'filter_markup',
-			), 10001, 1 );
+		// Filter markup of gravatars to modify markup for lazy loading.
+		add_filter( 'get_avatar', array( $this, 'filter_markup' ) );
 
-			$additional_filters = $this->settings->get_additional_filters();
+		// Adds lazyload markup and noscript element to post thumbnail.
+		add_filter( 'post_thumbnail_html', array(
+			$this,
+			'filter_markup',
+		), 10001, 1 );
 
-			if ( is_array( $additional_filters ) && ! empty( $additional_filters ) ) {
-				foreach ( $additional_filters as $filter ) {
-					add_filter( $filter, array( $this, 'filter_markup' ) );
-				}
+		// Run lazy loader on additional filters if set in the settings.
+		$additional_filters = explode( "\n", $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_ADDITIONAL_FILTERS ) );
+
+		if ( is_array( $additional_filters ) && ! empty( $additional_filters ) ) {
+			foreach ( $additional_filters as $filter ) {
+				add_filter( $filter, array( $this, 'filter_markup' ) );
 			}
 		}
 	}
 
 	/**
-	 * Run output buffering, to process the complete markup.
+	 * Run output buffering to process the complete markup.
 	 */
 	public function process_complete_markup() {
 		// If this is no content we should process, exit as early as possible.
-		if ( ! $this->helpers->is_post_to_process() ) {
+		if ( $this->processing_needed_check->run() === false ) {
 			return;
 		}
 
 		ob_start( array( $this, 'filter_markup' ) );
-	}
-
-	/**
-	 * Add settings link to the plugin entry in the plugin list.
-	 *
-	 * @param array  $links Array of action links.
-	 * @param string $file  Basename of the plugin.
-	 *
-	 * @return array The action links array.
-	 */
-	public function plugin_action_links( $links, $file ) {
-		if ( $file === $this->basename ) {
-			$links[] = sprintf(
-				'<a href="%s">%s</a>',
-				'options-media.php#lazy-loader-options',
-				__( 'Settings', 'lazy-loading-responsive-images' )
-			);
-		}
-
-		return $links;
 	}
 
 	/**
@@ -198,7 +137,7 @@ class Plugin {
 	 */
 	public function filter_markup( $content = '' ) {
 		// If this is no content we should process, exit as early as possible.
-		if ( ! $this->helpers->is_post_to_process() ) {
+		if ( $this->processing_needed_check->run() === false ) {
 			return $content;
 		}
 
@@ -212,576 +151,30 @@ class Plugin {
 			return $content;
 		}
 
-		// Disable libxml errors.
-		libxml_use_internal_errors( true );
-
-		// Create new HTML5 object.
-		$html5 = new HTML5( array(
-            'disable_html_ns' => true,
-        ) );
-
-		// Preserve html entities and conditional IE comments.
-		// @link https://github.com/ivopetkov/html5-dom-document-php.
-		$content = preg_replace( '/&([a-zA-Z]*);/', 'lazy-loading-responsive-images-entity1-$1-end', $content );
-		$content = preg_replace( '/&#([0-9]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
-		$content = preg_replace( '/<!--\[([\w ]*)\]>/', '<!--[$1]>-->', $content );
-		$content = str_replace( '<![endif]-->', '<!--<![endif]-->', $content );
-
-		// Load the HTML.
-		$dom = $html5->loadHTML( $content );
-
-		$xpath = new \DOMXPath( $dom );
-
-		// Get all nodes except the ones that live inside a noscript element.
-		// @link https://stackoverflow.com/a/19348287/7774451.
-		$nodes = $xpath->query( "//*[not(ancestor-or-self::noscript)][not(ancestor-or-self::*[contains(@class, 'disable-lazyload') or contains(@class, 'skip-lazy') or @data-skip-lazy])]" );
-
-		$is_modified = false;
-
-		foreach ( $nodes as $node ) {
-			// Check if it is an element that should not be lazy loaded.
-			// Get the classes as an array.
-			$node_classes = explode( ' ', $node->getAttribute( 'class' ) );
-
-			// Check for intersection with array of classes, which should
-			// not be lazy loaded.
-			$result = array_intersect( $this->disabled_classes, $node_classes );
-
-			// Filter empty values.
-			$result = array_filter( $result );
-
-			/*
-			 * Check if:
-			 * - we have no result from the array intersection.
-			 * - the node does not have the data-no-lazyload attr.
-			 * - the node does not already have the lazyload class.
-			 */
-			if ( ! empty( $result ) || $node->hasAttribute( 'data-no-lazyload' ) || in_array( 'lazyload', $node_classes, true ) ) {
-				continue;
-			}
-
-			// Check if the element has a style attribute with a background image.
-			if (
-				'1' === $this->settings->get_enable_for_background_images()
-				&& $node->hasAttribute( 'style' )
-				&& 'img' !== $node->tagName
-				&& 'picture' !== $node->tagName
-				&& 'iframe' !== $node->tagName
-				&& 'video' !== $node->tagName
-				&& 'audio' !== $node->tagName
-			) {
-				if ( 1 === preg_match( '/background(-[a-z]+)?:(.)*url\(["\']?([^"\']*)["\']?\)([^;])*;?/', $node->getAttribute( 'style' ) ) ) {
-					$dom = $this->modify_background_img_markup( $node, $dom );
-					$is_modified = true;
-				}
-			}
-
-			// Check if it is one of the supported elements and support for it is enabled.
-			if ( 'img' === $node->tagName && 'source' !== $node->parentNode->tagName && 'picture' !== $node->parentNode->tagName ) {
-				$dom = $this->modify_img_markup( $node, $dom );
-				$is_modified = true;
-			}
-
-			if ( 'picture' === $node->tagName ) {
-				$dom = $this->modify_picture_markup( $node, $dom );
-				$is_modified = true;
-			}
-
-			if (
-				'input' === $node->tagName
-				&& $node->hasAttribute( 'type' )
-				&& $node->getAttribute( 'type' ) === 'image'
-				&& $node->hasAttribute( 'src' )
-			) {
-				$dom = $this->modify_input_markup( $node, $dom );
-				$is_modified = true;
-			}
-
-			if ( '1' === $this->settings->get_enable_for_iframes() && 'iframe' === $node->tagName ) {
-				$dom = $this->modify_iframe_markup( $node, $dom );
-				$is_modified = true;
-			}
-
-			if ( '1' === $this->settings->get_enable_for_videos() && 'video' === $node->tagName ) {
-				$dom = $this->modify_video_markup( $node, $dom );
-				$is_modified = true;
-			}
-
-			if ( '1' === $this->settings->get_enable_for_audios() && 'audio' === $node->tagName ) {
-				$dom = $this->modify_audio_markup( $node, $dom );
-				$is_modified = true;
-			}
+		try {
+			$lazy_loader_core_config = $this->config->getSubConfig( PLUGIN_PREFIX, 'core_setting_values' );
+		} catch ( KeyNotFoundException $e ) {
+			error_log( 'The passed config key for Lazy Loader core does not exist.' );
+			return $content;
 		}
-
-		if ( true === $is_modified ) {
-			if ( '1' === $this->settings->get_process_complete_markup() ) {
-				// If someone directly passed markup to the plugin, no doctype will be present. So we need to check for a parse error first.
-				$errors = $html5->getErrors();
-				$no_doctype = false;
-				if ( is_array( $errors ) && ! empty( $errors ) ) {
-					foreach ( $errors as $error ) {
-						if ( strpos( $error, 'No DOCTYPE specified.' ) !== false ) {
-							$no_doctype = true;
-							$content = $this->helpers->save_html( $dom, $html5 );
-							break;
-						}
-					}
-				}
-				if ( $no_doctype === false ) {
-					$content = $html5->saveHTML( $dom );
-				}
-			} else {
-				$content = $this->helpers->save_html( $dom, $html5 );
-			}
-		}
-
-		// Restore the entities and conditional comments.
-		// @link https://github.com/ivopetkov/html5-dom-document-php/blob/9560a96f63a7cf236aa18b4f2fbd5aab4d756f68/src/HTML5DOMDocument.php#L343.
-		if ( strpos( $content, 'lazy-loading-responsive-images-entity') !== false || strpos( $content, '<!--<script' ) !== false ) {
-			$content = preg_replace('/lazy-loading-responsive-images-entity1-(.*?)-end/', '&$1;', $content );
-			$content = preg_replace('/lazy-loading-responsive-images-entity2-(.*?)-end/', '&#$1;', $content );
-			$content = preg_replace( '/<!--\[([\w ]*)\]>-->/', '<!--[$1]>', $content );
-			$content = str_replace( '<!--<![endif]-->', '<![endif]-->', $content );
-		}
-
-		return $content;
-	}
-
-	/**
-	 * Modifies element markup for lazy loading inline background image.
-	 *
-	 * @param \DOMNode     $node    The node with the inline background image.
-	 * @param \DOMDocument $dom     \DOMDocument() object of the HTML.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_background_img_markup( $node, $dom ) {
-		$original_css = $node->getAttribute( 'style' );
-		$classes = $node->getAttribute( 'class' );
-		// It is possible that there are multiple background rules for a inline element (including ones for size, position, et cetera).
-		// We will insert all of them to the inline style element, to not mess up their order.
-		if ( 0 !== preg_match_all( '/background(-[a-z]+)?:([^;])*;?/', $node->getAttribute( 'style' ), $matches ) ) {
-			// $matches[0] contains the full CSS background rules.
-			// We remove the rules from the inline style.
-			$modified_css = str_replace( $matches[0], '', $original_css );
-			$node->setAttribute( 'style', $modified_css );
-
-			// Build string of background rules.
-			$background_rules_string = implode( ' ', $matches[0] );
-
-			// Add unique class and lazyload class to element.
-			$unique_class = "lazy-loader-background-element-$this->background_image_number";
-			$classes .= " lazyload $unique_class ";
-			$node->setAttribute( 'class', $classes );
-			$this->background_image_number++;
-
-			// Create style element with the background rule.
-			$background_style_elem = $dom->createElement( 'style', ".$unique_class.lazyloaded{ $background_rules_string }" );
-			$node->parentNode->insertBefore( $background_style_elem, $node );
-
-			// Add the noscript element.
-			$noscript = $dom->createElement( 'noscript' );
-
-			// Insert it before the img node.
-			$noscript_node = $node->parentNode->insertBefore( $noscript, $node );
-
-			// Create element.
-			$background_style_elem_noscript = $dom->createElement( 'style', ".$unique_class.lazyload{ $background_rules_string }" );
-
-			// Add media node to noscript node.
-			$noscript_node->appendChild( $background_style_elem_noscript );
-		}
-		return $dom;
-	}
-
-	/**
-	 * Modifies img markup to enable lazy loading.
-	 *
-	 * @param \DOMNode     $img             The img dom node.
-	 * @param \DOMDocument $dom             \DOMDocument() object of the HTML.
-	 * @param boolean      $create_noscript Whether to create a noscript element for the img or not.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_img_markup( $img, $dom, $create_noscript = true ) {
-		// Check if the element already has a data-src attribute (might be the case for
-		// plugins that bring their own lazy load functionality) and skip it to prevent conflicts.
-		if ( $img->hasAttribute( 'data-src' ) ) {
-			return $dom;
-		}
-
-		// Add noscript element.
-		if ( true === $create_noscript ) {
-			$dom = $this->add_noscript_element( $dom, $img );
-		}
-
-		// Check if the image has sizes and srcset attribute.
-		$sizes_attr = '';
-		if ( $img->hasAttribute( 'sizes' ) ) {
-			// Get sizes value.
-			$sizes_attr = $img->getAttribute( 'sizes' );
-
-			// Check if the value is auto. If so, we modify it to data-sizes.
-			if ( 'auto' === $sizes_attr ) {
-				// Set data-sizes attribute.
-				$img->setAttribute( 'data-sizes', $sizes_attr );
-
-				// Remove sizes attribute.
-				$img->removeAttribute( 'sizes' );
-			}
-		}
-
-		if ( $img->hasAttribute( 'srcset' ) ) {
-			// Get srcset value.
-			$srcset = $img->getAttribute( 'srcset' );
-
-			// Set data-srcset attribute.
-			$img->setAttribute( 'data-srcset', $srcset );
-
-			// Set srcset attribute with src placeholder to produce valid markup.
-			$img_width  = $img->getAttribute( 'width' );
-			if ( '' !== $img_width ) {
-				$img->setAttribute( 'srcset', "$this->src_placeholder {$img_width}w" );
-			} elseif ( '' === $img_width && '' !== $sizes_attr ) {
-				$width = preg_replace( '/.+ (\d+)px$/', '$1', $sizes_attr );
-				if ( \is_numeric ( $width ) ) {
-					$img->setAttribute( 'srcset', "$this->src_placeholder {$width}w" );
-				} else {
-					$img->removeAttribute( 'srcset' );
-				}
-			} else {
-				// Remove srcset attribute.
-				$img->removeAttribute( 'srcset' );
-			}
-		}
-
-		// Get src value.
-		$src = $img->getAttribute( 'src' );
-
-		// Set data-src value.
-		$img->setAttribute( 'data-src', $src );
-
-		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
-			$img->setAttribute( 'loading', 'lazy' );
-		}
-
-		// Get the classes.
-		$classes = $img->getAttribute( 'class' );
-
-		// Add lazyload class.
-		$classes .= ' lazyload';
-
-		// Set the class string.
-		$img->setAttribute( 'class', $classes );
-
-		// Get width and height.
-		$img_width  = $img->getAttribute( 'width' );
-		$img_height = $img->getAttribute( 'height' );
-
-		// Set data URI for src attribute.
-		if ( '' !== $img_width && '' !== $img_height ) {
-			// We have image width and height, we can set a inline SVG to prevent content jumps.
-			$svg_placeholder = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$img_width}%20{$img_height}%22%3E%3C%2Fsvg%3E";
-			$img->setAttribute( 'src', $svg_placeholder );
-			if ( $img->hasAttribute( 'srcset' ) ) {
-				$img->setAttribute( 'srcset', "$svg_placeholder {$img_width}w" );
-			}
-
-			return $dom;
-		}
-		$img->setAttribute( 'src', $this->src_placeholder );
-
-		return $dom;
-	}
-
-	/**
-	 * Modifies input[type="image"] markup to enable lazy loading.
-	 *
-	 * @param \DOMNode     $node            The input dom node.
-	 * @param \DOMDocument $dom             \DOMDocument() object of the HTML.
-	 * @param boolean      $create_noscript Whether to create a noscript element for the input or not.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_input_markup( $node, $dom, $create_noscript = true ) {
-		// Check if the element already has a data-src attribute (might be the case for
-		// plugins that bring their own lazy load functionality) and skip it to prevent conflicts.
-		if ( $node->hasAttribute( 'data-src' ) ) {
-			return $dom;
-		}
-
-		// Add noscript element.
-		if ( true === $create_noscript ) {
-			$dom = $this->add_noscript_element( $dom, $node );
-		}
-
-		// Get src value.
-		$src = $node->getAttribute( 'src' );
-
-		// Set data-src value.
-		$node->setAttribute( 'data-src', $src );
-
-		// Get the classes.
-		$classes = $node->getAttribute( 'class' );
-
-		// Add lazyload class.
-		$classes .= ' lazyload';
-
-		// Set the class string.
-		$node->setAttribute( 'class', $classes );
-
-		// Get width and height.
-		$node_width  = $node->getAttribute( 'width' );
-		$node_height = $node->getAttribute( 'height' );
-
-		// Set data URI for src attribute.
-		if ( '' !== $node_width && '' !== $node_height ) {
-			// We have image width and height, we can set a inline SVG to prevent content jumps.
-			$svg_placeholder = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$node_width}%20{$node_height}%22%3E%3C%2Fsvg%3E";
-			$node->setAttribute( 'src', $svg_placeholder );
-			if ( $node->hasAttribute( 'srcset' ) ) {
-				$node->setAttribute( 'srcset', "$svg_placeholder {$node_width}w" );
-			}
-
-			return $dom;
-		}
-		$node->setAttribute( 'src', $this->src_placeholder );
-
-		return $dom;
-	}
-
-	/**
-	 * Modifies picture element markup to enable lazy loading.
-	 *
-	 * @param \DOMNode     $picture The source dom node.
-	 * @param \DOMDocument $dom     \DOMDocument() object of the HTML.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_picture_markup( $picture, $dom ) {
-		// Check if img element already has `layzload` class.
-		$img_element = $picture->getElementsByTagName( 'img' );
-
-		foreach ( $img_element as $img ) {
-			if ( in_array( 'lazyload', explode( ' ', $img->getAttribute( 'class' ) ) ) ) {
-				return $dom;
-			}
-		}
-		
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $dom, $picture );
-
-		// Get source elements from picture.
-		$source_elements = $picture->getElementsByTagName( 'source' );
-
-		// Loop the source elements if there are some.
-		if ( 0 !== $source_elements->length ) {
-			foreach ( $source_elements as $source_element ) {
-				// Check if we have a sizes attribute.
-				$sizes_attr = '';
-				if ( $source_element->hasAttribute( 'sizes' ) ) {
-					// Get sizes value.
-					$sizes_attr = $source_element->getAttribute( 'sizes' );
-
-					// Check if the value is auto. If so, we modify it to data-sizes.
-					if ( 'auto' === $sizes_attr ) {
-						// Set data-sizes attribute.
-						$source_element->setAttribute( 'data-sizes', $sizes_attr );
-
-						// Remove sizes attribute.
-						$source_element->removeAttribute( 'sizes' );
-					}
-				}
-
-				// Check for srcset.
-				if ( $source_element->hasAttribute( 'srcset' ) ) {
-					// Get srcset value.
-					$srcset = $source_element->getAttribute( 'srcset' );
-
-					// Set data-srcset attribute.
-					$source_element->setAttribute( 'data-srcset', $srcset );
-
-					// Set srcset attribute with src placeholder to produce valid markup.
-					if ( '' !== $sizes_attr ) {
-						$width = preg_replace( '/.+ (\d+)px$/', '$1', $sizes_attr );
-						if ( \is_numeric ( $width ) ) {
-							$source_element->setAttribute( 'srcset', "$this->src_placeholder {$width}w" );
-						} else {
-							$source_element->removeAttribute( 'srcset' );
-						}
-					} else {
-						// Remove srcset attribute.
-						$source_element->removeAttribute( 'srcset' );
-					}
-				}
-
-				if ( $source_element->hasAttribute( 'src' ) ) {
-					// Get src value.
-					$src = $source_element->getAttribute( 'src' );
-
-					// Set data-src value.
-					$source_element->setAttribute( 'data-src', $src );
-
-					// Set data URI for src attribute.
-					$source_element->setAttribute( 'src', $this->src_placeholder );
-				}
-			}
-		}
-
-		// Loop the img element.
-		foreach ( $img_element as $img ) {
-			$this->modify_img_markup( $img, $dom, false );
-		}
-
-		return $dom;
-	}
-
-	/**
-	 * Modifies iframe markup to enable lazy loading.
-	 *
-	 * @param \DOMNode     $iframe The iframe dom node.
-	 * @param \DOMDocument $dom    \DOMDocument() object of the HTML.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_iframe_markup( $iframe, $dom ) {
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $dom, $iframe );
-
-		// Check if the iframe has a src attribute.
-		if ( $iframe->hasAttribute( 'src' ) ) {
-			// Get src attribute.
-			$src = $iframe->getAttribute( 'src' );
-
-			// Set data-src value.
-			$iframe->setAttribute( 'data-src', $src );
-		} else {
-			return $dom;
-		}
-
-		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
-			$iframe->setAttribute( 'loading', 'lazy' );
-		}
-
-		// Get the classes.
-		$classes = $iframe->getAttribute( 'class' );
-
-		// Add lazyload class.
-		$classes .= ' lazyload';
-
-		// Set the class string.
-		$iframe->setAttribute( 'class', $classes );
-
-		// Remove the src attribute.
-		$iframe->removeAttribute( 'src' );
-
-		return $dom;
-	}
-
-	/**
-	 * Modifies video markup to enable lazy loading.
-	 *
-	 * @param \DOMNode     $video The video dom node.
-	 * @param \DOMDocument $dom   \DOMDocument() object of the HTML.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_video_markup( $video, $dom ) {
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $dom, $video );
-
-		// Check if the video has a poster attribute.
-		if ( $video->hasAttribute( 'poster' ) ) {
-			// Get poster attribute.
-			$poster = $video->getAttribute( 'poster' );
-
-			// Remove the poster attribute.
-			$video->removeAttribute( 'poster' );
-
-			// Set data-poster value.
-			$video->setAttribute( 'data-poster', $poster );
-		}
-
-		// Set preload to none.
-		$video->setAttribute( 'preload', 'none' );
-
-		// Check for autoplay attribute and change it for lazy loading.
-		if ( $video->hasAttribute( 'autoplay' ) ) {
-			$video->removeAttribute( 'autoplay' );
-			$video->setAttribute( 'data-autoplay', '' );
-		}
-
-		// Get the classes.
-		$classes = $video->getAttribute( 'class' );
-
-		// Add lazyload class.
-		$classes .= ' lazyload';
-
-		// Set the class string.
-		$video->setAttribute( 'class', $classes );
-
-		return $dom;
-	}
-
-	/**
-	 * Modifies audio markup to enable lazy loading.
-	 *
-	 * @param \DOMNode     $audio The audio dom node.
-	 * @param \DOMDocument $dom   \DOMDocument() object of the HTML.
-	 *
-	 * @return \DOMDocument The updated DOM.
-	 */
-	public function modify_audio_markup( $audio, $dom ) {
-		// Add noscript element.
-		$dom = $this->add_noscript_element( $dom, $audio );
-
-		// Set preload to none.
-		$audio->setAttribute( 'preload', 'none' );
-
-		// Get the classes.
-		$classes = $audio->getAttribute( 'class' );
-
-		// Add lazyload class.
-		$classes .= ' lazyload';
-
-		// Set the class string.
-		$audio->setAttribute( 'class', $classes );
-
-		return $dom;
-	}
-
-	/**
-	 * Adds noscript element before DOM node.
-	 *
-	 * @param \DOMDocument     $dom            \DOMDocument() object of the
-	 *                                         HTML.
-	 * @param \DOMNode         $elem           Single DOM node.
-	 *
-	 * @return \DOMDocument The updates DOM.
-	 */
-	public function add_noscript_element( $dom, $elem ) {
-		// Create noscript element and add it before the element that gets lazy loading.
-		$noscript = $dom->createElement( 'noscript' );
-		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
-
-		// Create copy of media element.
-		$noscript_media_fallback_elem = $elem->cloneNode( true );
 
 		/**
 		 * Array of HTML attributes that should be stripped from the fallback element in noscript.
-		 * 
+		 *
 		 * @param array Array of elements to strip from fallback.
 		 */
-		$attrs_to_strip_from_fallback = (array) apply_filters( 'lazy_loader_attrs_to_strip_from_fallback_elem', [] );
+		$attrs_to_strip = (array) apply_filters( 'lazy_loader_attrs_to_strip_from_fallback_elem', [] );
 
-		foreach ( $attrs_to_strip_from_fallback as $attr_to_strip ) {
-			$noscript_media_fallback_elem->removeAttribute( $attr_to_strip );
-		}
+		$config_array = $lazy_loader_core_config->getArrayCopy();
+		
+		// Add filerable value to core config.
+		$config_array[LAZY_LOADER_ATTRS_TO_STRIP_FROM_FALLBACK_ELEM] = $attrs_to_strip;
 
-		// Add a copy of the media element to the noscript.
-		$noscript_node->appendChild( $noscript_media_fallback_elem );
+		$lazy_loader_core_config = ConfigFactory::merge( $config_array );
 
-		return $dom;
+		$lazy_loader_core = new LazyLoaderCore( $lazy_loader_core_config );
+
+		return $lazy_loader_core->run( $content );
 	}
 
 	/**
@@ -806,7 +199,7 @@ class Plugin {
 	 * Enqueues scripts and styles.
 	 */
 	public function enqueue_script() {
-		if ( $this->helpers->is_disabled_for_post() ) {
+		if ( $this->processing_needed_check->run() === false ) {
 			return;
 		}
 
@@ -821,19 +214,19 @@ class Plugin {
 		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/lazysizes.min.js' ), true );
 
 		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->get_load_unveilhooks_plugin() || '1' === $this->settings->get_enable_for_audios() || '1' === $this->settings->get_enable_for_videos() || '1' === $this->settings->get_enable_for_background_images() ) {
+		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_UNVEILHOOKS_PLUGIN ) || true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_ENABLE_FOR_AUDIOS ) || true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_ENABLE_FOR_VIDEOS ) || true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_ENABLE_FOR_BACKGROUND_IMAGES ) ) {
 			// Enqueue unveilhooks plugin.
 			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.unveilhooks.min.js' ), true );
 		}
 
 		// Check if native loading plugin should be loaded.
-		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
+		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_NATIVE_LAZY_LOAD ) ) {
 			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.native-loading.min.js' ), true );
 		}
 
 		// Include custom lazysizes config if not empty.
-		if ( '' !== $this->settings->get_lazysizes_config() ) {
-			wp_add_inline_script( 'lazysizes', $this->settings->get_lazysizes_config(), 'before' );
+		if ( '' !== $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LAZYSIZES_CONFIG ) ) {
+			wp_add_inline_script( 'lazysizes', $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LAZYSIZES_CONFIG ), 'before' );
 		}
 	}
 
@@ -845,18 +238,18 @@ class Plugin {
 	 * echo it.
 	 */
 	public function add_inline_style() {
-		if ( $this->helpers->is_disabled_for_post() ) {
+		if ( $this->processing_needed_check->run() === false ) {
 			return;
 		}
 
 		// Create loading spinner style if needed.
 		$spinner_styles = '';
-		$spinner_color  = $this->settings->get_loading_spinner_color();
+		$spinner_color  = $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LOADING_SPINNER_COLOR );
 		$spinner_markup = sprintf(
 			'<svg width="44" height="44" xmlns="http://www.w3.org/2000/svg" stroke="%s"><g fill="none" fill-rule="evenodd" stroke-width="2"><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle></g></svg>',
 			$spinner_color
 		);
-		if ( '1' === $this->settings->get_loading_spinner() ) {
+		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LOADING_SPINNER ) ) {
 			$spinner_styles = sprintf(
 				'.lazyloading {
 	color: transparent;
@@ -921,69 +314,9 @@ class Plugin {
 	}
 
 	/**
-	 * Enqueue script to Gutenberg editor view.
-	 */
-	public function enqueue_block_editor_assets() {
-		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->get_disable_option_object_types() ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
-			$script_asset_file = require( __DIR__ . '/../js/build/functions.asset.php' );
-			wp_enqueue_script(
-				'lazy-loading-responsive-images-functions',
-				$this->js_asset_url,
-				$script_asset_file['dependencies'],
-				$script_asset_file['version']
-			);
-		}
-	}
-
-	/**
 	 * Loads the plugin translation.
 	 */
 	public function load_translation() {
 		load_plugin_textdomain( 'lazy-loading-responsive-images' );
-	}
-
-	/**
-	 * Sets plugin basename.
-	 *
-	 * @param string $basename The plugin basename.
-	 */
-	public function set_basename( $basename ) {
-		$this->basename = $basename;
-	}
-
-	/**
-	 * Sets plugin basename.
-	 *
-	 * @param string $basename The plugin basename.
-	 */
-	public function set_js_asset_url( $js_asset_url ) {
-		$this->js_asset_url = $js_asset_url;
-	}
-
-	/**
-	 * Action on plugin uninstall.
-	 */
-	public static function uninstall() {
-		$options_array = array(
-			'lazy_load_responsive_images_disabled_classes',
-			'lazy_load_responsive_images_enable_for_iframes',
-			'lazy_load_responsive_images_unveilhooks_plugin',
-			'lazy_load_responsive_images_enable_for_videos',
-			'lazy_load_responsive_images_enable_for_audios',
-			'lazy_load_responsive_images_aspectratio_plugin',
-			'lazy_load_responsive_images_loading_spinner',
-			'lazy_load_responsive_images_loading_spinner_color',
-			'lazy_load_responsive_images_granular_disable_option',
-			'lazy_load_responsive_images_native_loading_plugin',
-			'lazy_load_responsive_images_lazysizes_config',
-			'lazy_load_responsive_images_enable_for_background_images',
-			'lazy_load_responsive_images_process_complete_markup',
-			'lazy_load_responsive_images_additional_filters',
-		);
-
-		// Delete options.
-		foreach ( $options_array as $option ) {
-			delete_option( $option );
-		}
 	}
 }

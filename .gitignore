@@ -1,3 +1,4 @@
 /vendor/
 /node_modules/
 /js/build/
+.idea
