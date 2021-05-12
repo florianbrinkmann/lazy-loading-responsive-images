@@ -18,4 +18,4 @@ jobs:
         composer install
     - name: Run PHPCS
       run: |
-        vendor/bin/phpcs -p src/ vendor/masterminds/ --standard=PHPCompatibility --runtime-set testVersion 7.0
+        vendor/bin/phpcs -p src/ vendor/masterminds/ --standard=PHPCompatibility --runtime-set testVersion 7.1

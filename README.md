@@ -5,7 +5,7 @@
 **Requires at least:** 4.9.8  
 **Tested up to:** 5.7  
 **Stable tag:** 8.1.0  
-**Requires PHP:** 7.0  
+**Requires PHP:** 7.1  
 
 
 ## Description 
