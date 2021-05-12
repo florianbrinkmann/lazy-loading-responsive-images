@@ -10,7 +10,7 @@ class Sanitizer {
 	 *
 	 * @return string Sanitized comma separated list.
 	 */
-	public static function sanitize_class_name_list( $class_names ) {
+	public static function sanitize_class_name_list( string $class_names ): string {
 		// Get array of the class names.
 		$class_names_array = explode( ',', $class_names );
 
@@ -25,9 +25,7 @@ class Sanitizer {
 		}
 
 		// Implode the class names.
-		$class_names = implode( ',', $class_names_array );
-
-		return $class_names;
+		return implode( ',', $class_names_array );
 	}
 
 	/**
@@ -37,7 +35,7 @@ class Sanitizer {
 	 *
 	 * @return string Sanitized list.
 	 */
-	public static function sanitize_filter_name_list( $filters ) {
+	public static function sanitize_filter_name_list( string $filters ): string {
 		// Get array of the filter names.
 		$filters_array = explode( "\n", $filters );
 
@@ -54,14 +52,11 @@ class Sanitizer {
 			// Check if the filter is a valid PHP function name.
 			if ( preg_match( $function_name_regex, $filters_array[$i] ) !== 1 ) {
 				unset( $filters_array[$i] );
-				continue;
 			}
 		}
 
 		// Implode the filter names.
-		$filters = implode( "\n", $filters_array );
-
-		return $filters;
+		return implode( "\n", $filters_array );
 	}
 
 	/**
@@ -73,18 +68,18 @@ class Sanitizer {
 	 *
 	 * @return bool Whether the checkbox is checked.
 	 */
-	public static function sanitize_checkbox( $checked ) {
-		return ( ( isset( $checked ) && true == $checked ) ? true : false );
+	public static function sanitize_checkbox( bool $checked ): bool {
+		return isset( $checked ) && true == $checked;
 	}
 
 	/**
 	 * Sanitize textarea input.
 	 *
-	 * @param bool $checked Whether the checkbox is checked.
+	 * @param string $value Textarea input value.
 	 *
-	 * @return bool Whether the checkbox is checked.
+	 * @return string Sanitized input.
 	 */
-	public static function sanitize_textarea( $value ) {
+	public static function sanitize_textarea( string $value ): string {
 		return strip_tags( $value );
 	}
 
@@ -95,13 +90,13 @@ class Sanitizer {
 	 *
 	 * @return string The hex value.
 	 */
-	public static function sanitize_hex_color( $value ) {
+	public static function sanitize_hex_color( string $value ): string {
 		// Sanitize the input.
 		$sanitized = sanitize_hex_color( $value );
 		if ( null !== $sanitized && '' !== $sanitized ) {
 			return $value;
 		} 
 		
-		return LAZY_LOADER_LOADING_SPINNER_DEFAULT_COLOR;
+		return LOADING_SPINNER_DEFAULT_COLOR;
 	}
 }

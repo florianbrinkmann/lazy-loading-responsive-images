@@ -24,7 +24,7 @@ $desc = $args['description'] ?? '';
 <?php
 if ( '' !== $desc ) { ?>
 	<p class="description">
-		<?php echo wp_kses( $desc, LAZY_LOADER_ALLOWED_DESCRIPTION_HTML  ); ?>
+		<?php echo wp_kses( $desc, ALLOWED_DESCRIPTION_HTML  ); ?>
 	</p>
 	<?php
 }

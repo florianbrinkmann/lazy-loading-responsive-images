@@ -49,18 +49,22 @@ class LazyLoaderCore {
 
 			// Check for intersection with array of classes, which should
 			// not be lazy loaded.
-			$result = array_intersect( explode( ',', $this->getConfigKey( LAZY_LOADER_DISABLED_CLASSES ) ), $node_classes );
+			$result = array_intersect( explode( ',', $this->getConfigKey( DISABLED_CLASSES ) ), $node_classes );
 
 			// Filter empty values.
 			$result = array_filter( $result );
 
-			/*
-			 * Check if:
-			 * - we have no result from the array intersection.
-			 * - the node does not have the data-no-lazyload attr.
-			 * - the node does not already have the lazyload class.
-			 */
-			if ( ! empty( $result ) || $node->hasAttribute( 'data-no-lazyload' ) || in_array( 'lazyload', $node_classes, true ) ) {
+			if ( ! empty( $result ) ) {
+				// The element has a class that should be skipped.
+				continue;
+			}
+
+			if ( $node->hasAttribute( 'data-no-lazyload' ) ) {
+				continue;
+			}
+
+			if ( in_array( 'lazyload', $node_classes, true ) ) {
+				// Element already has a lazyload class.
 				continue;
 			}
 
@@ -70,10 +74,13 @@ class LazyLoaderCore {
 				continue;
 			}
 
-			$dom = $processor::process( $node, $dom, $this->getConfigArray() );
-			if ( ! $processor instanceof NullProcessor ) {
-				$markup_processor->content_is_modified();
+			if ( $processor instanceof NullProcessor ) {
+				continue;
 			}
+
+			$dom = $processor::process( $node, $dom, $this->getConfigArray() );
+
+			$markup_processor->content_is_modified();
 		}
 
 		return $markup_processor->get_html_string( $dom );

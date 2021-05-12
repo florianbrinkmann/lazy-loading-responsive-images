@@ -23,8 +23,18 @@ class MarkupProcessor {
 	 */
 	private $content_is_modified = false;
 
+	/**
+	 * HTML markup before processing.
+	 *
+	 * @var string
+	 */
 	private $original_markup = '';
 
+	/**
+	 * HTML5 object.
+	 *
+	 * @var HTML5
+	 */
 	private $html5;
 
 	public function parse_markup( string $markup ): DOMDocument {

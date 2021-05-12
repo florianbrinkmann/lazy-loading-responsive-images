@@ -9,13 +9,13 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages\NodeProcessor;
 use DOMDocument;
 use DOMNode;
 
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_ATTRS_TO_STRIP_FROM_FALLBACK_ELEM;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\ATTRS_TO_STRIP_FROM_FALLBACK_ELEM;
 
 /**
  * Trait ProcessorMisc
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
-trait AddNoscriptElement {
+trait AddNoscriptElementTrait {
 	/**
 	 * Adds noscript element before DOM node.
 	 *
@@ -34,7 +34,7 @@ trait AddNoscriptElement {
 		// Create copy of media element.
 		$noscript_media_fallback_elem = $elem->cloneNode( true );
 
-		$attrs_to_strip_from_fallback = (array) $config[LAZY_LOADER_ATTRS_TO_STRIP_FROM_FALLBACK_ELEM] ?? [];
+		$attrs_to_strip_from_fallback = (array) $config[ATTRS_TO_STRIP_FROM_FALLBACK_ELEM] ?? [];
 
 		foreach ( $attrs_to_strip_from_fallback as $attr_to_strip ) {
 			$noscript_media_fallback_elem->removeAttribute( $attr_to_strip );

@@ -9,16 +9,18 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages\NodeProcessor;
 use DOMDocument;
 use DOMNode;
 
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_NATIVE_LAZY_LOAD;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\NATIVE_LAZY_LOAD;
 
 /**
  * Class ImgProcessor
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
 class ImgProcessor implements Processor {
-	use AddNoscriptElement;
-	use AddLazyloadClass;
-	use SetSrcPlaceholder;
+	use AddNoscriptElementTrait;
+	use AddLazyloadClassTrait;
+	use SetSrcPlaceholderTrait;
+	use AddDataSizesAttributeTrait;
+	use AddDataSrcsetAttributeTrait;
 
 	/**
 	 * @inheritDoc
@@ -35,45 +37,11 @@ class ImgProcessor implements Processor {
 			$dom = self::add_noscript_element( $dom, $node, $config );
 		}
 
-		// Check if the image has sizes and srcset attribute.
-		$sizes_attr = '';
-		if ( $node->hasAttribute( 'sizes' ) ) {
-			// Get sizes value.
-			$sizes_attr = $node->getAttribute( 'sizes' );
+		$sizes_attr = $node->getAttribute( 'sizes' );
 
-			// Check if the value is auto. If so, we modify it to data-sizes.
-			if ( 'auto' === $sizes_attr ) {
-				// Set data-sizes attribute.
-				$node->setAttribute( 'data-sizes', $sizes_attr );
+		$node = self::add_data_sizes_attr( $node, $sizes_attr );
 
-				// Remove sizes attribute.
-				$node->removeAttribute( 'sizes' );
-			}
-		}
-
-		if ( $node->hasAttribute( 'srcset' ) ) {
-			// Get srcset value.
-			$srcset = $node->getAttribute( 'srcset' );
-
-			// Set data-srcset attribute.
-			$node->setAttribute( 'data-srcset', $srcset );
-
-			// Set srcset attribute with src placeholder to produce valid markup.
-			$node_width  = $node->getAttribute( 'width' );
-			if ( '' !== $node_width ) {
-				$node->setAttribute( 'srcset', self::$src_placeholder . " {$node_width}w" );
-			} elseif ( '' === $node_width && '' !== $sizes_attr ) {
-				$width = preg_replace( '/.+ (\d+)px$/', '$1', $sizes_attr );
-				if ( \is_numeric ( $width ) ) {
-					$node->setAttribute( 'srcset', self::$src_placeholder . " {$width}w" );
-				} else {
-					$node->removeAttribute( 'srcset' );
-				}
-			} else {
-				// Remove srcset attribute.
-				$node->removeAttribute( 'srcset' );
-			}
-		}
+		$node = self::add_data_srcset_attr( $node, $sizes_attr );
 
 		// Get src value.
 		$src = $node->getAttribute( 'src' );
@@ -81,7 +49,7 @@ class ImgProcessor implements Processor {
 		// Set data-src value.
 		$node->setAttribute( 'data-src', $src );
 
-		if ( isset( $config[LAZY_LOADER_NATIVE_LAZY_LOAD] ) && true === $config[LAZY_LOADER_NATIVE_LAZY_LOAD] ) {
+		if ( isset( $config[NATIVE_LAZY_LOAD] ) && true === $config[NATIVE_LAZY_LOAD] ) {
 			$node->setAttribute( 'loading', 'lazy' );
 		}
 

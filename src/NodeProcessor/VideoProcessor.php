@@ -14,8 +14,8 @@ use DOMNode;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
 class VideoProcessor implements Processor {
-	use AddNoscriptElement;
-	use AddLazyloadClass;
+	use AddNoscriptElementTrait;
+	use AddLazyloadClassTrait;
 
 	/**
 	 * @inheritDoc

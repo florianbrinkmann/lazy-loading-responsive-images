@@ -9,15 +9,15 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages\NodeProcessor;
 use DOMDocument;
 use DOMNode;
 
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_NATIVE_LAZY_LOAD;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\NATIVE_LAZY_LOAD;
 
 /**
  * Class IframeProcessor
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
 class IframeProcessor implements Processor {
-	use AddNoscriptElement;
-	use AddLazyloadClass;
+	use AddNoscriptElementTrait;
+	use AddLazyloadClassTrait;
 
 	/**
 	 * @inheritDoc
@@ -26,18 +26,18 @@ class IframeProcessor implements Processor {
 		// Add noscript element.
 		$dom = self::add_noscript_element( $dom, $node, $config );
 
-		// Check if the iframe has a src attribute.
-		if ( $node->hasAttribute( 'src' ) ) {
-			// Get src attribute.
-			$src = $node->getAttribute( 'src' );
-
-			// Set data-src value.
-			$node->setAttribute( 'data-src', $src );
-		} else {
+		// Check if the iframe has no src attribute.
+		if ( ! $node->hasAttribute( 'src' ) ) {
 			return $dom;
 		}
 
-		if ( isset( $config[LAZY_LOADER_NATIVE_LAZY_LOAD] ) && true === $config[LAZY_LOADER_NATIVE_LAZY_LOAD] ) {
+		// Get src attribute.
+		$src = $node->getAttribute( 'src' );
+
+		// Set data-src value.
+		$node->setAttribute( 'data-src', $src );
+
+		if ( isset( $config[NATIVE_LAZY_LOAD] ) && true === $config[NATIVE_LAZY_LOAD] ) {
 			$node->setAttribute( 'loading', 'lazy' );
 		}
 

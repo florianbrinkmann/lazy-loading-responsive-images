@@ -1,9 +1,6 @@
 <?php
-/**
- * Main plugin code.
- *
- * @package FlorianBrinkmann\LazyLoadResponsiveImages
- */
+
+declare( strict_types=1 );
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
@@ -39,15 +36,17 @@ class Plugin {
 	/**
 	 * Plugin constructor.
 	 */
-	public function __construct( ConfigInterface $config, $basename ) {
+	public function __construct( ConfigInterface $config, string $basename ) {
 		$this->processConfig( $config );
 		$this->basename = $basename;
 	}
 
 	/**
 	 * Runs the filters and actions.
+	 *
+	 * @return void
 	 */
-	public function init() {
+	public function init(): void {
 		// Init settings.
 		try {
 			$lazy_loader_setting_controls = $this->config->getSubConfig( PLUGIN_PREFIX, 'setting_controls' );
@@ -55,7 +54,13 @@ class Plugin {
 			wp_die( 'The passed config key for Lazy Loader setting controls does not exist.' );
 		}
 
+		// Init settings.
 		( new Settings( $lazy_loader_setting_controls, $this->basename ) )->init();
+
+		// Display checkbox to granular disable plugin.
+		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', GRANULAR_DISABLE_OPTION ) ) {
+			( new GranularDisableOption( $this->config ) )->init();
+		}
 
 		// Set helpers.
 		$this->processing_needed_check = new ProcessingNeededCheck();
@@ -63,27 +68,24 @@ class Plugin {
 		// Disable core lazy loading.
 		add_filter( 'wp_lazy_loading_enabled', '__return_false' );
 
+		// Load frontend assets.
+		( new FrontendAssets( $this->config, $this->processing_needed_check ) )->init();
+
+		// Init content processing.
 		add_action( 'init', array( $this, 'init_content_processing' ) );
-		
-		// Enqueues scripts and styles.
-		add_action( 'wp_enqueue_scripts', array(
-			$this,
-			'enqueue_script',
-		), 20 );
 
-		// Adds inline style.
-		add_action( 'wp_head', array( $this, 'add_inline_style' ) );
-
-		// Load the language files.
+		// Load translations.
 		add_action( 'plugins_loaded', array( $this, 'load_translation' ) );
 	}
 
 	/**
 	 * Run actions and filters to start content processing.
+	 *
+	 * @return void
 	 */
-	public function init_content_processing() {
+	public function init_content_processing(): void {
 		// Check if the complete markup should be processed.
-		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_PROCESS_COMPLETE_MARKUP ) ) {
+		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', PROCESS_COMPLETE_MARKUP ) ) {
 			add_action( 'template_redirect', array( $this, 'process_complete_markup' ) );
 			return;
 		}
@@ -107,7 +109,7 @@ class Plugin {
 		), 10001, 1 );
 
 		// Run lazy loader on additional filters if set in the settings.
-		$additional_filters = explode( "\n", $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_ADDITIONAL_FILTERS ) );
+		$additional_filters = explode( "\n", $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', ADDITIONAL_FILTERS ) );
 
 		if ( is_array( $additional_filters ) && ! empty( $additional_filters ) ) {
 			foreach ( $additional_filters as $filter ) {
@@ -118,8 +120,10 @@ class Plugin {
 
 	/**
 	 * Run output buffering to process the complete markup.
+	 *
+	 * @return void
 	 */
-	public function process_complete_markup() {
+	public function process_complete_markup(): void {
 		// If this is no content we should process, exit as early as possible.
 		if ( $this->processing_needed_check->run() === false ) {
 			return;
@@ -135,7 +139,7 @@ class Plugin {
 	 *
 	 * @return string Modified HTML.
 	 */
-	public function filter_markup( $content = '' ) {
+	public function filter_markup( string $content = '' ): string {
 		// If this is no content we should process, exit as early as possible.
 		if ( $this->processing_needed_check->run() === false ) {
 			return $content;
@@ -168,10 +172,11 @@ class Plugin {
 		$config_array = $lazy_loader_core_config->getArrayCopy();
 		
 		// Add filerable value to core config.
-		$config_array[LAZY_LOADER_ATTRS_TO_STRIP_FROM_FALLBACK_ELEM] = $attrs_to_strip;
+		$config_array[ATTRS_TO_STRIP_FROM_FALLBACK_ELEM] = $attrs_to_strip;
 
 		$lazy_loader_core_config = ConfigFactory::merge( $config_array );
 
+		// Create LazyLoaderCore instance and run it.
 		$lazy_loader_core = new LazyLoaderCore( $lazy_loader_core_config );
 
 		return $lazy_loader_core->run( $content );
@@ -180,12 +185,12 @@ class Plugin {
 	/**
 	 * Filter allowed html for posts.
 	 *
-	 * @param array  $allowedposttags Allowed post tags.
-	 * @param string $context         Context.
+	 * @param array $allowedposttags Allowed post tags.
+	 * @param string $context        Context.
 	 *
 	 * @return array
 	 */
-	public function wp_kses_allowed_html( $allowedposttags, $context ) {
+	public function wp_kses_allowed_html( array $allowedposttags, string $context ): array {
 		if ( 'post' !== $context ) {
 			return $allowedposttags;
 		}
@@ -196,127 +201,11 @@ class Plugin {
 	}
 
 	/**
-	 * Enqueues scripts and styles.
-	 */
-	public function enqueue_script() {
-		if ( $this->processing_needed_check->run() === false ) {
-			return;
-		}
-
-		// Check if something (like Avada) already included a lazysizes script. If that is the case, deregister it.
-		$lazysizes = wp_script_is( 'lazysizes' );
-
-		if ( $lazysizes ) {
-			wp_deregister_script( 'lazysizes' );
-		}
-
-		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/lazysizes.min.js' ), true );
-
-		// Check if unveilhooks plugin should be loaded.
-		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_UNVEILHOOKS_PLUGIN ) || true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_ENABLE_FOR_AUDIOS ) || true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_ENABLE_FOR_VIDEOS ) || true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_ENABLE_FOR_BACKGROUND_IMAGES ) ) {
-			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.unveilhooks.min.js' ), true );
-		}
-
-		// Check if native loading plugin should be loaded.
-		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'core_setting_values', LAZY_LOADER_NATIVE_LAZY_LOAD ) ) {
-			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.native-loading.min.js' ), true );
-		}
-
-		// Include custom lazysizes config if not empty.
-		if ( '' !== $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LAZYSIZES_CONFIG ) ) {
-			wp_add_inline_script( 'lazysizes', $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LAZYSIZES_CONFIG ), 'before' );
-		}
-	}
-
-	/**
-	 * Adds inline style.
-	 *
-	 * We do not enqueue a new CSS file for two rules, but cannot use
-	 * wp_add_inline_style() because we have no handle. So we need to
-	 * echo it.
-	 */
-	public function add_inline_style() {
-		if ( $this->processing_needed_check->run() === false ) {
-			return;
-		}
-
-		// Create loading spinner style if needed.
-		$spinner_styles = '';
-		$spinner_color  = $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LOADING_SPINNER_COLOR );
-		$spinner_markup = sprintf(
-			'<svg width="44" height="44" xmlns="http://www.w3.org/2000/svg" stroke="%s"><g fill="none" fill-rule="evenodd" stroke-width="2"><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="0s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="0s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle><circle cx="22" cy="22" r="1"><animate attributeName="r" begin="-0.9s" dur="1.8s" values="1; 20" calcMode="spline" keyTimes="0; 1" keySplines="0.165, 0.84, 0.44, 1" repeatCount="indefinite"/><animate attributeName="stroke-opacity" begin="-0.9s" dur="1.8s" values="1; 0" calcMode="spline" keyTimes="0; 1" keySplines="0.3, 0.61, 0.355, 1" repeatCount="indefinite"/></circle></g></svg>',
-			$spinner_color
-		);
-		if ( true === $this->getConfigKey( PLUGIN_PREFIX, 'wp_setting_values', LAZY_LOADER_LOADING_SPINNER ) ) {
-			$spinner_styles = sprintf(
-				'.lazyloading {
-	color: transparent;
-	opacity: 1;
-	transition: opacity 300ms;
-	transition: opacity var(--lazy-loader-animation-duration);
-	background: url("data:image/svg+xml,%s") no-repeat;
-	background-size: 2em 2em;
-	background-position: center center;
-}
-
-.lazyloaded {
-	animation-name: loaded;
-	animation-duration: 300ms;
-	animation-duration: var(--lazy-loader-animation-duration);
-	transition: none;
-}
-
-@keyframes loaded {
-	from {
-		opacity: 0;
-	}
-
-	to {
-		opacity: 1;
-	}
-}',
-				rawurlencode( $spinner_markup )
-			);
-		}
-
-		// Display the default styles.
-		$default_styles = "<style>:root {
-			--lazy-loader-animation-duration: 300ms;
-		}
-		  
-		.lazyload {
-	display: block;
-}
-
-.lazyload,
-        .lazyloading {
-			opacity: 0;
-		}
-
-
-		.lazyloaded {
-			opacity: 1;
-			transition: opacity 300ms;
-			transition: opacity var(--lazy-loader-animation-duration);
-		}$spinner_styles</style>";
-
-		/**
-		 * Filter for the default inline style element.
-		 *
-		 * @param string $default_styles The default styles (including <style> element).
-		 */
-		echo apply_filters( 'lazy_load_responsive_images_inline_styles', $default_styles );
-
-		// Hide images if no JS.
-		echo '<noscript><style>.lazyload { display: none; } .lazyload[class*="lazy-loader-background-element-"] { display: block; opacity: 1; }</style></noscript>';
-	}
-
-	/**
 	 * Loads the plugin translation.
+	 *
+	 * @return void
 	 */
-	public function load_translation() {
+	public function load_translation(): void {
 		load_plugin_textdomain( 'lazy-loading-responsive-images' );
 	}
 }

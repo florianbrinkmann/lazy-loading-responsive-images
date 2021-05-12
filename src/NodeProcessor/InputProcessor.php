@@ -14,8 +14,8 @@ use DOMNode;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
 class InputProcessor implements Processor {
-	use AddLazyloadClass;
-	use SetSrcPlaceholder;
+	use AddLazyloadClassTrait;
+	use SetSrcPlaceholderTrait;
 
 	/**
 	 * @inheritDoc

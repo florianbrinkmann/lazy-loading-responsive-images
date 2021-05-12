@@ -21,27 +21,6 @@ class Settings {
 	use ConfigTrait;
 
 	/**
-	 * Helpers object.
-	 *
-	 * @var \FlorianBrinkmann\LazyLoadResponsiveImages\ProcessingNeededCheck
-	 */
-	protected $helpers;
-
-	/**
-	 * Array of options data.
-	 *
-	 * @var array
-	 */
-	protected $options;
-
-	/**
-	 * Array of object types that should show the checkbox to disable lazy loading.
-	 *
-	 * @var array
-	 */
-	protected $disable_option_object_types = array();
-
-	/**
 	 * Basename of the plugin.
 	 *
 	 * @var string
@@ -56,7 +35,12 @@ class Settings {
 		$this->basename = $basename;
 	}
 
-	public function init() {
+	/**
+	 * Call actions and filters.
+	 *
+	 * @return void
+	 */
+	public function init(): void {
 		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
 
@@ -71,16 +55,14 @@ class Settings {
 			$this,
 			'plugin_action_links',
 		), 10, 2 );
-
-		if ( true === $this->getConfigKey( LAZY_LOADER_GRANULAR_DISABLE_OPTION ) ) {
-			( new GranularDisableOption( $this->config ) )->init();
-		}
 	}
 
 	/**
 	 * Init settings on media options page.
+	 *
+	 * @return void
 	 */
-	public function settings_init() {
+	public function settings_init(): void {
 		// Add section.
 		add_settings_section(
 			"lazy-load-responsive-images-section",
@@ -109,22 +91,24 @@ class Settings {
 				array(
 					'label_for'   => $option['wp_option_name'],
 					'value'       => $option['value'],
-					'description' => ( isset( $option['description'] ) ? $option['description'] : '' ),
+					'description' => $option['description'] ?? '',
 				)
 			);
-		} // End foreach().
+		}
 	}
 
 	/**
 	 * Add color picker to media settings page and init it.
 	 *
 	 * @param string $hook_suffix PHP file of the admin screen.
+	 *
+	 * @return void
 	 */
-	public function add_color_picker( $hook_suffix ) {
+	public function add_color_picker( string $hook_suffix ): void {
 		// Check if we are not on the media backend screen.
 		if ( 'options-media.php' !== $hook_suffix ) {
 			return;
-		} // End if().
+		}
 
 		// Add color picker script and style and init it.
 		wp_enqueue_style( 'wp-color-picker' );
@@ -137,12 +121,12 @@ class Settings {
 	/**
 	 * Add settings link to the plugin entry in the plugin list.
 	 *
-	 * @param array  $links Array of action links.
+	 * @param array $links Array of action links.
 	 * @param string $file  Basename of the plugin.
 	 *
 	 * @return array The action links array.
 	 */
-	public function plugin_action_links( $links, $file ) {
+	public function plugin_action_links( array $links, string $file ): array {
 		if ( $file === $this->basename ) {
 			$links[] = sprintf(
 				'<a href="%s">%s</a>',

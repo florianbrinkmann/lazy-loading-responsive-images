@@ -7,7 +7,7 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 /**
  * Class ProcessingNeededCheck
  *
- * Class with medthods to detect if a WP post should be processed.
+ * Class with methods to detect if a WP post should be processed.
  *
  * @package FlorianBrinkmann\LazyLoadResponsiveImages
  */
@@ -56,12 +56,12 @@ class ProcessingNeededCheck {
 			}
 
 			return ! ( defined( 'DOING_AJAX' ) && DOING_AJAX );
-		} else {
-			if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
-				return false;
-			}
-			return ( isset( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'] );
 		}
+
+		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
+			return false;
+		}
+		return ( isset( $_REQUEST['context'] ) && 'edit' === $_REQUEST['context'] );
 	}
 
 	/**

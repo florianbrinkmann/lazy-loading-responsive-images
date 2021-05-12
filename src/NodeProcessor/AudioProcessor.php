@@ -14,8 +14,8 @@ use DOMNode;
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
 class AudioProcessor implements Processor {
-	use AddNoscriptElement;
-	use AddLazyloadClass;
+	use AddNoscriptElementTrait;
+	use AddLazyloadClassTrait;
 
 	/**
 	 * @inheritDoc

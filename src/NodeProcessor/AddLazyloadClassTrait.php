@@ -9,10 +9,17 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages\NodeProcessor;
 use DOMNode;
 
 /**
- * Trait AddLazyloadClass
+ * Trait AddLazyloadClassTrait
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
-trait AddLazyloadClass {
+trait AddLazyloadClassTrait {
+	/**
+	 * Add lazyload class to DOMNode.
+	 *
+	 * @param DOMNode $node The DOMNode.
+	 *
+	 * @return DOMNode
+	 */
 	private static function add_lazyload_class( DOMNode $node ): DOMNode {
 		// Get the classes.
 		$classes = $node->getAttribute( 'class' );

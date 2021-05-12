@@ -15,6 +15,7 @@ use BrightNucleus\Config\ConfigTrait;
 
 use function add_post_meta;
 use function delete_post_meta;
+use function register_post_meta;
 
 /**
  * Class Settings
@@ -30,7 +31,7 @@ class GranularDisableOption {
 	 *
 	 * @var array
 	 */
-	private $disable_option_object_types = array();
+	private $object_types = array();
 
 	/**
 	 * GranularDisableOption constructor.
@@ -42,7 +43,7 @@ class GranularDisableOption {
 	}
 
 	public function init() {
-		add_action( 'init', array( $this, 'disable_option_object_types_filter' ), 11 );
+		add_action( 'init', array( $this, 'object_types_filter' ), 11 );
 
 		// Register meta for disabling per page.
 		add_action( 'init', array( $this, 'register_post_meta' ), 11 );
@@ -57,8 +58,10 @@ class GranularDisableOption {
 
 	/**
 	 * Set array of post types that support granular disabling of Lazy Loader features.
+	 *
+	 * @return void
 	 */
-	public function disable_option_object_types_filter() {
+	public function object_types_filter(): void {
 		$public_post_types = get_post_types( array(
 			'public' => true,
 		), 'names' );
@@ -76,19 +79,21 @@ class GranularDisableOption {
 		 * @param array $public_post_types An array of post types that should have the option
 		 *                                 for disabling.
 		 */
-		$this->disable_option_object_types = apply_filters( 'lazy_loader_disable_option_object_types', $public_post_types );
+		$this->object_types = (array) apply_filters( 'lazy_loader_disable_option_object_types', $public_post_types );
 	}
 
 	/**
-	 * Register post meta for disabling plugin per
+	 * Register post meta for disabling plugin per post.
+	 *
+	 * @return void
 	 */
-	public function register_post_meta() {
-		if ( ! is_array( $this->disable_option_object_types ) ) {
+	public function register_post_meta(): void {
+		if ( ! is_array( $this->object_types ) ) {
 			return;
 		}
 
-		foreach ( $this->disable_option_object_types as $object_type ) {
-			\register_post_meta(
+		foreach ( $this->object_types as $object_type ) {
+			register_post_meta(
 				$object_type,
 				'lazy_load_responsive_images_disabled',
 				array(
@@ -105,36 +110,29 @@ class GranularDisableOption {
 	 * Add checkbox to Publish Post meta box.
 	 *
 	 * @link https://github.com/deworg/dewp-planet-feed/
+	 *
+	 * @return void
 	 */
-	public function add_checkbox() {
+	public function add_checkbox(): void {
 		global $post;
 
-		if ( ! in_array( $post->post_type, $this->disable_option_object_types ) ) {
+		if ( ! in_array( $post->post_type, $this->object_types ) ) {
 			return;
 		}
 
 		// Check user capability. Not bailing, though, on purpose.
 		$maybe_enabled = current_user_can( 'publish_posts' );
-		// This actually defines whether post will be listed in our feed.
+
+		// Get current value of checkbox.
 		$value = absint( get_post_meta( $post->ID, 'lazy_load_responsive_images_disabled', true ) );
-		printf(
-			'<div class="misc-pub-section dewp-planet">
-				<label for="disable-lazy-loader">
-					<input type="checkbox" id="disable-lazy-loader" name="disable-lazy-loader" class="disable-lazy-loader" %s %s />
-					<span class="dewp-planet__label-text">%s</span>
-				</label>
-			</div>',
-			$maybe_enabled ? '' : 'disabled',
-			$value === 1 ? 'checked' : '',
-			esc_html__( 'Disable Lazy Loader', 'lazy-loading-responsive-images' )
-		);
+		include __DIR__ . '/../views/granular-disable-checkbox.php';
 	}
 
 	/**
 	 * Enqueue script to Gutenberg editor view.
 	 */
 	public function enqueue_block_editor_assets() {
-		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->disable_option_object_types ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
+		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->object_types ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
 			$script_asset_file = require( $this->getConfigKey( PLUGIN_PREFIX, 'gutenberg_script_path' ) );
 			wp_enqueue_script(
 				'lazy-loading-responsive-images-functions',
@@ -164,7 +162,7 @@ class GranularDisableOption {
 		if ( absint( $_POST['post_ID'] ) !== $post_id ) {
 			return;
 		}
-		if ( ! in_array( $_POST['post_type'], $this->disable_option_object_types ) ) {
+		if ( ! in_array( $_POST['post_type'], $this->object_types ) ) {
 			return;
 		}
 		if ( ! current_user_can( 'publish_posts' ) ) {
@@ -172,8 +170,9 @@ class GranularDisableOption {
 		}
 		if ( empty( $_POST['disable-lazy-loader'] ) ) {
 			delete_post_meta( $post_id, 'lazy_load_responsive_images_disabled' );
-		} else {
-			add_post_meta( $post_id, 'lazy_load_responsive_images_disabled', true, true );
+			return;
 		}
+
+		update_post_meta( $post_id, 'lazy_load_responsive_images_disabled', true );
 	}
 }

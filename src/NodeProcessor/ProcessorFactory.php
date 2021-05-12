@@ -9,10 +9,10 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages\NodeProcessor;
 use DOMNode;
 use InvalidArgumentException;
 
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_ENABLE_FOR_AUDIOS;
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_ENABLE_FOR_BACKGROUND_IMAGES;
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_ENABLE_FOR_IFRAMES;
-use const FlorianBrinkmann\LazyLoadResponsiveImages\LAZY_LOADER_ENABLE_FOR_VIDEOS;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\ENABLE_FOR_AUDIOS;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\ENABLE_FOR_BACKGROUND_IMAGES;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\ENABLE_FOR_IFRAMES;
+use const FlorianBrinkmann\LazyLoadResponsiveImages\ENABLE_FOR_VIDEOS;
 
 /**
  * Class ProcessFactory
@@ -35,8 +35,8 @@ final class ProcessorFactory {
 	public static function get_content_processor( DOMNode $node, array $config ): Processor {
 		// Check if the element has a style attribute with a background image.
 		if (
-			isset( $config[LAZY_LOADER_ENABLE_FOR_BACKGROUND_IMAGES] )
-			&& true === $config[LAZY_LOADER_ENABLE_FOR_BACKGROUND_IMAGES]
+			isset( $config[ENABLE_FOR_BACKGROUND_IMAGES] )
+			&& true === $config[ENABLE_FOR_BACKGROUND_IMAGES]
 			&& $node->hasAttribute( 'style' )
 			&& 'img' !== $node->tagName
 			&& 'picture' !== $node->tagName
@@ -67,15 +67,15 @@ final class ProcessorFactory {
 			return self::get_processor_instance( 'InputProcessor' );
 		}
 
-		if ( isset( $config[LAZY_LOADER_ENABLE_FOR_IFRAMES] ) && true === $config[LAZY_LOADER_ENABLE_FOR_IFRAMES] && 'iframe' === $node->tagName ) {
+		if ( isset( $config[ENABLE_FOR_IFRAMES] ) && true === $config[ENABLE_FOR_IFRAMES] && 'iframe' === $node->tagName ) {
 			return self::get_processor_instance( 'IframeProcessor' );
 		}
 
-		if ( isset( $config[LAZY_LOADER_ENABLE_FOR_VIDEOS] ) && true === $config[LAZY_LOADER_ENABLE_FOR_VIDEOS] && 'video' === $node->tagName ) {
+		if ( isset( $config[ENABLE_FOR_VIDEOS] ) && true === $config[ENABLE_FOR_VIDEOS] && 'video' === $node->tagName ) {
 			return self::get_processor_instance( 'VideoProcessor' );
 		}
 
-		if ( isset( $config[LAZY_LOADER_ENABLE_FOR_AUDIOS] ) && true === $config[LAZY_LOADER_ENABLE_FOR_AUDIOS] && 'audio' === $node->tagName ) {
+		if ( isset( $config[ENABLE_FOR_AUDIOS] ) && true === $config[ENABLE_FOR_AUDIOS] && 'audio' === $node->tagName ) {
 			return self::get_processor_instance( 'AudioProcessor' );
 		}
 

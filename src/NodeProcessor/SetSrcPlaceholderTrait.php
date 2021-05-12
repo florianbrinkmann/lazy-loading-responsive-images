@@ -9,10 +9,10 @@ namespace FlorianBrinkmann\LazyLoadResponsiveImages\NodeProcessor;
 use DOMNode;
 
 /**
- * Trait SetSrcPlaceholder
+ * Trait SetSrcPlaceholderTrait
  * @package FlorianBrinkmann\LazyLoadResponsiveImages\ContentProcessor
  */
-trait SetSrcPlaceholder {
+trait SetSrcPlaceholderTrait {
 	/**
 	 * Placeholder data uri for img src attributes.
 	 *

@@ -1,4 +1,6 @@
 <?php
+
+declare( strict_types=1 );
 /**
  * Lazy Loader plugin.
  *
@@ -32,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 // Create object.
-$lazy_loader = new Plugin( ConfigFactory::create( __DIR__ . '/config/settings.php' ), plugin_basename( __FILE__ ) );
+$lazy_loader = new Plugin( ConfigFactory::create( __DIR__ . '/config/config.php' ), plugin_basename( __FILE__ ) );
 
 // Init the plugin.
 $lazy_loader->init();
@@ -41,12 +43,12 @@ $lazy_loader->init();
 register_uninstall_hook( plugin_basename( __FILE__ ), 'FlorianBrinkmann\LazyLoadResponsiveImages\uninstall' );
 
 /**
- * Function that triggers the Uninstall class to remove the Lazy Loader settings from the database.
+ * Function that triggers routine to delete the settings from the database.
  *
  * @return void
  */
-function uninstall() {
-	$config = ConfigFactory::create( __DIR__ . '/config/settings.php' );
+function uninstall(): void {
+	$config = ConfigFactory::create( __DIR__ . '/config/config.php' );
 	try {
 		$lazy_loader_setting_controls = $config->getSubConfig( PLUGIN_PREFIX, 'setting_controls' );
 	} catch ( KeyNotFoundException $e ) {
