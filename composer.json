@@ -22,5 +22,10 @@
   "prefer-stable" : true,
   "require": {
     "masterminds/html5": "^2.7"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

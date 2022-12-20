@@ -150,6 +150,11 @@ class Helpers {
 			return false;
 		}
 
+		// Check for TranslatePress editor.
+		if ( isset( $_REQUEST['trp-edit-translation'] ) ) {
+			return false;
+		}
+
 		return true;
 	}
 
