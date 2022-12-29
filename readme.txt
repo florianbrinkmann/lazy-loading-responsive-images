@@ -3,8 +3,8 @@ Contributors: FlorianBrinkmann
 Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
-Tested up to: 6.0
-Stable tag: 8.1.0
+Tested up to: 6.1
+Stable tag: 8.1.1
 Requires PHP: 7.0
 
 == Description ==
@@ -103,6 +103,14 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 8.1.1 – 20.12.2022 =
+
+Tested with WordPress 6.1.
+
+**Fixed**
+
+- Disable lazy loading in TranslatePress editor.
 
 = 8.1.0 – 29.03.2021 =
 
