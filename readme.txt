@@ -3,8 +3,8 @@ Contributors: FlorianBrinkmann
 Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
-Tested up to: 6.1
-Stable tag: 8.1.1
+Tested up to: 6.5
+Stable tag: 8.1.2
 Requires PHP: 7.0
 
 == Description ==
@@ -103,6 +103,14 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 8.1.2 – 14.04.2024 =
+
+Tested with WordPress 6.5.
+
+**Fixed**
+
+- Updated `mastermind/html5` dependency to latest version, which fixes a PHP deprecation notice.
 
 = 8.1.1 – 20.12.2022 =
 
