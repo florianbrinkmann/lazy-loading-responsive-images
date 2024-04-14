@@ -4,7 +4,7 @@
 **Tags:** lazysizes, lazy loading, performance, images  
 **Requires at least:** 4.9.8  
 **Tested up to:** 6.5  
-**Stable tag:** 8.1.2  
+**Stable tag:** 8.2.0  
 **Requires PHP:** 7.0  
 
 
@@ -45,7 +45,7 @@ Lazy loads (without the need of any manually modifications):
 * Scripts.
 * Styles.
 
-The plugin adds a `noscript` element as fallback for disabled JavaScript.
+The plugin adds a `noscript` element as fallback for disabled JavaScript (can be disabled with the `lazy_loader_generate_noscript` filter).
 
 You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the `skip-lazy` class or the `data-skip-lazy` attribute. `skip-lazy` and `data-skip-lazy` also work on wrapper elements to exclude the wrapper and its children from being processed.
 
@@ -110,7 +110,11 @@ There is a textarea in the plugin settings where you can insert custom settings 
 
 ## Changelog 
 
-### 8.1.2 – 14.04.2024
+### 8.2.0 – 14.04.2024
+
+**Added**
+
+* `lazy_loader_generate_noscript` filter to allow disabling of `noscript` element generation.
 
 Tested with WordPress 6.5.
 

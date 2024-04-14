@@ -1,143 +1,98 @@
 <?php
 /**
- * Class for adding customizer settings.
- *
  * @package FlorianBrinkmann\LazyLoadResponsiveImages
  */
 
 namespace FlorianBrinkmann\LazyLoadResponsiveImages;
 
-/**
- * Class Settings
- *
- * Adds options to the customizer.
- *
- * @package FlorianBrinkmann\LazyLoadResponsiveImages
- */
 class Settings {
 
 	/**
-	 * Helpers object.
-	 *
 	 * @var \FlorianBrinkmann\LazyLoadResponsiveImages\Helpers
 	 */
 	private $helpers;
 
 	/**
-	 * Array of options data.
-	 *
 	 * @var array
 	 */
 	private $options;
 
 	/**
-	 * Classes which should not be lazy loaded.
-	 *
 	 * @var array
 	 */
 	private $disabled_classes;
 
 	/**
-	 * Value of settings for enabling lazy loading for iFrames.
-	 *
 	 * @var string
 	 */
 	private $enable_for_iframes;
 
 	/**
-	 * Value of setting for loading the unveilhooks plugin.
-	 *
 	 * @var string
 	 */
 	private $load_native_loading_plugin;
 
 	/**
-	 * Value of setting for loading the unveilhooks plugin.
-	 *
 	 * @var string
 	 */
 	private $load_unveilhooks_plugin;
 
 	/**
-	 * Value of settings for enabling lazy loading for background images.
-	 *
 	 * @var string
 	 */
 	private $enable_for_background_images;
 
 	/**
-	 * Value of settings for enabling lazy loading for videos.
-	 *
 	 * @var string
 	 */
 	private $enable_for_videos;
 
 	/**
-	 * Value of settings for enabling lazy loading for audios.
-	 *
 	 * @var string
 	 */
 	private $enable_for_audios;
 
 	/**
-	 * Value of setting for displaying a loading spinner.
-	 *
 	 * @var string
 	 */
 	private $loading_spinner;
 
 	/**
-	 * Default loading spinner color.
-	 *
 	 * @var string
 	 */
 	private $loading_spinner_color_default = '#333333';
 
 	/**
-	 * Value of setting for loading spinner color.
-	 *
 	 * @var string
 	 */
 	private $loading_spinner_color;
 
 	/**
-	 * Value of setting for displaying the option to disable the plugin per page/post.
-	 *
 	 * @var string
 	 */
 	private $granular_disable_option;
 
 	/**
-	 * Array of object types that should show the checkbox to disable lazy loading.
-	 *
 	 * @var array
 	 */
 	private $disable_option_object_types = array();
 
 	/**
-	 * String to modify lazysizes config.
-	 *
 	 * @var string
 	 */
 	private $lazysizes_config = '';
 
 	/**
-	 * Value of setting for processing the complete website markup.
-	 *
 	 * @var string
 	 */
 	private $process_complete_markup;
 
 	/**
-	 * Value of setting for additional filters to process.
-	 *
 	 * @var array
 	 */
 	private $additional_filters;
 
 	/**
-	 * Allowed HTML tags in descriptions.
-	 *
 	 * @var array
 	 */
 	private $allowed_description_html = array(
@@ -147,11 +102,7 @@ class Settings {
 		'strong' => array(),
 	);
 
-	/**
-	 * Settings constructor.
-	 */
 	public function __construct() {
-		// Set helpers.
 		$this->helpers = new Helpers();
 
 		$this->options = array(
@@ -294,7 +245,6 @@ class Settings {
 			),
 		);
 
-		// Fill properties with setting values.
 		$this->disabled_classes        = explode( ',', $this->options['lazy_load_responsive_images_disabled_classes']['value'] );
 		$this->enable_for_iframes      = $this->options['lazy_load_responsive_images_enable_for_iframes']['value'];
 		$this->load_native_loading_plugin = $this->options['lazy_load_responsive_images_native_loading_plugin']['value'];
@@ -309,10 +259,8 @@ class Settings {
 		$this->lazysizes_config = $this->options['lazy_load_responsive_images_lazysizes_config']['value'];
 		$this->enable_for_background_images = $this->options['lazy_load_responsive_images_enable_for_background_images']['value'];
 
-		// Register settings on media options page.
 		add_action( 'admin_init', array( $this, 'settings_init' ), 12 );
 
-		// Include color picker JS.
 		add_action( 'admin_enqueue_scripts', array(
 			$this,
 			'add_color_picker',
@@ -321,20 +269,14 @@ class Settings {
 		if ( '1' === $this->granular_disable_option ) {
 			add_action( 'init', array( $this, 'disable_option_object_types_filter' ), 11 );
 
-			// Register meta for disabling per page.
 			add_action( 'init', array( $this, 'register_post_meta' ), 11 );
 
-			// Publish post actions.
 			add_action( 'post_submitbox_misc_actions', array( $this, 'add_checkbox' ), 9 );
 			add_action( 'save_post', array( $this, 'save_checkbox' ) );
 		}
 	}
 
-	/**
-	 * Init settings on media options page.
-	 */
 	public function settings_init() {
-		// Add section.
 		add_settings_section(
 			"lazy-load-responsive-images-section",
 			sprintf(
@@ -345,14 +287,11 @@ class Settings {
 			'media'
 		);
 
-		// Loop the options.
 		foreach ( $this->options as $option_id => $option ) {
-			// Register setting.
 			register_setting( 'media', $option_id, array(
 				'sanitize_callback' => $option['sanitize_callback'],
 			) );
 
-			// Create field.
 			add_settings_field(
 				$option_id,
 				$option['label'],
@@ -365,20 +304,16 @@ class Settings {
 					'description' => ( isset( $option['description'] ) ? $option['description'] : '' ),
 				)
 			);
-		} // End foreach().
+		}
 	}
 
 	/**
-	 * Section callback.
-	 *
 	 * @param array $args
 	 */
 	public function section_cb( $args ) {
 	}
 
 	/**
-	 * Checkbox callback.
-	 *
 	 * @param array $args               {
 	 *                                  Argument array.
 	 *
@@ -388,15 +323,12 @@ class Settings {
 	 * }
 	 */
 	public function checkbox_field_cb( $args ) {
-		// Get option value.
 		$option_value = $args['value'];
 
-		// Get label for.
 		?>
 		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
 			   type="checkbox" <?php echo ( $option_value == '1' || $option_value == 'on' ) ? 'checked="checked"' : ''; ?>>
 		<?php
-		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
 				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
@@ -406,8 +338,6 @@ class Settings {
 	}
 
 	/**
-	 * Text field callback.
-	 *
 	 * @param array $args               {
 	 *                                  Argument array.
 	 *
@@ -417,15 +347,12 @@ class Settings {
 	 * }
 	 */
 	public function text_field_cb( $args ) {
-		// Get option value.
 		$option_value = $args['value'];
 
-		// Get label for.
 		?>
 		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
 			   type="text" value="<?php echo esc_attr( $option_value ); ?>">
 		<?php
-		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
 				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
@@ -435,8 +362,6 @@ class Settings {
 	}
 
 	/**
-	 * Textarea field callback.
-	 *
 	 * @param array $args               {
 	 *                                  Argument array.
 	 *
@@ -446,13 +371,11 @@ class Settings {
 	 * }
 	 */
 	public function textarea_field_cb( $args ) {
-		// Get option value.
 		$option_value = $args['value'];
 
 		?>
 		<textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>" style="width: 100%;"><?php echo esc_textarea( $option_value ); ?></textarea>
 		<?php
-		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
 				<?php echo wp_kses( $args['description'], $this->allowed_description_html  ); ?>
@@ -462,8 +385,6 @@ class Settings {
 	}
 
 	/**
-	 * Color field callback.
-	 *
 	 * @param array $args               {
 	 *                                  Argument array.
 	 *
@@ -474,17 +395,14 @@ class Settings {
 	 * }
 	 */
 	public function color_field_cb( $args ) {
-		// Get option value.
 		$option_value = $args['value'];
 
-		// Get label for.
 		?>
 		<input id="<?php echo esc_attr( $args['label_for'] ); ?>" name="<?php echo esc_attr( $args['label_for'] ); ?>"
 			   type="text" value="<?php echo esc_attr( $option_value ); ?>"
 			   data-default-color="<?php echo esc_attr( $this->loading_spinner_color_default ); ?>"
 			   class="lazy-load-responsive-images-color-field">
 		<?php
-		// Check for description.
 		if ( '' !== $args['description'] ) { ?>
 			<p class="description">
 				<?php echo wp_kses( $args['description'], array( 'a', 'strong', 'code', 'br' ) ); ?>
@@ -494,17 +412,13 @@ class Settings {
 	}
 
 	/**
-	 * Add color picker to media settings page and init it.
-	 *
 	 * @param string $hook_suffix PHP file of the admin screen.
 	 */
 	public function add_color_picker( $hook_suffix ) {
-		// Check if we are not on the media backend screen.
 		if ( 'options-media.php' !== $hook_suffix ) {
 			return;
-		} // End if().
+		}
 
-		// Add color picker script and style and init it.
 		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_script( 'wp-color-picker' );
 		wp_add_inline_script( 'wp-color-picker', "jQuery(document).ready(function($){
@@ -512,15 +426,11 @@ class Settings {
 });" );
 	}
 
-	/**
-	 * Set array of post types that support granular disabling of Lazy Loader features.
-	 */
 	public function disable_option_object_types_filter() {
 		$public_post_types = get_post_types( array(
 			'public' => true,
 		), 'names' );
 
-		// Remove attachment post type.
 		if ( is_array( $public_post_types ) && isset( $public_post_types['attachment'] ) ) {
 			unset( $public_post_types['attachment'] );
 		}
@@ -536,9 +446,6 @@ class Settings {
 		$this->disable_option_object_types = apply_filters( 'lazy_loader_disable_option_object_types', $public_post_types );
 	}
 
-	/**
-	 * Register post meta for disabling plugin per
-	 */
 	public function register_post_meta() {
 		if ( ! is_array( $this->disable_option_object_types ) ) {
 			return;
@@ -559,8 +466,6 @@ class Settings {
 	}
 
 	/**
-	 * Add checkbox to Publish Post meta box.
-	 *
 	 * @link https://github.com/deworg/dewp-planet-feed/
 	 */
 	public function add_checkbox() {
@@ -570,9 +475,7 @@ class Settings {
 			return;
 		}
 
-		// Check user capability. Not bailing, though, on purpose.
 		$maybe_enabled = current_user_can( 'publish_posts' );
-		// This actually defines whether post will be listed in our feed.
 		$value = absint( get_post_meta( $post->ID, 'lazy_load_responsive_images_disabled', true ) );
 		printf(
 			'<div class="misc-pub-section dewp-planet">
@@ -588,8 +491,6 @@ class Settings {
 	}
 
 	/**
-	 * Save option value to post meta.
-	 *
 	 * @link https://github.com/deworg/dewp-planet-feed/
 	 *
 	 * @param  int $post_id ID of current post.
@@ -621,8 +522,6 @@ class Settings {
 	}
 
 	/**
-	 * Return disabled classes setting value.
-	 * 
 	 * @return array
 	 */
 	public function get_disabled_classes() {
@@ -630,8 +529,6 @@ class Settings {
 	}
 
 	/**
-	 * Return load_unveilhooks_plugin value.
-	 * 
 	 * @return string
 	 */
 	public function get_load_unveilhooks_plugin() {
@@ -639,8 +536,6 @@ class Settings {
 	}
 
 	/**
-	 * Return enable_for_audios value.
-	 * 
 	 * @return string
 	 */
 	public function get_enable_for_audios() {
@@ -648,8 +543,6 @@ class Settings {
 	}
 
 	/**
-	 * Return enable_for_videos value.
-	 * 
 	 * @return string
 	 */
 	public function get_enable_for_videos() {
@@ -657,8 +550,6 @@ class Settings {
 	}
 
 	/**
-	 * Return enable_for_iframes value.
-	 * 
 	 * @return string
 	 */
 	public function get_enable_for_iframes() {
@@ -666,8 +557,6 @@ class Settings {
 	}
 
 	/**
-	 * Return enable_for_background_images value.
-	 * 
 	 * @return string
 	 */
 	public function get_enable_for_background_images() {
@@ -675,8 +564,6 @@ class Settings {
 	}
 
 	/**
-	 * Return load_native_loading_plugin value.
-	 * 
 	 * @return string
 	 */
 	public function get_load_native_loading_plugin() {
@@ -684,8 +571,6 @@ class Settings {
 	}
 
 	/**
-	 * Return lazysizes_config value.
-	 * 
 	 * @return string
 	 */
 	public function get_lazysizes_config() {
@@ -693,8 +578,6 @@ class Settings {
 	}
 
 	/**
-	 * Return loading_spinner_color value.
-	 * 
 	 * @return string
 	 */
 	public function get_loading_spinner_color() {
@@ -702,8 +585,6 @@ class Settings {
 	}
 
 	/**
-	 * Return loading_spinner_color_default value.
-	 * 
 	 * @return string
 	 */
 	public function get_loading_spinner_color_default() {
@@ -711,8 +592,6 @@ class Settings {
 	}
 
 	/**
-	 * Return loading_spinner value.
-	 * 
 	 * @return string
 	 */
 	public function get_loading_spinner() {
@@ -720,8 +599,6 @@ class Settings {
 	}
 
 	/**
-	 * Return disable_option_object_types value.
-	 * 
 	 * @return array
 	 */
 	public function get_disable_option_object_types() {
@@ -729,8 +606,6 @@ class Settings {
 	}
 
 	/**
-	 * Return process_complete_markup value.
-	 * 
 	 * @return string
 	 */
 	public function get_process_complete_markup() {
@@ -738,8 +613,6 @@ class Settings {
 	}
 
 	/**
-	 * Return additional_filters value.
-	 * 
 	 * @return array
 	 */
 	public function get_additional_filters() {
