@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/florianbrinkmann/lazy-loading-responsive-images#readme",
   "devDependencies": {
-    "@wordpress/scripts": "^25.0.0"
+    "@wordpress/scripts": "^27.6.0"
   }
 }
