@@ -171,10 +171,10 @@ class Plugin {
             'disable_html_ns' => true,
         ) );
 
-		// Preserve html entities and conditional IE comments.
+		// Preserve html entities, hex+decimal codes, and conditional IE comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php.
 		$content = preg_replace( '/&([a-zA-Z]*);/', 'lazy-loading-responsive-images-entity1-$1-end', $content );
-		$content = preg_replace( '/&#([0-9]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
+		$content = preg_replace( '/&#([0-9a-zA-Z]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
 		$content = preg_replace( '/<!--\[([\w ]*)\]>/', '<!--[$1]>-->', $content );
 		$content = str_replace( '<![endif]-->', '<!--<![endif]-->', $content );
 
