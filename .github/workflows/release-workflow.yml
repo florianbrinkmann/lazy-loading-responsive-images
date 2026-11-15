@@ -36,7 +36,7 @@ jobs:
         rsync -rav --exclude-from='.rsync-exclude' --delete-excluded ./ lazy-loading-responsive-images
         zip -r lazy-loading-responsive-images.zip lazy-loading-responsive-images/
     - name: Create artifact with files to deploy to W.org
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: lazy-loading-responsive-images
         path: lazy-loading-responsive-images
